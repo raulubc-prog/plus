@@ -6,8 +6,15 @@
 <meta name="robots" content="noindex">
 <title>Plus Desplazamiento</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src https://router.project-osrm.org; base-uri 'none'; form-action 'none'; object-src 'none'">
 <style>
+/* Fuentes Barlow (licencia OFL, ver fonts/LICENSE-Barlow.txt) servidas desde este mismo repo: ninguna visita pasa por Google. */
+@font-face{font-family:'Barlow';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/barlow-latin-400-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Barlow';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/barlow-latin-500-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Barlow';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/barlow-latin-600-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/barlow-condensed-latin-500-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/barlow-condensed-latin-600-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/barlow-condensed-latin-700-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 /* Layout: una columna de herramienta — carga y ajustes arriba, resumen del mes, tabla de días. Estética de señalética de autovía. */
 :root{
   --bg:#f3f5f8; --surface:#ffffff; --fg:#14202e; --muted:#5b6878; --line:#d9dfe7;
@@ -252,7 +259,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.20 · 19/10/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.21 · 20/10/2026</span></p>
     </div>
   </header>
 
@@ -459,18 +466,48 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · v2.3.20</p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · v2.3.21</p>
 </div>
 
 <script>
 (function(){
 const $=id=>document.getElementById(id);
 const DEF={desde:'',umbral:50,eur:22,ekm:'',vel:90,modo:'km',parada:30,parada2:60,ini:'06:30',fin:'21:00',casa:'',kmsrc:'obra'};
+// v2.3.21: lo que llega de un archivo (copia propia o de un compañero) se comprueba antes de guardarlo.
+// Un valor raro se ignora; los ajustes que cambian se dicen en el mensaje, nunca en silencio.
+const MAXCOPIA=5*1024*1024;
+const AJ_LBL={umbral:'umbral de km',eur:'€/hora',ekm:'€/km',vel:'velocidad',modo:'modo de cálculo',desde:'fecha "desde"',parada:'parada corta',parada2:'parada larga',ini:'hora de inicio',fin:'hora de fin',casa:'casa',kmsrc:'origen de los km'};
+const num=v=>{const n=typeof v==='number'?v:parseFloat(String(v??'').replace(',','.'));return isFinite(n)?n:null};
+const okAj=(k,v)=>{
+  if(v===undefined||v===null)return null;
+  if(['umbral','eur','parada','parada2'].includes(k)){const n=num(v);return n!==null&&n>=0&&n<100000?n:null}
+  if(k==='vel'){const n=num(v);return n>0&&n<1000?n:null}
+  if(k==='ekm'){if(v==='')return '';const n=num(v);return n>0&&n<1000?n:null}
+  if(k==='desde')return v===''||(typeof v==='string'&&/^\d{4}-\d\d-\d\d$/.test(v))?v:null;
+  if(k==='ini'||k==='fin')return typeof v==='string'&&/^\d\d:\d\d$/.test(v)?v:null;
+  if(k==='modo')return v==='km'||v==='tiempo'?v:null;
+  if(k==='kmsrc')return v==='obra'||v==='gps'?v:null;
+  if(k==='casa')return typeof v==='string'&&v.length<=60&&parseCasa(v)?v:null;
+  return null};
+// aplica los ajustes válidos del archivo; devuelve la lista (legible) de los que han cambiado
+function applyAj(a,keys){const ch=[];if(!a||typeof a!=='object'||Array.isArray(a))return ch;
+  for(const k of keys){const v=okAj(k,a[k]);if(v===null)continue;const old=cfg[k]??'';if(String(v)!==String(old)){ch.push(AJ_LBL[k]+': '+(old===''?'vacío':old)+' → '+(v===''?'vacío':v))}cfg[k]=v}
+  if(ch.length){store.set('pd_cfg',cfg);for(const k in F){const el=$(F[k]);if(el&&cfg[k]!==undefined)el.value=cfg[k]}}
+  return ch}
+const ajMsg=ch=>ch.length?' Ojo: el archivo ha cambiado estos ajustes → '+ch.join('; ')+'. Revísalos si no son los tuyos.':'';
+const isCoord=p=>Array.isArray(p)&&p.length===2&&p.every(x=>typeof x==='number'&&isFinite(x))&&Math.abs(p[0])<=90&&Math.abs(p[1])<=180;
+const txt=(v,max)=>typeof v==='string'?v.slice(0,max):'';
+const kmOk=v=>{const n=num(v);return n!==null&&n>0&&n<5000?n:null};
+const isDay=k=>typeof k==='string'&&/^\d{4}-\d\d-\d\d$/.test(k);
+const okModo=m=>m==='i'||m==='v'?m:'iv';
+const tooBig=f=>f.size>MAXCOPIA;
 const EKM=()=>(+cfg.ekm>0?+cfg.ekm:0); // v2.3.2: precio por km de más (si se pone, manda sobre el precio hora)
 const calcTxt=()=>EKM()?EKM().toLocaleString('es-ES',{maximumFractionDigits:3})+' €/km de más':(cfg.modo==='tiempo'&&MODE!=='man')?cfg.eur+' €/h por tiempo real de conducción':cfg.eur+' €/h a '+cfg.vel+' km/h';
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const isObj=v=>v&&typeof v==='object'&&!Array.isArray(v);
 let cfg=Object.assign({},DEF,isObj(store.get('pd_cfg',{}))?store.get('pd_cfg',{}):{});
+// v2.3.21: si en el móvil quedó guardado un ajuste con tipo raro (p. ej. de una copia antigua), se repara al arrancar
+{let fix=false;for(const k in DEF){if(k in AJ_LBL&&okAj(k,cfg[k])===null&&String(cfg[k]??'')!==String(DEF[k])){cfg[k]=DEF[k];fix=true}}if(typeof cfg.casaDir!=='string'){cfg.casaDir='';fix=true}if(fix)store.set('pd_cfg',cfg)}
 let excl=isObj(store.get('pd_excl',{}))?store.get('pd_excl',{}):{};
 let manual=Array.isArray(store.get('pd_manual',[]))?store.get('pd_manual',[]):[];let wantMonth=null; // días añadidos a mano: [{day,p,name,km,modo:'iv'|'i'|'v'}]
 let drives=null;      // [{start,end,s:[lat,lng],e:[lat,lng],km}]
@@ -758,15 +795,16 @@ $('obexp').addEventListener('click',()=>{
 let dl=null;try{if(window.claude&&window.claude.use)window.claude.use('downloads').then(x=>{dl=x},()=>{})}catch(_){}
 $('obimpf').addEventListener('change',e=>{
   const f=e.target.files[0];if(!f)return;const rd=new FileReader();
-  rd.onload=()=>{try{const j=JSON.parse(rd.result);if(j.tipo!=='plus-desplazamiento-obras'||!Array.isArray(j.obras))throw 0;
-    {const base=isExample?store.get('pd_manual',[]):manual;if(Array.isArray(j.dias))for(const x of j.dias){if(x&&x.day&&!base.some(y=>y.day===x.day))base.push(x)}store.set('pd_manual',base);if(!isExample)manual=base}
-    if(j.excl&&typeof j.excl==='object'&&!Array.isArray(j.excl)){const base=isExample?store.get('pd_excl',{}):excl;for(const k in j.excl)if(/^\d{4}-\d\d-\d\d$/.test(k))base[k]=1;store.set('pd_excl',base);if(!isExample)excl=base}
-    if(j.ajustes&&typeof j.ajustes==='object'){for(const k of ['umbral','eur','ekm','vel','modo','desde','parada','parada2','ini','fin','kmsrc'])if(j.ajustes[k]!==undefined&&j.ajustes[k]!==null)cfg[k]=j.ajustes[k];if(j.ajustes.casa&&!cfg.casa)cfg.casa=j.ajustes.casa;store.set('pd_cfg',cfg);for(const k in F){const el=$(F[k]);if(el)el.value=cfg[k]}}
-    else if(Array.isArray(j.casa)&&j.casa.length===2&&!cfg.casa&&j.casa.every(isFinite)){cfg.casa=j.casa[0]+', '+j.casa[1];store.set('pd_cfg',cfg);$('c_casa').value=cfg.casa}
+  if(tooBig(f)){$('osrmmsg').innerHTML='<b>Ese archivo es demasiado grande</b> para ser una copia de obras de esta app.';e.target.value='';return}
+  rd.onload=()=>{try{const j=JSON.parse(rd.result);if(!j||typeof j!=='object'||j.tipo!=='plus-desplazamiento-obras'||!Array.isArray(j.obras))throw 0;
+    {const base=isExample?store.get('pd_manual',[]):manual;if(Array.isArray(j.dias))for(const x of j.dias){if(!x||typeof x!=='object'||!isDay(x.day)||base.some(y=>y.day===x.day))continue;const km=kmOk(x.km);const p=isCoord(x.p)?x.p:null;if(!p&&!km)continue;base.push({day:x.day,p,name:txt(x.name,120).trim(),km,modo:okModo(x.modo)})}store.set('pd_manual',base);if(!isExample)manual=base}
+    if(j.excl&&typeof j.excl==='object'&&!Array.isArray(j.excl)){const base=isExample?store.get('pd_excl',{}):excl;for(const k in j.excl)if(isDay(k))base[k]=1;store.set('pd_excl',base);if(!isExample)excl=base}
+    const ch=applyAj(j.ajustes,['umbral','eur','ekm','vel','modo','desde','parada','parada2','ini','fin','kmsrc'].concat(cfg.casa?[]:['casa']));
+    if(!cfg.casa&&isCoord(j.casa)){cfg.casa=j.casa[0]+', '+j.casa[1];store.set('pd_cfg',cfg);$('c_casa').value=cfg.casa}
     if(isExample)saved=store.get('pd_obras',[]).concat(saved.filter(x=>x.name==='Obra de ejemplo (Huesca)'));
-    let n=0;for(const o of j.obras){if(!Array.isArray(o.p))continue;const s=findSaved(o.p);if(s){s.name=o.name||s.name;s.man=o.man??s.man;s.osrm=o.osrm??s.osrm}else saved.push({p:o.p,name:o.name||'',man:o.man??null,osrm:o.osrm??null});n++}
-    if(isExample){store.set('pd_obras',saved.filter(x=>x.name!=='Obra de ejemplo (Huesca)'));const t=store.get('pd_obras',[]).length;saved=[{p:[42.14,-0.41],name:'Obra de ejemplo (Huesca)',man:null,osrm:null}];$('osrmmsg').innerHTML=`<b>✓ Cargadas ${n} obras de ${escH(f.name)}</b> (${t} guardadas en el móvil). Se verán en la lista cuando cargues tu Cronología: las obras salen de los sitios donde paraste.`}
-    else{persistSaved();$('osrmmsg').innerHTML=`<b>✓ Cargadas ${n} obras de ${escH(f.name)}.</b>`}render()}
+    let n=0;for(const o of j.obras){if(!o||typeof o!=='object'||!isCoord(o.p))continue;const name=txt(o.name,120),man=kmOk(o.man),osrm=kmOk(o.osrm);const s=findSaved(o.p);if(s){s.name=name||s.name;s.man=man??s.man;s.osrm=osrm??s.osrm}else saved.push({p:o.p,name,man,osrm});n++}
+    if(isExample){store.set('pd_obras',saved.filter(x=>x.name!=='Obra de ejemplo (Huesca)'));const t=store.get('pd_obras',[]).length;saved=[{p:[42.14,-0.41],name:'Obra de ejemplo (Huesca)',man:null,osrm:null}];$('osrmmsg').innerHTML=`<b>✓ Cargadas ${n} obras de ${escH(f.name)}</b> (${t} guardadas en el móvil). Se verán en la lista cuando cargues tu Cronología: las obras salen de los sitios donde paraste.${escH(ajMsg(ch))}`}
+    else{persistSaved();$('osrmmsg').innerHTML=`<b>✓ Cargadas ${n} obras de ${escH(f.name)}.</b>${escH(ajMsg(ch))}`}render()}
     catch(_){let t='';try{t=JSON.parse(rd.result).tipo}catch(__){}
       $('osrmmsg').innerHTML=t==='plus-desplazamiento-manual'?'<b>Esa es una copia del modo "Apuntar a mano".</b> Cárgala en esa pestaña, en "Copia de seguridad".':'<b>No he podido leer ese archivo.</b> Tiene que ser el que guarda esta app con "Guardar obras en archivo" (obras_fecha.json).'}
     e.target.value=''};
@@ -874,7 +912,7 @@ $('x_csv').addEventListener('click',()=>{
 try{const tf=new File(['x'],'t.pdf',{type:'application/pdf'});if(navigator.share&&navigator.canShare&&navigator.canShare({files:[tf]}))$('x_share').hidden=false}catch(_){}
 function loadScript(u){return new Promise((ok,ko)=>{const s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=ko;document.head.appendChild(s)})}
 async function xPdf(){
-  if(!window.jspdf){await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js')}
+  if(!window.jspdf){await loadScript('lib/jspdf.umd.min.js');await loadScript('lib/jspdf.plugin.autotable.min.js')}
   const {jsPDF}=window.jspdf;const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
   const on=current.filter(d=>!XE()[d.day]);const tot=on.reduce((s,d)=>s+d.imp,0),km=on.reduce((s,d)=>s+d.extra,0);
   doc.setFontSize(16);doc.text('Plus de desplazamiento',14,15);
@@ -1070,18 +1108,23 @@ $('mb_save').addEventListener('click',()=>{
 });
 $('mb_load').addEventListener('change',e=>{
   const f=e.target.files[0];if(!f)return;const rd=new FileReader();
+  if(tooBig(f)){$('mb_msg').textContent=$('mn_msg').textContent='Ese archivo es demasiado grande para ser una copia de esta app.';e.target.value='';return}
   rd.onload=()=>{try{
-    const j=JSON.parse(rd.result);
+    const j=JSON.parse(rd.result);if(!j||typeof j!=='object')throw 0;
     if(j.tipo==='plus-desplazamiento-manual'){
-      const okId=v=>typeof v==='string'&&/^[a-z0-9]{4,24}$/i.test(v);const map={};
-      let n=0;for(const o of j.obras||[]){if(!o||!o.name)continue;const ex=(okId(o.id)&&mob.find(x=>x.id===o.id))||mob.find(x=>!x.arch&&x.name.toLowerCase()===String(o.name).toLowerCase());
-        if(ex){map[o.id]=ex.id;Object.assign(ex,o,{id:ex.id})}else{const id=okId(o.id)&&!mob.some(x=>x.id===o.id)?o.id:newId();map[o.id]=id;mob.push(Object.assign({},o,{id}));n++}}
-      let d=0;for(const k in j.marcas||{}){const m=j.marcas[k];if(!marks[k]&&m&&typeof m==='object'&&/^\d{4}-\d\d-\d\d$/.test(k)){marks[k]=m.o?Object.assign({},m,{o:map[m.o]||m.o}):m;d++}}
-      if(j.casaDir&&!cfg.casaDir){cfg.casaDir=j.casaDir;store.set('pd_cfg',cfg)}
-      if(j.ajustes&&typeof j.ajustes==='object'){for(const k of ['umbral','eur','ekm','vel','desde'])if(j.ajustes[k]!==undefined&&j.ajustes[k]!==null)cfg[k]=j.ajustes[k];store.set('pd_cfg',cfg);for(const k in F){const el=$(F[k]);if(el)el.value=cfg[k]}}
-      $('mb_msg').textContent=`Copia cargada: ${n} obras nuevas y ${d} días que no tenías. Los días que ya tenías marcados no se tocan.`;
+      // solo entran los campos que la app conoce, con su tipo; nada de copiar objetos enteros del archivo
+      const okId=v=>typeof v==='string'&&/^[a-z0-9]{4,24}$/i.test(v);const map=new Map();
+      const pick=o=>({name:txt(o.name,120).trim(),dir:txt(o.dir,200).trim(),km:kmOk(o.km),arch:!!o.arch});
+      let n=0;for(const o of Array.isArray(j.obras)?j.obras:[]){if(!o||typeof o!=='object')continue;const c=pick(o);if(!c.name)continue;const ex=(okId(o.id)&&mob.find(x=>x.id===o.id))||mob.find(x=>!x.arch&&x.name.toLowerCase()===c.name.toLowerCase());
+        if(ex){if(okId(o.id))map.set(o.id,ex.id);ex.name=c.name;ex.arch=c.arch;if(c.km!==null)ex.km=c.km;if(c.dir)ex.dir=c.dir}else{const id=okId(o.id)&&!mob.some(x=>x.id===o.id)?o.id:newId();if(okId(o.id))map.set(o.id,id);mob.push(Object.assign({id},c));n++}}
+      let d=0;const mk=j.marcas&&typeof j.marcas==='object'&&!Array.isArray(j.marcas)?j.marcas:{};
+      for(const k of Object.keys(mk)){const m=mk[k];if(marks[k]||!isDay(k)||!m||typeof m!=='object')continue;
+        if(m.off){marks[k]={off:1};d++}else if(okId(m.o)){const o=map.get(m.o)||m.o;if(!mob.some(x=>x.id===o))continue;marks[k]={o,m:okModo(m.m)};d++}}
+      if(!cfg.casaDir&&txt(j.casaDir,200).trim()){cfg.casaDir=txt(j.casaDir,200).trim();store.set('pd_cfg',cfg)}
+      const ch=applyAj(j.ajustes,['umbral','eur','ekm','vel','desde']);
+      $('mb_msg').textContent=`Copia cargada: ${n} obras nuevas y ${d} días que no tenías. Los días que ya tenías marcados no se tocan.`+ajMsg(ch);
     }else if(j.tipo==='plus-desplazamiento-obras'&&Array.isArray(j.obras)){
-      let n=0;for(const o of j.obras){const name=(o.name||'').trim();const km=o.man||o.osrm;if(!name||/^\s*paso\b/i.test(name)||!(km>0))continue;if(mob.some(x=>!x.arch&&x.name.toLowerCase()===name.toLowerCase()))continue;mob.push({id:newId(),name,dir:'',km});n++}
+      let n=0;for(const o of j.obras){if(!o||typeof o!=='object')continue;const name=txt(o.name,120).trim();const km=kmOk(o.man)||kmOk(o.osrm);if(!name||/^\s*paso\b/i.test(name)||!km)continue;if(mob.some(x=>!x.arch&&x.name.toLowerCase()===name.toLowerCase()))continue;mob.push({id:newId(),name,dir:'',km});n++}
       $('mb_msg').textContent=`Cargadas ${n} obras de la tabla del modo GPS (sin los sitios "paso").`;
     }else throw 0;
     saveMan();renderMset();renderMan();$('mn_msg').textContent=$('mb_msg').textContent;$('mset').open=true;

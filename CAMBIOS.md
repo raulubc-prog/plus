@@ -4,6 +4,13 @@ Web: https://raulubc-prog.github.io/plus/ · Enlace modo manual: https://raulubc
 
 Historial de GitHub reiniciado el 19/10/2026 (v2.3.19) por privacidad; las versiones anteriores solo quedan descritas aquí.
 
+## 20/10/2026
+- **v2.3.21** — Seguridad y privacidad, sin cambios visibles en el uso:
+  - Las fuentes (Barlow) y la librería del PDF (jsPDF) se sirven desde el propio repo: ninguna visita pasa ya por Google Fonts ni por un CDN externo. Lo único que sale fuera sigue siendo lo que dice el aviso: OSRM (si lo pides) y Google Maps (si abres la ruta).
+  - Política de contenido (CSP): la página solo puede conectarse a OSRM; cualquier otro envío de datos queda bloqueado por el navegador.
+  - Archivos de copia (obras y modo manual): se comprueba el tipo de cada dato antes de guardarlo; un archivo mal formado ya no deja la app rota. Límite de 5 MB. Si una copia trae ajustes distintos a los tuyos (€/hora, umbral…), el mensaje de carga los enumera en vez de cambiarlos en silencio.
+  - Al arrancar, si en el móvil quedó guardado un ajuste con tipo raro, se repara solo.
+
 ## 19/10/2026
 - **v2.3.20** — Instrucciones para sacar la Cronología rehechas paso a paso (Ajustes → Ubicación → Ajustes de ubicación → Cronología → Exportar), con aviso de que no está en Google Maps.
 - **v2.3.19** — Privacidad: el ejemplo inicial pasa a ciudades y cifras inventadas (Zaragoza → Huesca); RETOMAR.md sale del repo; historial de GitHub reiniciado en un solo cambio.
