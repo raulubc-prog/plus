@@ -5,6 +5,7 @@ Web: https://raulubc-prog.github.io/plus/ · Enlace modo manual: https://raulubc
 Historial de GitHub reiniciado el 19/10/2026 (v2.3.19) por privacidad; las versiones anteriores solo quedan descritas aquí.
 
 ## 19/10/2026
+- **v2.3.20** — Instrucciones para sacar la Cronología rehechas paso a paso (Ajustes → Ubicación → Ajustes de ubicación → Cronología → Exportar), con aviso de que no está en Google Maps.
 - **v2.3.19** — Privacidad: el ejemplo inicial pasa a ciudades y cifras inventadas (Zaragoza → Huesca); RETOMAR.md sale del repo; historial de GitHub reiniciado en un solo cambio.
 - **v2.3.18** — Segunda revisión a fondo (prueba con 3 meses de datos, dos obras el mismo día, paradas de paso, cambio de hora, cruces de medianoche: todo correcto). Arreglos:
   - Modo manual: en el móvil, el botón "↻ repetir" ya no tapa el "Sin marcar" con nombres largos.
