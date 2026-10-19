@@ -1,0 +1,19 @@
+# Nunca al repo: datos personales, copias y notas
+datos/
+notas/
+*.json
+*.zip
+*.pdf
+*.csv
+*.xlsx
+*.png
+*.jpg
+*.jpeg
+*.mp4
+*.gif
+RETOMAR*.md
+NOTAS*.md
+PENDIENTE*.md
+TODO*.md
+.env
+.env.*
