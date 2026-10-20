@@ -183,6 +183,8 @@ select.pill{width:100%;min-width:0;text-overflow:ellipsis}
 #mdays.cards,#gdays.cards{gap:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
 #gdays .card{border:0;border-radius:0;padding:0;border-top:1px solid var(--line)}#gdays .card:first-child{border-top:0}#gdays .card.open{background:var(--bg)}#gdays .gex .drow{opacity:.55}
 .gtrip+.gtrip{margin-top:8px}
+/* v2.3.23: flecha de desplegar en "Días con plus" */
+#gdays .drow{grid-template-columns:5.6em minmax(0,1fr) auto}#gdays .drow .dd::before{content:"▸ ";color:var(--accent)}#gdays .card.open .drow .dd::before{content:"▾ "}
 #mdays .card{border:0;border-radius:0;padding:0;border-top:1px solid var(--line)}
 #mdays .card:first-child{border-top:0}
 #mdays .card.today{box-shadow:inset 4px 0 0 var(--accent)}
@@ -263,13 +265,13 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.22 · 20/10/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.23 · 20/10/2026</span></p>
     </div>
   </header>
 
   <p class="banner proto" id="proto" role="note">Prototipo. Los importes son orientativos y no sustituyen al cálculo oficial de la empresa.</p>
 
-  <details class="privacy"><summary><b>Tus datos no salen de este móvil</b></summary><p>No hay servidor ni cuentas: lo que apuntas y los archivos que cargas se quedan solo en este navegador. Solo sale algo fuera si tú lo pides: la ruta que abres en Google Maps y, en el modo GPS, las coordenadas que se mandan a OSRM para calcular km por carretera. Si borras los datos del navegador se pierde todo, así que guarda una copia de vez en cuando.</p><p>Dudas o fallos: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a>. No mandes tus datos (obras, direcciones) si no hace falta: con contar el problema basta.</p></details>
+  <details class="privacy"><summary><b>Tus datos no salen de este móvil</b></summary><p>No hay servidor ni cuentas: lo que apuntas y los archivos que cargas se quedan solo en este navegador (almacenamiento local; sin cookies ni rastreo). Solo sale algo fuera si tú lo pides: la ruta que abres en Google Maps y, en el modo GPS, las coordenadas de casa y de la obra que se mandan a OSRM (servidor público de FOSSGIS, en la UE) para calcular km por carretera. La página la aloja GitHub Pages, que registra la dirección IP de cada visita por seguridad (<a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">su política de privacidad</a>). Si borras los datos del navegador se pierde todo, así que guarda una copia de vez en cuando. No escribas nombres de otras personas: para una parada basta "paso: compañero".</p><p>Dudas o fallos: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a>. No mandes tus datos (obras, direcciones) si no hace falta: con contar el problema basta.</p></details>
 
   <nav class="modes" role="tablist" aria-label="Forma de apuntar">
     <button class="mode" role="tab" data-mode="man" type="button">Apuntar a mano</button>
@@ -461,7 +463,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
         <tbody id="obrows"></tbody>
       </table>
     </div>
-    <p class="hint">"Km GPS" es la mediana de los trayectos casa ↔ obra (ida y vuelta), así los desvíos sueltos no cuentan. "Km carretera" lo calcula OSRM (mapa libre, sin Google) para la ruta más corta en coche; para eso se envían a OSRM solo las coordenadas de casa y de la obra. Si el GPS o tu km manual se separan más de un 10 % de la carretera, la fila sale en rojo con "revisar": compruébala en Maps con el botón de copiar y escribe el bueno en "Km manual".</p>
+    <p class="hint">"Km GPS" es la mediana de los trayectos casa ↔ obra (ida y vuelta), así los desvíos sueltos no cuentan. "Km carretera" lo calcula OSRM (mapa libre, sin Google) para la ruta más corta en coche; para eso se envían a OSRM solo las coordenadas de casa y de la obra. Si el GPS o tu km manual se separan más de un 10 % de la carretera, la fila sale en rojo con "revisar": compruébala en Maps con el botón de copiar y escribe el bueno en "Km manual". Km carretera: ruta de OSRM con datos © colaboradores de OpenStreetMap (ODbL).</p>
   </details>
   <details class="panel" id="reset">
     <summary>Borrar datos</summary>
@@ -475,7 +477,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.22 · 20/10/2026</span></p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.23 · 20/10/2026</span></p>
   <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
