@@ -183,13 +183,13 @@ select.pill{width:100%;min-width:0;text-overflow:ellipsis}
 #mdays.cards,#gdays.cards{gap:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
 #gdays .card{border:0;border-radius:0;padding:0;border-top:1px solid var(--line)}#gdays .card:first-child{border-top:0}#gdays .card.open{background:var(--bg)}#gdays .gex .drow{opacity:.55}
 .gtrip+.gtrip{margin-top:8px}
-/* v2.3.23: flecha de desplegar en "Días con plus" */
-#gdays .drow{grid-template-columns:5.6em minmax(0,1fr) auto}#gdays .drow .dd::before{content:"▸ ";color:var(--accent)}#gdays .card.open .drow .dd::before{content:"▾ "}
+/* v2.3.23: flecha de desplegar en "Días con plus"; v2.3.24: también en las tarjetas del modo manual */
+.drow .dd::before{content:"▸ ";color:var(--accent)}.card.open .drow .dd::before{content:"▾ "}
 #mdays .card{border:0;border-radius:0;padding:0;border-top:1px solid var(--line)}
 #mdays .card:first-child{border-top:0}
 #mdays .card.today{box-shadow:inset 4px 0 0 var(--accent)}
 #mdays .card.open{background:var(--bg)}
-.drow{display:grid;grid-template-columns:4.6em minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 12px;min-height:46px;cursor:pointer}
+.drow{display:grid;grid-template-columns:5.6em minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 12px;min-height:46px;cursor:pointer}
 .drow .dd b{font-weight:700;font-variant-numeric:tabular-nums}
 .drow .dd small{display:block;font-size:11px;color:var(--accent);font-weight:600}
 .drow .dm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
@@ -265,7 +265,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.23 · 20/10/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.24 · 20/10/2026</span></p>
     </div>
   </header>
 
@@ -477,7 +477,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.23 · 20/10/2026</span></p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.24 · 20/10/2026</span></p>
   <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
