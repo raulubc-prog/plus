@@ -70,6 +70,10 @@ input[type=file]{display:none}
 .btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 .btn:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .banner{background:var(--warn-soft);color:var(--warn);border-radius:6px;padding:8px 12px;font-weight:500}
+/* v2.3.22: avisos de prototipo y de importe orientativo */
+.proto{border:1px solid var(--warn);font-weight:600}
+.nodev{color:var(--warn);font-weight:600;font-size:13px}
+p.nodev{margin:-4px 0 0}
 .status{color:var(--muted);font-size:14px}
 details summary{cursor:pointer;color:var(--fg);font-family:var(--display);font-weight:600;font-size:18px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-top:12px}
@@ -259,9 +263,11 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.21 · 20/10/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.22 · 20/10/2026</span></p>
     </div>
   </header>
+
+  <p class="banner proto" id="proto" role="note">Prototipo. Los importes son orientativos y no sustituyen al cálculo oficial de la empresa.</p>
 
   <details class="privacy"><summary><b>Tus datos no salen de este móvil</b></summary><p>No hay servidor ni cuentas: lo que apuntas y los archivos que cargas se quedan solo en este navegador. Solo sale algo fuera si tú lo pides: la ruta que abres en Google Maps y, en el modo GPS, las coordenadas que se mandan a OSRM para calcular km por carretera. Si borras los datos del navegador se pierde todo, así que guarda una copia de vez en cuando.</p><p>Dudas o fallos: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a>. No mandes tus datos (obras, direcciones) si no hace falta: con contar el problema basta.</p></details>
 
@@ -295,6 +301,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
     <button class="btn primary" id="m_export" type="button" aria-haspopup="dialog">Exportar</button>
   </div>
   <section class="kpis" id="mkpis" data-only="man"></section>
+  <p class="nodev" data-only="man">Sin acuerdo firmado no hay devengo: los importes son orientativos.</p>
   <div class="banner" id="mpend" data-only="man" hidden></div>
   <label class="chk" data-only="man"><input type="checkbox" id="m_we"> Ver sábados y domingos</label>
   <div class="cards" id="mdays" data-only="man"></div>
@@ -348,12 +355,12 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <details class="panel" id="cfgbox">
     <summary>Ajustes del cálculo</summary>
     <div class="grid">
-      <label>Plus desde (fecha)<input type="date" id="c_desde"></label>
+      <label>Plus desde (fecha)<input type="date" id="c_desde"><span class="nodev">Sin acuerdo firmado no hay devengo: los importes son orientativos.</span></label>
       <label>Umbral (km)<input type="number" id="c_umbral" min="0" step="1"></label>
       <div class="pair"><label>Precio hora (€)<input type="number" id="c_eur" min="0" step="0.01"></label><label>o precio km (€)<input type="number" id="c_ekm" min="0" step="0.001" placeholder="vacío"></label></div>
       <label>Velocidad de conversión (km/h)<input type="number" id="c_vel" min="1" step="1"></label>
       <label data-only="gps">Cálculo
-        <select id="c_modo"><option value="km">Por km (km de más ÷ velocidad)</option><option value="tiempo">Por tiempo real</option></select>
+        <select id="c_modo"><option value="km">Por km (km de más ÷ velocidad)</option><option value="tiempo">Por tiempo real</option><option value="osrm">Por duración de la ruta (OSRM)</option></select>
       </label>
       <label data-only="gps">Parada máxima en ruta (min)<input type="number" id="c_parada" min="0" step="1"></label>
       <label data-only="gps">Parada máxima en sitio de paso (min)<input type="number" id="c_parada2" min="0" step="1"></label>
@@ -405,6 +412,8 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
 
   <h2 class="sect" id="dsum" data-only="gps">Días con plus</h2>
   <section class="kpis" id="kpis" data-only="gps"></section>
+  <p class="nodev" data-only="gps">Sin acuerdo firmado no hay devengo: los importes son orientativos.</p>
+  <div class="banner" id="osrmwarn" data-only="gps" role="status" hidden></div>
 
   <div class="cards" id="gdays" data-only="gps"></div>
   <section class="tablebox" data-only="gps" hidden>
@@ -466,7 +475,8 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · v2.3.21</p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.22 · 20/10/2026</span></p>
+  <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
 <script>
@@ -485,7 +495,7 @@ const okAj=(k,v)=>{
   if(k==='ekm'){if(v==='')return '';const n=num(v);return n>0&&n<1000?n:null}
   if(k==='desde')return v===''||(typeof v==='string'&&/^\d{4}-\d\d-\d\d$/.test(v))?v:null;
   if(k==='ini'||k==='fin')return typeof v==='string'&&/^\d\d:\d\d$/.test(v)?v:null;
-  if(k==='modo')return v==='km'||v==='tiempo'?v:null;
+  if(k==='modo')return v==='km'||v==='tiempo'||v==='osrm'?v:null;
   if(k==='kmsrc')return v==='obra'||v==='gps'?v:null;
   if(k==='casa')return typeof v==='string'&&v.length<=60&&parseCasa(v)?v:null;
   return null};
@@ -498,11 +508,16 @@ const ajMsg=ch=>ch.length?' Ojo: el archivo ha cambiado estos ajustes → '+ch.j
 const isCoord=p=>Array.isArray(p)&&p.length===2&&p.every(x=>typeof x==='number'&&isFinite(x))&&Math.abs(p[0])<=90&&Math.abs(p[1])<=180;
 const txt=(v,max)=>typeof v==='string'?v.slice(0,max):'';
 const kmOk=v=>{const n=num(v);return n!==null&&n>0&&n<5000?n:null};
+const vrOk=v=>{const n=num(v);return n!==null&&n>5&&n<200?n:null};
 const isDay=k=>typeof k==='string'&&/^\d{4}-\d\d-\d\d$/.test(k);
 const okModo=m=>m==='i'||m==='v'?m:'iv';
 const tooBig=f=>f.size>MAXCOPIA;
 const EKM=()=>(+cfg.ekm>0?+cfg.ekm:0); // v2.3.2: precio por km de más (si se pone, manda sobre el precio hora)
-const calcTxt=()=>EKM()?EKM().toLocaleString('es-ES',{maximumFractionDigits:3})+' €/km de más':(cfg.modo==='tiempo'&&MODE!=='man')?cfg.eur+' €/h por tiempo real de conducción':cfg.eur+' €/h a '+cfg.vel+' km/h';
+const calcTxt=()=>EKM()?EKM().toLocaleString('es-ES',{maximumFractionDigits:3})+' €/km de más':(cfg.modo==='tiempo'&&MODE!=='man')?cfg.eur+' €/h por tiempo real de conducción':(cfg.modo==='osrm'&&MODE!=='man')?cfg.eur+' €/h; horas según la duración de la ruta casa-obra en OSRM'+(osrmFb?' ('+osrmFb+' trayectos sin duración, a '+cfg.vel+' km/h)':''):cfg.eur+' €/h a '+cfg.vel+' km/h';
+// v2.3.22: modo OSRM. Velocidad media de la ruta casa → obra (km ÷ duración de OSRM); si falta, km ÷ velocidad fija.
+let osrmFb=0;
+const vrOf=o=>{const s=o&&o.sv;return s&&s.vr>0?s.vr:null};
+const impOf=(extra,km,min,o)=>{if(EKM())return extra*EKM();if(cfg.modo==='tiempo')return min*extra/km/60*cfg.eur;if(cfg.modo==='osrm'){const v=vrOf(o);if(v)return extra/v*cfg.eur;osrmFb++}return extra*cfg.eur/cfg.vel};
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const isObj=v=>v&&typeof v==='object'&&!Array.isArray(v);
 let cfg=Object.assign({},DEF,isObj(store.get('pd_cfg',{}))?store.get('pd_cfg',{}):{});
@@ -604,7 +619,7 @@ function obraName(o,H){return (o.sv&&o.sv.name)||('Obra a '+Math.round(dist(H,o.
 
 function compute(){
   const H=parseCasa(cfg.casa)||home;if(!drives||!H){obras=[];return []}
-  obras=buildObras(H);
+  obras=buildObras(H);osrmFb=0;
   const md=mergedDays(H,true);const days=[];
   for(const day of Object.keys(md)){
     const trips=[];
@@ -615,7 +630,7 @@ function compute(){
       if(cfg.kmsrc==='obra'&&hs!==he){const o=hs?oe:os;const k=o&&obraKm(o);if(k){km=k.km;fixed=k.src}}
       if(km<=cfg.umbral)continue;
       const min=(new Date(m.end)-new Date(m.start))/60000,extra=km-cfg.umbral;
-      const imp=EKM()?extra*EKM():cfg.modo==='tiempo'?min*extra/km/60*cfg.eur:extra*cfg.eur/cfg.vel;
+      const imp=impOf(extra,km,min,hs!==he?(hs?oe:os):null);
       const lab=(p,o,h)=>h?'Casa':o?obraName(o,H):'Obra a '+Math.round(dist(H,p))+' km';
       trips.push({ini:m.start.slice(11,16),fin:m.end.slice(11,16),km,gps:m.km,fixed,min,extra,imp,stops:m.stops,de:lab(m.s,os,hs),a:lab(m.e,oe,he)});
     }
@@ -625,11 +640,11 @@ function compute(){
   for(const x of manual){
     if(cfg.desde&&x.day<cfg.desde)continue;
     {const g=days.find(d=>d.day===x.day);if(g){if(g.trips.some(t=>t.de!=='Casa'||t.a!=='Casa'))continue;days.splice(days.indexOf(g),1)}}
-    let km=x.km,nm=x.name||'Obra';
-    if(x.p){const o=obraOf(x.p);if(o){const k=obraKm(o);if(k)km=k.km;nm=obraName(o,H)}}
+    let km=x.km,nm=x.name||'Obra',xo=null;
+    if(x.p){const o=obraOf(x.p);if(o){xo=o;const k=obraKm(o);if(k)km=k.km;nm=obraName(o,H)}}
     if(!(km>cfg.umbral))continue;
-    const extra=km-cfg.umbral,min=km/cfg.vel*60,imp=EKM()?extra*EKM():cfg.modo==='tiempo'?min*extra/km/60*cfg.eur:extra*cfg.eur/cfg.vel;
-    const t=(de,a)=>({ini:'—',fin:'—',km,gps:km,fixed:'a mano',min,extra,imp,stops:0,de,a,mano:true});
+    const extra=km-cfg.umbral,min=km/cfg.vel*60;
+    const t=(de,a)=>({ini:'—',fin:'—',km,gps:km,fixed:'a mano',min,extra,imp:impOf(extra,km,min,xo),stops:0,de,a,mano:true});
     const trips=x.modo==='i'?[t('Casa',nm)]:x.modo==='v'?[t(nm,'Casa')]:[t('Casa',nm),t(nm,'Casa')];
     days.push({day:x.day,trips,extra:trips.reduce((s,t)=>s+t.extra,0),imp:trips.reduce((s,t)=>s+t.imp,0),largo:false,mano:true});
   }
@@ -668,7 +683,7 @@ function renderObras(){
     return `<tr class="${off?'flag':''}"><td><input class="nm" data-i="${i}" data-f="name" value="${escH(s.name||'')}" placeholder="Obra a ${Math.round(dist(H,o.p))} km (recta)" aria-label="Nombre de la obra"><div class="small">${all?'última: '+o.last.split('-').reverse().join('/'):'última: '+(lastM||'').split('-').reverse().join('/')} · <b>${all?o.n:dM} ${(all?o.n:dM)===1?'visita':'visitas'}</b>${all?'':(o.n!==dM?' ('+o.n+' en total)':'')}${off?' <span class="chip bad">revisar</span>':''}</div></td>
       <td class="num">${all?o.n:dM}<div class="small">${(all?o.n:dM)===1?'día':'días'}${all?'':(view==='mes'?' este mes':' en el periodo')}${all?'':'<br>'+o.n+' en total'}</div></td>
       <td class="num ${offG?'diff':''}">${o.med?n1(o.med):'—'}<div class="small">${o.km.length} trayectos</div></td>
-      <td class="num ${off?'diff':''}">${s.osrm?n1(s.osrm):`<button class="btn sm" data-osrm="${i}">Calcular</button>`}</td>
+      <td class="num ${off?'diff':''}">${s.osrm?n1(s.osrm)+(s.vr>0?`<div class="small">${Math.round(s.osrm/s.vr*60)} min · ${Math.round(s.vr)} km/h</div>`:''):`<button class="btn sm" data-osrm="${i}">Calcular</button>`}</td>
       <td class="num ${off?'diff':''}"><input class="km" type="number" min="0" step="0.1" inputmode="decimal" data-i="${i}" data-f="man" value="${isFinite(s.man)&&s.man>0?s.man:''}" placeholder="${used?n1(used.km):'km'}" aria-label="Km de casa a la obra"><div class="small">${isFinite(s.man)&&s.man>0?'a mano':used?(used.src==='GPS'?'del GPS':'por carretera'):'escribe los km'}${off?' · revisar':''}</div></td>
       <td class="num">${used?`<span class="used">${n1(used.km)}</span><span class="src">${used.src}</span>`:'—'}</td>
       <td><div class="small">${ll6}</div><div class="acts"><button class="btn sm" data-copy="${i}">Copiar</button><a class="btn sm" href="https://www.google.com/maps/search/?api=1&query=${o.p[0].toFixed(6)},${o.p[1].toFixed(6)}" target="_blank" rel="noopener">Ver punto</a></div></td></tr>`;
@@ -681,17 +696,17 @@ async function osrm(o){
   const url=`https://router.project-osrm.org/route/v1/driving/${H[1]},${H[0]};${o.p[1]},${o.p[0]}?overview=false`;
   const r=await fetch(url);if(!r.ok)throw new Error('http '+r.status);
   const j=await r.json();if(j.code!=='Ok'||!j.routes||!j.routes[0])throw new Error(j.code||'sin ruta');
-  return j.routes[0].distance/1000;
+  const r0=j.routes[0];return {km:r0.distance/1000,h:r0.duration/3600};
 }
 async function doOsrm(list){
   const msg=$('osrmmsg');let ok=0,bad=0;
   for(let k=0;k<list.length;k++){
     const o=list[k];msg.textContent=`Calculando por carretera ${k+1} de ${list.length}…`;
-    try{const km=await osrm(o);const s=savedFor(o,true);s.osrm=+km.toFixed(1);o.sv=s;ok++}catch(e){bad++}
+    try{const r=await osrm(o);const s=savedFor(o,true);s.osrm=+r.km.toFixed(1);if(r.h>0){const v=r.km/r.h;if(v>5&&v<200)s.vr=+v.toFixed(1)}o.sv=s;ok++}catch(e){bad++}
     if(k<list.length-1)await new Promise(r=>setTimeout(r,1100));
   }
   persistSaved();
-  msg.textContent=bad?`Hecho: ${ok} calculadas, ${bad} sin respuesta. El servidor de prueba a veces falla: vuelve a intentarlo. Si sigue sin responder, abre la copia de la app que tienes en el PC (carpeta app), que sí puede conectarse.`:`Hecho: ${ok} calculadas por carretera.`;
+  msg.textContent=bad?`Hecho: ${ok} calculadas, ${bad} sin respuesta. El servidor de prueba a veces falla: vuelve a intentarlo. Si sigue sin responder, abre la copia de la app que tienes en el PC (carpeta app), que sí puede conectarse.${cfg.modo==='osrm'?' Mientras tanto, esas obras se calculan con km ÷ velocidad ('+cfg.vel+' km/h).':''}`:`Hecho: ${ok} calculadas por carretera.`;
   renderSoon();
 }
 
@@ -700,8 +715,9 @@ let current=[];
 let gOpen=null;
 function render(){
   const eqKm=cfg.eur/cfg.vel;
-  $('eqhint').textContent=EKM()?`Se paga ${EKM().toLocaleString('es-ES',{maximumFractionDigits:3})} € por cada km de más (precio km puesto; el precio hora no se usa). Déjalo vacío para calcular por hora.`:cfg.modo==='km'?`Equivale a ${eqKm.toLocaleString('es-ES',{maximumFractionDigits:3})} € por km de más (${cfg.eur} €/h a ${cfg.vel} km/h).`:'Por tiempo real: minutos del trayecto × parte de km por encima del umbral × precio hora. Incluye las paradas cortas.';
+  $('eqhint').textContent=EKM()?`Se paga ${EKM().toLocaleString('es-ES',{maximumFractionDigits:3})} € por cada km de más (precio km puesto; el precio hora no se usa). Déjalo vacío para calcular por hora.`:(cfg.modo==='km'||MODE==='man')?`Equivale a ${eqKm.toLocaleString('es-ES',{maximumFractionDigits:3})} € por km de más (${cfg.eur} €/h a ${cfg.vel} km/h).`:cfg.modo==='osrm'?`Por duración de la ruta: km de más ÷ velocidad media de la ruta casa → obra según OSRM × precio hora. Si una obra no tiene duración de OSRM, se usa km ÷ ${cfg.vel} km/h. Para pedirla se mandan a OSRM las coordenadas de casa y de la obra.`:'Por tiempo real: minutos del trayecto × parte de km por encima del umbral × precio hora. Incluye las paradas cortas.';
   const days=compute();
+  {const w=$('osrmwarn');const on=cfg.modo==='osrm'&&!EKM()&&osrmFb>0;w.hidden=!on;if(on)w.textContent=`⚠ ${osrmFb===1?'1 trayecto':osrmFb+' trayectos'} sin duración de OSRM (obra sin calcular, OSRM sin respuesta o trayecto que no es casa ↔ obra): se calculan con km ÷ velocidad (${cfg.vel} km/h). Para reintentar, pulsa "Calcular km por carretera" en Obras.`}
   const months=[...new Set(days.map(d=>d.day.slice(0,7)))].sort().reverse();
   const sel=$('month');const prev=sel.value;
   sel.innerHTML=months.map(m=>`<option value="${m}">${MES[+m.slice(5)-1]} ${m.slice(0,4)}</option>`).join('');
@@ -802,7 +818,7 @@ $('obimpf').addEventListener('change',e=>{
     const ch=applyAj(j.ajustes,['umbral','eur','ekm','vel','modo','desde','parada','parada2','ini','fin','kmsrc'].concat(cfg.casa?[]:['casa']));
     if(!cfg.casa&&isCoord(j.casa)){cfg.casa=j.casa[0]+', '+j.casa[1];store.set('pd_cfg',cfg);$('c_casa').value=cfg.casa}
     if(isExample)saved=store.get('pd_obras',[]).concat(saved.filter(x=>x.name==='Obra de ejemplo (Huesca)'));
-    let n=0;for(const o of j.obras){if(!o||typeof o!=='object'||!isCoord(o.p))continue;const name=txt(o.name,120),man=kmOk(o.man),osrm=kmOk(o.osrm);const s=findSaved(o.p);if(s){s.name=name||s.name;s.man=man??s.man;s.osrm=osrm??s.osrm}else saved.push({p:o.p,name,man,osrm});n++}
+    let n=0;for(const o of j.obras){if(!o||typeof o!=='object'||!isCoord(o.p))continue;const name=txt(o.name,120),man=kmOk(o.man),osrm=kmOk(o.osrm),vr=vrOk(o.vr);const s=findSaved(o.p);if(s){s.name=name||s.name;s.man=man??s.man;s.osrm=osrm??s.osrm;if(vr)s.vr=vr}else{const x={p:o.p,name,man,osrm};if(vr)x.vr=vr;saved.push(x)}n++}
     if(isExample){store.set('pd_obras',saved.filter(x=>x.name!=='Obra de ejemplo (Huesca)'));const t=store.get('pd_obras',[]).length;saved=[{p:[42.14,-0.41],name:'Obra de ejemplo (Huesca)',man:null,osrm:null}];$('osrmmsg').innerHTML=`<b>✓ Cargadas ${n} obras de ${escH(f.name)}</b> (${t} guardadas en el móvil). Se verán en la lista cuando cargues tu Cronología: las obras salen de los sitios donde paraste.${escH(ajMsg(ch))}`}
     else{persistSaved();$('osrmmsg').innerHTML=`<b>✓ Cargadas ${n} obras de ${escH(f.name)}.</b>${escH(ajMsg(ch))}`}render()}
     catch(_){let t='';try{t=JSON.parse(rd.result).tipo}catch(__){}
@@ -810,7 +826,7 @@ $('obimpf').addEventListener('change',e=>{
     e.target.value=''};
   rd.readAsText(f);
 });
-$('osrmall').addEventListener('click',()=>{const list=obras.filter(o=>!(o.sv&&o.sv.osrm));if(!list.length){$('osrmmsg').textContent='Todas las obras ya tienen km por carretera.';return}doOsrm(list)});
+$('osrmall').addEventListener('click',()=>{const list=obras.filter(o=>!(o.sv&&o.sv.osrm)||(cfg.modo==='osrm'&&!vrOf(o)));if(!list.length){$('osrmmsg').textContent='Todas las obras ya tienen km por carretera.';return}doOsrm(list)});
 
 
 $('gdays').addEventListener('click',e=>{if(e.target.closest('input,label'))return;const r=e.target.closest('[data-gtog]');if(!r)return;gOpen=gOpen===r.dataset.gtog?null:r.dataset.gtog;render()});
@@ -837,7 +853,9 @@ function renderQuick(){
 
 // ajustes
 const F={desde:'c_desde',umbral:'c_umbral',eur:'c_eur',vel:'c_vel',modo:'c_modo',ekm:'c_ekm',parada:'c_parada',parada2:'c_parada2',ini:'c_ini',fin:'c_fin',casa:'c_casa',kmsrc:'c_kmsrc'};
-for(const k in F){const el=$(F[k]);el.value=cfg[k];el.addEventListener('change',()=>{let v=el.value;if(['umbral','eur','vel','parada','parada2'].includes(k)){v=parseFloat(String(v).replace(',','.'));if(!isFinite(v)||v<0||(k==='vel'&&!(v>0)))v=DEF[k];el.value=v}if(['ini','fin'].includes(k)&&!/^\d\d:\d\d$/.test(v)){v=DEF[k];el.value=v}if(k==='ekm'){v=parseFloat(String(v).replace(',','.'));if(!(v>0))v='';el.value=v}cfg[k]=v;store.set('pd_cfg',cfg);render()})}
+for(const k in F){const el=$(F[k]);el.value=cfg[k];el.addEventListener('change',()=>{let v=el.value;if(['umbral','eur','vel','parada','parada2'].includes(k)){v=parseFloat(String(v).replace(',','.'));if(!isFinite(v)||v<0||(k==='vel'&&!(v>0)))v=DEF[k];el.value=v}if(['ini','fin'].includes(k)&&!/^\d\d:\d\d$/.test(v)){v=DEF[k];el.value=v}if(k==='ekm'){v=parseFloat(String(v).replace(',','.'));if(!(v>0))v='';el.value=v}cfg[k]=v;store.set('pd_cfg',cfg);render();
+  // v2.3.22: al elegir "Por duración de la ruta", se pide a OSRM la duración de las obras que no la tienen (solo entonces)
+  if(k==='modo'&&v==='osrm'&&drives){const list=obras.filter(o=>!vrOf(o));if(list.length)doOsrm(list)}})}
 
 // carga
 function loadText(txt,name){
@@ -884,7 +902,7 @@ function renderX(){
   const kmx=current.filter(d=>!XE()[d.day]).reduce((s,d)=>s+d.extra,0);
   $('x_s1').textContent=$('x_sub').textContent;
   $('x_s2').textContent=`Días: ${on.length} · Km de más: ${Math.round(kmx)} · Importe: ${tot.toFixed(2).replace('.',',')} €`;
-  $('x_s3').textContent=`Cálculo: más de ${cfg.umbral} km por trayecto; ${calcTxt()}. Km de obra: ruta más corta sin peaje (manual) o GPS. Generado el ${new Date().toLocaleDateString('es-ES')}.`;
+  $('x_s3').textContent=`Cálculo: más de ${cfg.umbral} km por trayecto; ${calcTxt()}. Km de obra: ruta más corta sin peaje (manual) o GPS. Generado el ${new Date().toLocaleDateString('es-ES')}. Sin acuerdo firmado no hay devengo: los importes son orientativos.`;
 }
 $('m_export').addEventListener('click',()=>$('copy').click());
 $('copy').addEventListener('click',()=>{const x=$('xport');$('x_msg').textContent='';try{x.showModal()}catch(_){x.setAttribute('open','')}renderX()});
@@ -918,8 +936,9 @@ async function xPdf(){
   doc.setFontSize(16);doc.text('Plus de desplazamiento',14,15);
   doc.setFontSize(10);doc.text($('x_sub').textContent,14,22);
   doc.text(`Días: ${on.length} · Km de más: ${Math.round(km)} · Importe: ${tot.toFixed(2).replace('.',',')} €`,14,28);
-  doc.setFontSize(8);doc.setTextColor(100);doc.text(`Cálculo: más de ${cfg.umbral} km por trayecto; ${calcTxt()}. Km de obra: ruta más corta sin peaje (manual) o GPS. Generado el ${new Date().toLocaleDateString('es-ES')}.`,14,33);doc.setTextColor(0);
-  doc.autoTable({startY:37,head:[XH],body:xRows(),styles:{fontSize:8,cellPadding:1.5},headStyles:{fillColor:[11,78,162]},columnStyles:{3:{halign:'right'},5:{halign:'right'},6:{halign:'right'},7:{halign:'right'}},
+  doc.setFontSize(8);doc.setTextColor(100);doc.text(doc.splitTextToSize(`Cálculo: más de ${cfg.umbral} km por trayecto; ${calcTxt()}. Km de obra: ruta más corta sin peaje (manual) o GPS. Generado el ${new Date().toLocaleDateString('es-ES')}.`,268),14,33);
+  doc.setTextColor(163,93,0);doc.text('Prototipo. Sin acuerdo firmado no hay devengo: los importes son orientativos. No sustituyen al cálculo oficial de la empresa.',14,41);doc.setTextColor(0);
+  doc.autoTable({startY:45,head:[XH],body:xRows(),styles:{fontSize:8,cellPadding:1.5},headStyles:{fillColor:[11,78,162]},columnStyles:{3:{halign:'right'},5:{halign:'right'},6:{halign:'right'},7:{halign:'right'}},
     foot:[['Total','','','','','','',tot.toFixed(2).replace('.',',')]],footStyles:{fillColor:[227,236,248],textColor:20,fontStyle:'bold'}});
   return doc.output('blob');
 }

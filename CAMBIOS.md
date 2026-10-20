@@ -5,6 +5,11 @@ Web: https://raulubc-prog.github.io/plus/ · Enlace modo manual: https://raulubc
 Historial de GitHub reiniciado el 19/10/2026 (v2.3.19) por privacidad; las versiones anteriores solo quedan descritas aquí.
 
 ## 20/10/2026
+- **v2.3.22** — Para enseñar al comité (borrador del acuerdo y textos legales):
+  - Aviso arriba: "Prototipo. Los importes son orientativos y no sustituyen al cálculo oficial de la empresa."
+  - "Plus desde" vacío por defecto y, junto al campo, en el resultado y en el PDF: "Sin acuerdo firmado no hay devengo: los importes son orientativos." "Km para el plus" sigue por defecto en "Km fijos de la obra". Quien ya tenía ajustes guardados los conserva.
+  - Nueva opción en "Cálculo": "Por duración de la ruta (OSRM)". Pasa los km de más a horas con la velocidad media de la ruta casa → obra según OSRM, en vez de los 90 km/h fijos. OSRM solo se consulta al elegir esta opción o al pulsar "Calcular km por carretera". Si OSRM no responde, se calcula con km ÷ velocidad y se avisa en pantalla. La tabla de obras muestra la duración y la velocidad de la ruta.
+  - Pie: "© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso." Versión igual en cabecera y pie.
 - **v2.3.21** — Seguridad y privacidad, sin cambios visibles en el uso:
   - Las fuentes (Barlow) y la librería del PDF (jsPDF) se sirven desde el propio repo: ninguna visita pasa ya por Google Fonts ni por un CDN externo. Lo único que sale fuera sigue siendo lo que dice el aviso: OSRM (si lo pides) y Google Maps (si abres la ruta).
   - Política de contenido (CSP): la página solo puede conectarse a OSRM; cualquier otro envío de datos queda bloqueado por el navegador.
