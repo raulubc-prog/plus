@@ -265,7 +265,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.24 · 20/10/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.25 · 20/10/2026</span></p>
     </div>
   </header>
 
@@ -287,7 +287,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
     <div class="acts" style="margin-top:12px"><label class="btn primary" for="mb_load" style="display:inline-block;min-height:24px">Cargar obras o copia de archivo</label></div>
     <div class="oblist" id="moblist"></div>
     <div class="obitem" style="margin-top:12px;background:var(--surface)">
-      <label>Nueva obra<input type="text" id="mn_name" placeholder="Nombre (ej. Llodio)"></label>
+      <label>Nueva obra<input type="text" id="mn_name" placeholder="Nombre (ej. Huesca centro)"></label>
       <label class="wide">Dirección (opcional)<input type="text" id="mn_dir" placeholder="Calle, número, localidad"></label>
       <label>Km<input type="number" id="mn_km" min="0" step="0.1" inputmode="decimal" placeholder="km"></label>
       <div class="acts"><button class="btn primary" id="mn_add" type="button" style="min-height:40px">Añadir obra</button></div>
@@ -374,7 +374,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       </label>
     </div>
     <p class="hint" id="eqhint"></p>
-    <p class="hint" data-only="gps">Reglas: lunes a viernes; una parada de hasta la parada máxima no corta el trayecto; una más larga es una obra. Si un sitio de la tabla de obras no es obra (dejar a un compañero, gasolinera, compra), ponle un nombre que empiece por "paso" (ej. "paso: compañero Laredo"): ahí la parada solo corta el trayecto si pasa de la parada máxima en sitio de paso. Cuenta cada trayecto de más del umbral. Con "km fijos de la obra", los trayectos casa ↔ obra usan los km de la tabla de obras (manual, si no carretera, si no mediana del GPS); el resto usa el GPS.</p>
+    <p class="hint" data-only="gps">Reglas: lunes a viernes; una parada de hasta la parada máxima no corta el trayecto; una más larga es una obra. Si un sitio de la tabla de obras no es obra (dejar a un compañero, gasolinera, compra), ponle un nombre que empiece por "paso" (ej. "paso: compañero Tudela"): ahí la parada solo corta el trayecto si pasa de la parada máxima en sitio de paso. Cuenta cada trayecto de más del umbral. Con "km fijos de la obra", los trayectos casa ↔ obra usan los km de la tabla de obras (manual, si no carretera, si no mediana del GPS); el resto usa el GPS.</p>
   </details>
 
   <div class="bar" style="align-items:flex-end" data-only="gps">
@@ -477,7 +477,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.24 · 20/10/2026</span></p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.25 · 20/10/2026</span></p>
   <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
@@ -568,7 +568,7 @@ function parseTimeline(j){
 const isWork=(iso,useDesde)=>{const day=iso.slice(0,10),hm=iso.slice(11,16),wd=new Date(day+'T12:00:00').getDay();if(useDesde&&cfg.desde&&day<cfg.desde)return false;if(manual.some(x=>x.day===day))return true;return wd!==0&&wd!==6&&hm>=cfg.ini&&hm<=cfg.fin};
 const median=a=>{if(!a.length)return null;const s=[...a].sort((x,y)=>x-y),m=s.length>>1;return s.length%2?s[m]:(s[m-1]+s[m])/2};
 
-// Sitios de paso: en la tabla de obras, un nombre que empieza por "paso" (p. ej. "paso: compañero Laredo")
+// Sitios de paso: en la tabla de obras, un nombre que empieza por "paso" (p. ej. "paso: compañero Tudela")
 // marca un sitio que NO es obra. Ahí la parada puede durar hasta la "parada máxima en sitio de paso" sin cortar el trayecto.
 const isPaso=n=>/^\s*paso\b/i.test(String(n||''));
 function pasoAt(pt){if(!pt)return false;return saved.some(s=>isPaso(s.name)&&dist(s.p,pt)<MATCH_R)}

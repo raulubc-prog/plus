@@ -5,6 +5,7 @@ Web: https://raulubc-prog.github.io/plus/ · Enlace modo manual: https://raulubc
 Historial de GitHub reiniciado el 19/10/2026 (v2.3.19) por privacidad; las versiones anteriores solo quedan descritas aquí.
 
 ## 20/10/2026
+- **v2.3.25** — Ejemplos de nombres de obra y de parada cambiados por lugares inventados ("Huesca centro", "paso: compañero Tudela").
 - **v2.3.24** — La flecha ▸/▾ también en las tarjetas de cada día del modo "Apuntar a mano".
 - **v2.3.23** — En "Días con plus", cada fila lleva ▸ (▾ al abrirla) para que se vea que se despliega. Aviso de privacidad más completo: sin cookies ni rastreo, OSRM es un servidor de FOSSGIS en la UE, GitHub Pages registra la IP de cada visita, y no escribir nombres de otras personas. Atribución de OpenStreetMap (ODbL) junto a "Km carretera".
 - **v2.3.22** — Para enseñar al comité (borrador del acuerdo y textos legales):
