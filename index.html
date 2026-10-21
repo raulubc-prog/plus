@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex">
 <title>Plus Desplazamiento</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src https://router.project-osrm.org; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; worker-src 'self'; connect-src 'self' https://router.project-osrm.org; base-uri 'none'; form-action 'none'; object-src 'none'">
 <style>
 /* Fuentes Barlow (licencia OFL, ver fonts/LICENSE-Barlow.txt) servidas desde este mismo repo: ninguna visita pasa por Google. */
 @font-face{font-family:'Barlow';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/barlow-latin-400-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
@@ -115,6 +115,15 @@ h2{font-family:var(--display);font-weight:700;font-size:22px;margin:0}
 /* hoja de vista previa: siempre blanca, como el PDF */
  #xport{border:0;padding:0;margin:auto;width:min(720px,100vw);max-width:100vw;max-height:100dvh;background:var(--surface);color:var(--fg);border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.4)}
 #xport::backdrop{background:rgba(5,10,20,.6)}
+#otcam{border:0;padding:12px;margin:auto;width:min(560px,100vw);max-width:100vw;max-height:100dvh;background:var(--surface);color:var(--fg);border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.4);box-sizing:border-box}
+#otcam::backdrop{background:rgba(5,10,20,.75)}
+#otcam .camtit{margin:0 0 8px}
+#otcam .camwrap{position:relative;overflow:hidden;background:#000;border-radius:8px;height:min(62dvh,560px)}
+#otcam video{display:block;width:100%;height:100%;object-fit:contain}
+#otcam .camframe{position:absolute;left:4%;right:4%;top:50%;transform:translateY(-50%);aspect-ratio:3/1;border:3px solid #ffd54a;border-radius:6px;box-shadow:0 0 0 9999px rgba(0,0,0,.45);pointer-events:none}
+#otcam .camhint{margin:8px 0 0}
+#otcam .camacts{margin-top:8px}
+@media (max-width:640px){#otcam{width:100vw;height:100dvh;border-radius:0}}
 @media (max-width:640px){#xport{width:100vw;height:100dvh;border-radius:0}}
 .xbar{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:16px 16px 6px;position:sticky;top:0;background:var(--surface)}
 .xhead b{display:block;font-family:var(--display);font-size:24px}
@@ -265,13 +274,13 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.25 · 20/10/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.28 · 21/10/2026</span></p>
     </div>
   </header>
 
   <p class="banner proto" id="proto" role="note">Prototipo. Los importes son orientativos y no sustituyen al cálculo oficial de la empresa.</p>
 
-  <details class="privacy"><summary><b>Tus datos no salen de este móvil</b></summary><p>No hay servidor ni cuentas: lo que apuntas y los archivos que cargas se quedan solo en este navegador (almacenamiento local; sin cookies ni rastreo). Solo sale algo fuera si tú lo pides: la ruta que abres en Google Maps y, en el modo GPS, las coordenadas de casa y de la obra que se mandan a OSRM (servidor público de FOSSGIS, en la UE) para calcular km por carretera. La página la aloja GitHub Pages, que registra la dirección IP de cada visita por seguridad (<a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">su política de privacidad</a>). Si borras los datos del navegador se pierde todo, así que guarda una copia de vez en cuando. No escribas nombres de otras personas: para una parada basta "paso: compañero".</p><p>Dudas o fallos: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a>. No mandes tus datos (obras, direcciones) si no hace falta: con contar el problema basta.</p></details>
+  <details class="privacy"><summary><b>Tus datos no salen de este móvil</b></summary><p>No hay servidor ni cuentas: lo que apuntas y los archivos que cargas se quedan solo en este navegador (almacenamiento local; sin cookies ni rastreo). Solo sale algo fuera si tú lo pides: la ruta que abres en Google Maps y, en el modo GPS, las coordenadas de casa y de la obra que se mandan a OSRM (servidor público de FOSSGIS, en la UE) para calcular km por carretera. La página la aloja GitHub Pages, que registra la dirección IP de cada visita por seguridad (<a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">su política de privacidad</a>). Si añades una obra con la foto de la Orden de Trabajo (con la cámara o una foto que elijas), la imagen se lee en este móvil, sin enviarla a ningún sitio, solo para sacar la localización de la obra: la foto y el resto del texto (nombres, cliente, números de orden…) no se guardan. Revisa lo que se rellena antes de añadirla. Si borras los datos del navegador se pierde todo, así que guarda una copia de vez en cuando. No escribas nombres de otras personas: para una parada basta "paso: compañero".</p><p>Dudas o fallos: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a>. No mandes tus datos (obras, direcciones) si no hace falta: con contar el problema basta.</p></details>
 
   <nav class="modes" role="tablist" aria-label="Forma de apuntar">
     <button class="mode" role="tab" data-mode="man" type="button">Apuntar a mano</button>
@@ -284,10 +293,11 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
     <summary id="msum">Tus obras</summary>
     <label style="margin-top:12px">Tu casa (dirección)<input type="text" id="mc_dir" placeholder="Calle, número, localidad" autocomplete="street-address"></label>
     <p class="hint">Solo sirve para abrir la ruta casa → obra en Google Maps y mirar los km.</p>
-    <div class="acts" style="margin-top:12px"><label class="btn primary" for="mb_load" style="display:inline-block;min-height:24px">Cargar obras o copia de archivo</label></div>
+    <div class="acts" style="margin-top:12px"><label class="btn primary" for="mb_load" style="display:inline-block;min-height:24px">Cargar obras o copia de archivo</label><button class="btn" id="ot_cam" type="button" style="min-height:24px">Hacer foto a la Orden de Trabajo</button><label class="btn" for="mb_ot" style="display:inline-block;min-height:24px">Elegir foto</label><input type="file" id="mb_ot" accept="image/*"><input type="file" id="mb_otcap" accept="image/*" capture="environment"></div>
+    <p class="hint">Haz una foto a la Orden de Trabajo de la carpeta de montaje (encaja la tabla de arriba en el recuadro) o elige una que ya tengas. Se lee aquí, en el móvil, y se rellena la obra con lo que pone en "Localización". Tú revisas, pones los km y la añades.</p>
     <div class="oblist" id="moblist"></div>
     <div class="obitem" style="margin-top:12px;background:var(--surface)">
-      <label>Nueva obra<input type="text" id="mn_name" placeholder="Nombre (ej. Huesca centro)"></label>
+      <label>Nueva obra<input type="text" id="mn_name" placeholder="Nombre (ej. Santiago centro)"></label>
       <label class="wide">Dirección (opcional)<input type="text" id="mn_dir" placeholder="Calle, número, localidad"></label>
       <label>Km<input type="number" id="mn_km" min="0" step="0.1" inputmode="decimal" placeholder="km"></label>
       <div class="acts"><button class="btn primary" id="mn_add" type="button" style="min-height:40px">Añadir obra</button></div>
@@ -388,6 +398,13 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <div class="bar" id="obquick" data-only="gps"><span class="small">Rápido:</span>
   </div>
 
+  <dialog id="otcam" aria-labelledby="otcam_t">
+    <p class="camtit" id="otcam_t"><b>Foto a la Orden de Trabajo</b></p>
+    <div class="camwrap"><video id="otvid" playsinline muted autoplay></video><div class="camframe" id="otframe"></div></div>
+    <p class="hint camhint">Encaja en el recuadro la tabla de arriba (de la primera fila a "Cliente"), de frente y con luz. La imagen no sale del móvil.</p>
+    <p class="status" id="otcammsg" role="status"></p>
+    <div class="acts camacts"><button class="btn primary" id="otcap" type="button">Capturar</button><label class="btn" for="mb_otcap" style="display:inline-block">Cámara del móvil</label><button class="btn" id="otcancel" type="button">Cancelar</button></div>
+  </dialog>
   <dialog id="xport" aria-labelledby="x_title">
     <div class="xbar">
       <div class="xhead"><b id="x_title">Exportar</b><span id="x_sub"></span></div>
@@ -477,7 +494,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.25 · 20/10/2026</span></p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.28 · 21/10/2026</span></p>
   <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
@@ -819,9 +836,9 @@ $('obimpf').addEventListener('change',e=>{
     if(j.excl&&typeof j.excl==='object'&&!Array.isArray(j.excl)){const base=isExample?store.get('pd_excl',{}):excl;for(const k in j.excl)if(isDay(k))base[k]=1;store.set('pd_excl',base);if(!isExample)excl=base}
     const ch=applyAj(j.ajustes,['umbral','eur','ekm','vel','modo','desde','parada','parada2','ini','fin','kmsrc'].concat(cfg.casa?[]:['casa']));
     if(!cfg.casa&&isCoord(j.casa)){cfg.casa=j.casa[0]+', '+j.casa[1];store.set('pd_cfg',cfg);$('c_casa').value=cfg.casa}
-    if(isExample)saved=store.get('pd_obras',[]).concat(saved.filter(x=>x.name==='Obra de ejemplo (Huesca)'));
+    if(isExample)saved=store.get('pd_obras',[]).concat(saved.filter(x=>x.name==='Obra de ejemplo (Santiago)'));
     let n=0;for(const o of j.obras){if(!o||typeof o!=='object'||!isCoord(o.p))continue;const name=txt(o.name,120),man=kmOk(o.man),osrm=kmOk(o.osrm),vr=vrOk(o.vr);const s=findSaved(o.p);if(s){s.name=name||s.name;s.man=man??s.man;s.osrm=osrm??s.osrm;if(vr)s.vr=vr}else{const x={p:o.p,name,man,osrm};if(vr)x.vr=vr;saved.push(x)}n++}
-    if(isExample){store.set('pd_obras',saved.filter(x=>x.name!=='Obra de ejemplo (Huesca)'));const t=store.get('pd_obras',[]).length;saved=[{p:[42.14,-0.41],name:'Obra de ejemplo (Huesca)',man:null,osrm:null}];$('osrmmsg').innerHTML=`<b>✓ Cargadas ${n} obras de ${escH(f.name)}</b> (${t} guardadas en el móvil). Se verán en la lista cuando cargues tu Cronología: las obras salen de los sitios donde paraste.${escH(ajMsg(ch))}`}
+    if(isExample){store.set('pd_obras',saved.filter(x=>x.name!=='Obra de ejemplo (Santiago)'));const t=store.get('pd_obras',[]).length;saved=[{p:[42.88,-8.54],name:'Obra de ejemplo (Santiago)',man:null,osrm:null}];$('osrmmsg').innerHTML=`<b>✓ Cargadas ${n} obras de ${escH(f.name)}</b> (${t} guardadas en el móvil). Se verán en la lista cuando cargues tu Cronología: las obras salen de los sitios donde paraste.${escH(ajMsg(ch))}`}
     else{persistSaved();$('osrmmsg').innerHTML=`<b>✓ Cargadas ${n} obras de ${escH(f.name)}.</b>${escH(ajMsg(ch))}`}render()}
     catch(_){let t='';try{t=JSON.parse(rd.result).tipo}catch(__){}
       $('osrmmsg').innerHTML=t==='plus-desplazamiento-manual'?'<b>Esa es una copia del modo "Apuntar a mano".</b> Cárgala en esa pestaña, en "Copia de seguridad".':'<b>No he podido leer ese archivo.</b> Tiene que ser el que guarda esta app con "Guardar obras en archivo" (obras_fecha.json).'}
@@ -1153,6 +1170,115 @@ $('mb_load').addEventListener('change',e=>{
   rd.readAsText(f);
 });
 
+// ---------- v2.3.27: obra desde la foto de la Orden de Trabajo ----------
+// La foto se lee aquí con Tesseract (lib/ocr, sin internet). Solo se usa el campo "Localización" (y Dirección/Localidad
+// para la ruta); la foto y el resto del texto (nombres, cliente, nº de orden…) no se guardan ni se envían.
+let ocrW=null;
+async function ocrWorker(){
+  if(ocrW)return ocrW;
+  if(!window.Tesseract)await loadScript('lib/ocr/tesseract.min.js');
+  ocrW=await Tesseract.createWorker('spa',1,{workerPath:'lib/ocr/worker.min.js',corePath:'lib/ocr/',langPath:'lib/ocr/',workerBlobURL:false,cacheMethod:'none'});
+  return ocrW;
+}
+// Recorte de la foto (la tabla de la obra está arriba), ampliada, en gris y con contraste; "ang" endereza fotos algo torcidas
+function fotoCanvas(bm,crop,W,ang){
+  const sh=bm.height*crop,k=W/bm.width,c=document.createElement('canvas');
+  c.width=W;c.height=Math.round(sh*k);
+  const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.filter='grayscale(1) contrast(1.4)';
+  g.translate(c.width/2,c.height/2);g.rotate(ang*Math.PI/180);g.drawImage(bm,0,0,bm.width,sh,-c.width/2,-c.height/2,c.width,c.height);
+  return c;
+}
+// Busca "Localización", "Dirección Equipo" y "Localidad" por su etiqueta; si la foto no deja leer las etiquetas,
+// usa las líneas con calle (C/, Avda., Plaza…): si delante de la calle hay texto ("OBRA X, C/ …") es la
+// Localización; si empieza por la calle, es la Dirección Equipo y la Localización es la línea siguiente.
+function leerOT(texto){
+  // la columna de la derecha (dirección de la empresa) se cuela al final de las líneas: código postal y lo que sigue,
+  // "Parque/Edificio/Planta…" y una palabra suelta en minúsculas tras un número o tras la localidad en mayúsculas
+  const EMP=/\s+(\d{5}\b.*|Parque\b.*|Edificio\b.*|Planta\b.*)$/i,EMP2=/(?<=\d|[A-ZÁÉÍÓÚÑ]{3})[\s"”“'’.,;:]*\s[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{3,}(\s+\S{1,3})?$/;
+  const ETQ=/^\W*(direcci\S*\s*(de\s*)?equipo|\S{0,8}aci[oó0]n|l?ocali\S*|cliente|t[eé]cnico\S*)\W*/i;
+  const ls=String(texto).split(/\n+/).map(l=>l.replace(/[|\[\]{}_—=]+/g,' ').replace(/\s+/g,' ').trim().replace(EMP,'').replace(EMP2,'').trim()).filter(Boolean);
+  const otra=l=>/^\W*(l?ocalidad|cliente|direcci)/i.test(l||'');
+  const campo=re=>{for(let i=0;i<ls.length;i++){const m=ls[i].match(re);if(!m)continue;let v=ls[i].slice(m.index+m[0].length).replace(/^[\s:.,\-]+/,'').trim();if(v.length<3)return ls[i+1]&&!otra(ls[i+1])?[ls[i+1],i+1]:['',-1];return [v,i]}return ['',-1]};
+  let [loc,li]=campo(/locali[sz]aci[oó0]n/i),[dir]=campo(/direcci[oó0]n\s*(de\s*)?equipo/i),[pob]=campo(/^\W*localidad\b/i);
+  const CALLE=/(^|\s)(C\s?\/|CL\.|C\.\/|CALLE|AVDA\.?|AVENIDA|PLAZA|PZA\.?|CTRA\.?|CARRETERA|BARRIO|BO\.|PASEO|POL[IÍ]GONO)\s/i;
+  let di=-1,lci=-1;
+  for(let i=0;i<ls.length&&i<60;i++){const m=ls[i].match(CALLE);if(!m||!/\d/.test(ls[i]))continue;
+    const pre=ls[i].slice(0,m.index).replace(ETQ,'');
+    if(/[A-Za-zÁÉÍÓÚÑáéíóúñ]{3,}/.test(pre)){if(lci<0)lci=i}else if(di<0){di=i;if(!dir)dir=ls[i].slice(m.index+m[1].length)}
+    if(di>=0&&lci>=0)break}
+  if(!loc||!/\d/.test(loc)){
+    if(lci>=0){loc=ls[lci].replace(ETQ,'');li=lci}
+    else if(di>=0&&ls[di+1]&&!otra(ls[di+1])){loc=ls[di+1].replace(ETQ,'');li=di+1}}
+  const lim=v=>txt(v,120).replace(/^[^0-9A-Za-zÁÉÍÓÚÑáéíóúñ]+/,'').replace(/\s+([,.])/g,'$1').replace(/[\s\-–.,:;"'”“’]+$/,'').trim();
+  loc=lim(loc);
+  const CAPS=/([A-ZÁÉÍÓÚÑ]{3,}(?:[ \-][A-ZÁÉÍÓÚÑ]{2,})*)/;
+  if(!pob){const m=loc.match(new RegExp(CAPS.source+'$'));if(m)pob=m[1]}
+  for(let k=1;k<=2&&!pob&&li>=0&&ls[li+k];k++){const m=ls[li+k].replace(/^\W*l?ocalidad\W*/i,'').match(new RegExp('^'+CAPS.source+'(?![A-Za-zÁÉÍÓÚÑáéíóúñ])'));if(m&&!/\d/.test(ls[li+k]))pob=m[1]}
+  dir=lim(dir);if(!CALLE.test(' '+dir+' '))dir=''; // si no parece una calle, la ruta usa el nombre
+  return {loc,dir,pob:lim(pob)};
+}
+// Lee la Orden de Trabajo de una imagen ya cargada (ImageBitmap) probando varios recortes/ángulos; rellena "Nueva obra"
+async function procesarOT(bm,pasos){
+  const msg=$('mn_msg');
+  msg.textContent='Leyendo la foto en este móvil… (la primera vez tarda un poco más: se carga el lector)';
+  try{
+    const w=await ocrWorker();
+    // si no sale la localidad, se prueba enderezando un poco la foto
+    let r=null;for(const [crop,W,ang] of pasos){const c=fotoCanvas(bm,crop,W,ang);const d=(await w.recognize(c)).data,x=leerOT(d.text);c.width=c.height=0;x.n=(x.loc?200:0)+(/\d/.test(x.loc)?200:0)+(x.pob?100:0)+(x.dir&&x.pob?50:0)+(/^[A-ZÁÉÍÓÚÑ0-9]{3,}/.test(x.loc)?30:0)+(+d.confidence||0);if(!r||x.n>r.n)r=x;if(x.n>=580)break}
+    bm.close&&bm.close();
+    const name=r.loc||[r.dir,r.pob].filter(Boolean).join(' ');
+    if(!name){msg.textContent='No he encontrado "Localización" en la foto. Hazla de frente, con buena luz y que se vea la tabla de arriba; o escribe la obra a mano.';return}
+    $('mn_name').value=name;$('mn_dir').value=r.dir&&r.pob?r.dir+', '+r.pob:name;
+    msg.textContent='Leído de la Orden de Trabajo. Revisa el nombre y la dirección, escribe los km de tu casa a la obra y pulsa "Añadir obra". ';
+    const a=document.createElement('a');a.href=mapsUrl({dir:$('mn_dir').value});a.target='_blank';a.rel='noopener';a.textContent='Ver ruta en Maps';msg.appendChild(a);
+    $('mset').open=true;$('mn_km').focus();
+  }catch(err){msg.textContent='No he podido leer la foto en este navegador. Escribe la obra a mano.'}
+}
+async function fotoOT(e){
+  const f=e.target.files[0];e.target.value='';if(!f)return;
+  const msg=$('mn_msg');
+  if(!/^image\//.test(f.type)&&!/\.(jpe?g|png|webp)$/i.test(f.name)){msg.textContent='Elige una foto (JPG o PNG) de la Orden de Trabajo.';return}
+  if(f.size>25e6){msg.textContent='La foto es demasiado grande.';return}
+  msg.textContent='Leyendo la foto en este móvil…';
+  let bm;try{bm=await createImageBitmap(f,{imageOrientation:'from-image'})}catch(_){msg.textContent='No he podido abrir esa foto. Escribe la obra a mano.';return}
+  procesarOT(bm,[[.4,3000,0],[.4,3000,-2],[.4,3000,2],[1,2400,0],[.4,3000,-5],[.4,3000,5]]);
+}
+$('mb_ot').addEventListener('change',fotoOT);
+$('mb_otcap').addEventListener('change',e=>{cerrarCam();fotoOT(e)});
+
+// ---------- v2.3.28: cámara dentro de la web, con recuadro para la tabla ----------
+// La imagen de la cámara no sale del móvil: se recorta lo que hay dentro del recuadro y se lee igual que una foto.
+let camStream=null;
+function cerrarCam(){
+  if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null}
+  $('otvid').srcObject=null;const d=$('otcam');if(d.open)d.close();
+}
+$('ot_cam').addEventListener('click',async()=>{
+  // sin cámara en la web (navegador antiguo o sin https): la cámara normal del móvil
+  if(!window.isSecureContext||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$('mb_otcap').click();return}
+  const d=$('otcam');$('otcammsg').textContent='Abriendo la cámara…';$('otcap').disabled=true;
+  try{d.showModal()}catch(_){d.setAttribute('open','')}
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});
+    const v=$('otvid');v.srcObject=camStream;await v.play();
+    $('otcammsg').textContent='';$('otcap').disabled=false;
+  }catch(err){$('otcammsg').textContent='No se ha podido abrir la cámara aquí (permiso denegado o sin cámara). Usa "Cámara del móvil" o "Elegir foto".'}
+});
+$('otcancel').addEventListener('click',cerrarCam);
+$('otcam').addEventListener('close',()=>{if(camStream)cerrarCam()});
+$('otcap').addEventListener('click',async()=>{
+  const v=$('otvid'),vw=v.videoWidth,vh=v.videoHeight;if(!vw||!vh)return;
+  // del recuadro en pantalla a píxeles del vídeo (el vídeo se ve entero: object-fit contain), con un 4 % de margen
+  const vr=v.getBoundingClientRect(),fr=$('otframe').getBoundingClientRect(),s=Math.min(vr.width/vw,vr.height/vh);
+  const ox=vr.left+(vr.width-vw*s)/2,oy=vr.top+(vr.height-vh*s)/2,m=0.04;
+  let x=(fr.left-ox)/s-fr.width/s*m,y=(fr.top-oy)/s-fr.height/s*m,w=fr.width/s*(1+2*m),h=fr.height/s*(1+2*m);
+  x=Math.max(0,x);y=Math.max(0,y);w=Math.min(vw-x,w);h=Math.min(vh-y,h);
+  const c=document.createElement('canvas');c.width=Math.round(w);c.height=Math.round(h);
+  c.getContext('2d').drawImage(v,x,y,w,h,0,0,c.width,c.height);
+  cerrarCam();
+  const bm=await createImageBitmap(c);c.width=c.height=0;
+  procesarOT(bm,[[1,3000,0],[1,3000,-2],[1,3000,2],[1,3000,-5],[1,3000,5]]);
+});
 // cambio de modo
 function setMode(m){
   MODE=m;store.set('pd_mode',m);document.body.dataset.mode=m;
@@ -1184,11 +1310,11 @@ $('unload').addEventListener('click',()=>{
 
 // ---------- ejemplo inicial: ciudades y cifras inventadas, sin relación con ningún usuario ----------
 function loadExample(){
-  const H=[41.65,-0.88],O=[42.14,-0.41]; // Zaragoza → Huesca, lugares y datos inventados
+  const H=[43.37,-8.40],O=[42.88,-8.54]; // A Coruña → Santiago, lugares y datos inventados
   const base=[['2026-10-01','07:30','08:30',72.0,'17:00','18:00',72.0],['2026-10-02','07:30','08:30',72.0,'17:00','18:00',72.0],['2026-10-05','07:30','08:30',72.0,'17:00','18:00',72.0],['2026-10-06','07:30','08:30',72.0,'17:00','18:00',72.0],['2026-10-07','07:30','08:30',72.0,'17:00','18:00',72.0]];
   drives=[];visits=[];
   for(const b of base){drives.push({start:`${b[0]}T${b[1]}:00+02:00`,end:`${b[0]}T${b[2]}:00+02:00`,s:H,e:O,km:b[3]});drives.push({start:`${b[0]}T${b[4]}:00+02:00`,end:`${b[0]}T${b[5]}:00+02:00`,s:O,e:H,km:b[6]});visits.push({start:`${b[0]}T${b[2]}:00+02:00`,end:`${b[0]}T${b[4]}:00+02:00`,p:O})}
-  home=H;manual=[];excl={};saved=[{p:O,name:'Obra de ejemplo (Huesca)',man:null,osrm:null}];
+  home=H;manual=[];excl={};saved=[{p:O,name:'Obra de ejemplo (Santiago)',man:null,osrm:null}];
   isExample=true;$('status').textContent='';
 }
 loadExample();
