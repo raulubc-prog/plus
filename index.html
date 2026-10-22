@@ -130,7 +130,7 @@ h2{font-family:var(--display);font-weight:700;font-size:22px;margin:0}
 .xhead span{color:var(--muted);font-size:14px}
 .xacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;padding:10px 16px}
 .xacts .btn{padding:14px 12px;font-size:16px}
-.xpart{display:block;padding:10px 16px 0;font-weight:600}.xpart select{display:block;width:100%;margin-top:6px;font-size:16px;padding:10px}
+.xpart{display:block;padding:10px 16px 0;font-weight:600}.xzero{display:flex;gap:8px;align-items:center;padding:10px 16px 0;font-size:15px}.xpart select{display:block;width:100%;margin-top:6px;font-size:16px;padding:10px}
 #xport .status{padding:0 16px;min-height:1.2em}
 .xprev{padding:6px 16px 16px}
 .xprev summary{font-family:var(--body);font-size:14px;color:var(--muted)}
@@ -279,7 +279,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.30 · 22/10/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.31 · 23/10/2026</span></p>
     </div>
   </header>
 
@@ -413,6 +413,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn" id="x_close" type="button" aria-label="Cerrar">✕</button>
     </div>
     <label class="xpart">Qué exportar<select id="x_part"><option value="">Todo lo de la pantalla</option></select></label>
+    <label class="chk xzero"><input type="checkbox" id="x_zero"> Incluir trayectos a 0 € (los que no pasan del umbral)</label>
     <div class="xacts">
       <button class="btn primary" id="x_open" type="button">Abrir PDF</button>
       <button class="btn" id="x_pdf" type="button">Guardar PDF</button>
@@ -497,7 +498,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.30 · 22/10/2026</span></p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.31 · 23/10/2026</span></p>
   <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
@@ -925,9 +926,11 @@ drop.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f){const rd=
 const XE=()=>MODE==='man'?{}:excl;
 // v2.3.30: exportar todo, una semana (lun–dom) o un día de lo que se ve
 const monOf=k=>{const d=new Date(k+'T12:00:00');d.setDate(d.getDate()-(d.getDay()+6)%7);return isoD(d)};
-const XD=()=>{const v=$('x_part').value;if(!v)return current;const k=v.slice(2);return current.filter(d=>v[0]==='w'?monOf(d.day)===k:d.day===k)};
+// v2.3.31: sin la casilla «Incluir trayectos a 0 €» (desmarcada por defecto) solo salen los trayectos con importe
+const XZ=()=>$('x_zero').checked?current:current.map(d=>d.trips.every(t=>t.imp>0)?d:Object.assign({},d,{trips:d.trips.filter(t=>t.imp>0)})).filter(d=>d.trips.length);
+const XD=()=>{const v=$('x_part').value,c=XZ();if(!v)return c;const k=v.slice(2);return c.filter(d=>v[0]==='w'?monOf(d.day)===k:d.day===k)};
 function fillPart(){const sel=$('x_part'),old=sel.value,fd=k=>k.split('-').reverse().join('/'),sh=k=>fd(k).slice(0,5);
-  const on=current.filter(d=>!XE()[d.day]).map(d=>d.day).sort();const W=[...new Set(on.map(monOf))];
+  const on=XZ().filter(d=>!XE()[d.day]).map(d=>d.day).sort();const W=[...new Set(on.map(monOf))];
   const sun=k=>{const d=new Date(k+'T12:00:00');d.setDate(d.getDate()+6);return isoD(d)};
   sel.innerHTML='<option value="">Todo lo de la pantalla</option>'+(W.length?'<optgroup label="Una semana">'+W.map(w=>`<option value="w:${w}">Semana del ${sh(w)} al ${sh(sun(w))}</option>`).join('')+'</optgroup><optgroup label="Un día">'+on.map(k=>`<option value="d:${k}">${DOW[new Date(k+'T12:00:00').getDay()]} ${fd(k)}</option>`).join('')+'</optgroup>':'');
   sel.value=[...sel.options].some(o=>o.value===old)?old:''}
@@ -955,7 +958,8 @@ function renderX(){
   $('x_s3').textContent=`Cálculo: más de ${cfg.umbral} km por trayecto; ${calcTxt()}. Km de obra: ruta más rápida según Google Maps (o la mediana del GPS como propuesta). Generado el ${new Date().toLocaleDateString('es-ES')}. Sin acuerdo firmado no hay devengo: los importes son orientativos.`;
 }
 $('m_export').addEventListener('click',()=>$('copy').click());
-$('copy').addEventListener('click',()=>{const x=$('xport');$('x_msg').textContent='';try{x.showModal()}catch(_){x.setAttribute('open','')}fillPart();renderX()});
+$('copy').addEventListener('click',()=>{const x=$('xport');$('x_msg').textContent='';try{x.showModal()}catch(_){x.setAttribute('open','')}$('x_zero').checked=false;fillPart();renderX()});
+$('x_zero').addEventListener('change',()=>{$('x_msg').textContent='';fillPart();renderX()});
 $('x_part').addEventListener('change',()=>{$('x_msg').textContent='';renderX()});
 $('x_close').addEventListener('click',()=>{try{$('xport').close()}catch(_){$('xport').removeAttribute('open')}});
 $('x_open').addEventListener('click',async()=>{
