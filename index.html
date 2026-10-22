@@ -274,7 +274,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.28 · 21/10/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.29 · 22/10/2026</span></p>
     </div>
   </header>
 
@@ -494,7 +494,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.28 · 21/10/2026</span></p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.29 · 22/10/2026</span></p>
   <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
@@ -1195,36 +1195,65 @@ function leerOT(texto){
   // la columna de la derecha (dirección de la empresa) se cuela al final de las líneas: código postal y lo que sigue,
   // "Parque/Edificio/Planta…" y una palabra suelta en minúsculas tras un número o tras la localidad en mayúsculas
   const EMP=/\s+(\d{5}\b.*|Parque\b.*|Edificio\b.*|Planta\b.*)$/i,EMP2=/(?<=\d|[A-ZÁÉÍÓÚÑ]{3})[\s"”“'’.,;:]*\s[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{3,}(\s+\S{1,3})?$/;
-  const ETQ=/^\W*(direcci\S*\s*(de\s*)?equipo|\S{0,8}aci[oó0]n|l?ocali\S*|cliente|t[eé]cnico\S*)\W*/i;
+  const ETQ=/^\W*(\S{0,2}recci\S*\s*(de\s*)?equipo|\S{0,8}aci[oó0]n|l?ocali\S*|cliente|t[eé]cnico\S*)\W*/i;
   const ls=String(texto).split(/\n+/).map(l=>l.replace(/[|\[\]{}_—=]+/g,' ').replace(/\s+/g,' ').trim().replace(EMP,'').replace(EMP2,'').trim()).filter(Boolean);
-  const otra=l=>/^\W*(l?ocalidad|cliente|direcci)/i.test(l||'');
+  const otra=l=>/^\W*(l?ocalidad|c?l?iente|\S{0,2}recci)/i.test(l||'');
   const campo=re=>{for(let i=0;i<ls.length;i++){const m=ls[i].match(re);if(!m)continue;let v=ls[i].slice(m.index+m[0].length).replace(/^[\s:.,\-]+/,'').trim();if(v.length<3)return ls[i+1]&&!otra(ls[i+1])?[ls[i+1],i+1]:['',-1];return [v,i]}return ['',-1]};
-  let [loc,li]=campo(/locali[sz]aci[oó0]n/i),[dir]=campo(/direcci[oó0]n\s*(de\s*)?equipo/i),[pob]=campo(/^\W*localidad\b/i);
+  let [loc,li]=campo(/locali[sz]aci[oó0]n/i),[dir,dj]=campo(/recci[oó0]n\s*(de\s*)?equipo/i),[pob]=campo(/^\W*localidad\b/i);
   const CALLE=/(^|\s)(C\s?\/|CL\.|C\.\/|CALLE|AVDA\.?|AVENIDA|PLAZA|PZA\.?|CTRA\.?|CARRETERA|BARRIO|BO\.|PASEO|POL[IÍ]GONO)\s/i;
-  let di=-1,lci=-1;
-  for(let i=0;i<ls.length&&i<60;i++){const m=ls[i].match(CALLE);if(!m||!/\d/.test(ls[i]))continue;
+  // v2.3.29: las filas de fechas no son la obra (a veces el lector junta "Fecha Inicio…" con la dirección de la
+  // columna de la derecha); y la Localización va después de la Dirección Equipo
+  const FECHA=/\d{1,2}\s?\/\s?\d{1,2}\s?\/\s?\d{2,4}|\bfecha\b|previst/i;
+  let di=-1,dd='';const lcs=[];
+  for(let i=0;i<ls.length&&i<60;i++){const m=ls[i].match(CALLE);if(!m||!/\d/.test(ls[i])||FECHA.test(ls[i]))continue;
     const pre=ls[i].slice(0,m.index).replace(ETQ,'');
-    if(/[A-Za-zÁÉÍÓÚÑáéíóúñ]{3,}/.test(pre)){if(lci<0)lci=i}else if(di<0){di=i;if(!dir)dir=ls[i].slice(m.index+m[1].length)}
-    if(di>=0&&lci>=0)break}
+    if(/[A-Za-zÁÉÍÓÚÑáéíóúñ]{3,}/.test(pre))lcs.push(i);else if(di<0){di=i;dd=ls[i].slice(m.index+m[1].length)}}
+  const lci=lcs.find(i=>i>di)??lcs[0]??-1;
   if(!loc||!/\d/.test(loc)){
-    if(lci>=0){loc=ls[lci].replace(ETQ,'');li=lci}
+    if(di>=0&&ls[di+1]&&!otra(ls[di+1])&&CALLE.test(ls[di+1])&&(lci<0||lci<di)){loc=ls[di+1].replace(ETQ,'');li=di+1}
+    else if(lci>=0){loc=ls[lci].replace(ETQ,'');li=lci}
     else if(di>=0&&ls[di+1]&&!otra(ls[di+1])){loc=ls[di+1].replace(ETQ,'');li=di+1}}
+  // si "Dirección Equipo" se leyó vacía y se cogió la fila de abajo, era la Localización: vale la fila de la calle
+  if(!dir||dj>=0&&dj===li)dir=dd;
   const lim=v=>txt(v,120).replace(/^[^0-9A-Za-zÁÉÍÓÚÑáéíóúñ]+/,'').replace(/\s+([,.])/g,'$1').replace(/[\s\-–.,:;"'”“’]+$/,'').trim();
   loc=lim(loc);
   const CAPS=/([A-ZÁÉÍÓÚÑ]{3,}(?:[ \-][A-ZÁÉÍÓÚÑ]{2,})*)/;
+  // la localidad va en mayúsculas: si lo leído junto a "Localidad" no lo está (letras confundidas o la fila de
+  // "Cliente"), se saca del final de la Localización
+  if(pob&&!new RegExp('^'+CAPS.source+'$').test(lim(pob)))pob='';
   if(!pob){const m=loc.match(new RegExp(CAPS.source+'$'));if(m)pob=m[1]}
   for(let k=1;k<=2&&!pob&&li>=0&&ls[li+k];k++){const m=ls[li+k].replace(/^\W*l?ocalidad\W*/i,'').match(new RegExp('^'+CAPS.source+'(?![A-Za-zÁÉÍÓÚÑáéíóúñ])'));if(m&&!/\d/.test(ls[li+k]))pob=m[1]}
   dir=lim(dir);if(!CALLE.test(' '+dir+' '))dir=''; // si no parece una calle, la ruta usa el nombre
   return {loc,dir,pob:lim(pob)};
 }
-// Lee la Orden de Trabajo de una imagen ya cargada (ImageBitmap) probando varios recortes/ángulos; rellena "Nueva obra"
+// Nota de una lectura: más si hay Localización con número, localidad y dirección, y si la localidad está también al
+// final de la Localización (las dos filas cuadran)
+function puntosOT(x,conf){
+  return (x.loc?200:0)+(/\d/.test(x.loc)?200:0)+(x.pob?100:0)+(x.dir&&x.pob?50:0)+(/^[A-ZÁÉÍÓÚÑ0-9]{3,}/.test(x.loc)?30:0)+(x.pob&&x.loc.endsWith(x.pob)?40:0)+conf;
+}
+// Una lectura cuadra sola si la Localización lleva la calle de la Dirección Equipo y acaba en la Localidad
+const sinAc=s=>s.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/[^a-z0-9]+/g,' ').trim();
+const cuadraOT=x=>!!(x.dir&&x.pob&&x.loc.endsWith(x.pob)&&sinAc(x.loc).includes(sinAc(x.dir)));
+// Lee la Orden de Trabajo de una imagen ya cargada (ImageBitmap) probando varios recortes, anchos, ángulos y formas de
+// separar el texto (psm de Tesseract: 6 = un bloque, el de siempre; 4 = una columna, mejor con la cámara); el lector
+// acierta o falla según el tamaño de la letra. Para en cuanto una lectura cuadra sola o dos coinciden; si no, se queda
+// con la más repetida entre las buenas. Rellena "Nueva obra"
+let ocrPsm='6';
 async function procesarOT(bm,pasos){
   const msg=$('mn_msg');
   msg.textContent='Leyendo la foto en este móvil… (la primera vez tarda un poco más: se carga el lector)';
   try{
     const w=await ocrWorker();
-    // si no sale la localidad, se prueba enderezando un poco la foto
-    let r=null;for(const [crop,W,ang] of pasos){const c=fotoCanvas(bm,crop,W,ang);const d=(await w.recognize(c)).data,x=leerOT(d.text);c.width=c.height=0;x.n=(x.loc?200:0)+(/\d/.test(x.loc)?200:0)+(x.pob?100:0)+(x.dir&&x.pob?50:0)+(/^[A-ZÁÉÍÓÚÑ0-9]{3,}/.test(x.loc)?30:0)+(+d.confidence||0);if(!r||x.n>r.n)r=x;if(x.n>=580)break}
+    let r=null;const buenas=[],veces=k=>buenas.filter(y=>y.k===k).length;
+    for(const [crop,W,ang,psm='6'] of pasos){
+      if(psm!==ocrPsm){await w.setParameters({tessedit_pageseg_mode:psm,user_defined_dpi:psm==='4'?'300':'0'});ocrPsm=psm} // con dpi fijo no avisa en la consola
+      const c=fotoCanvas(bm,crop,W,ang);const d=(await w.recognize(c)).data,x=leerOT(d.text);c.width=c.height=0;
+      x.n=puntosOT(x,+d.confidence||0);x.k=x.loc+'|'+x.pob;if(!r||x.n>r.n)r=x;
+      if(x.n<620)continue;
+      buenas.push(x);if(cuadraOT(x)||veces(x.k)>1)break
+    }
+    // la mejor entre las buenas: la que cuadra, si no la que más se repite y, a igualdad, la de más nota
+    if(buenas.length)r=buenas.slice().sort((a,b)=>cuadraOT(b)-cuadraOT(a)||veces(b.k)-veces(a.k)||b.n-a.n)[0];
     bm.close&&bm.close();
     const name=r.loc||[r.dir,r.pob].filter(Boolean).join(' ');
     if(!name){msg.textContent='No he encontrado "Localización" en la foto. Hazla de frente, con buena luz y que se vea la tabla de arriba; o escribe la obra a mano.';return}
@@ -1241,7 +1270,7 @@ async function fotoOT(e){
   if(f.size>25e6){msg.textContent='La foto es demasiado grande.';return}
   msg.textContent='Leyendo la foto en este móvil…';
   let bm;try{bm=await createImageBitmap(f,{imageOrientation:'from-image'})}catch(_){msg.textContent='No he podido abrir esa foto. Escribe la obra a mano.';return}
-  procesarOT(bm,[[.4,3000,0],[.4,3000,-2],[.4,3000,2],[1,2400,0],[.4,3000,-5],[.4,3000,5]]);
+  procesarOT(bm,[[.4,3000,0],[.4,2000,0],[.4,3000,-2],[.4,3000,2],[1,2400,0],[.4,3000,-5],[.4,3000,5],[.4,3000,0,'4'],[1,2400,0,'4']]);
 }
 $('mb_ot').addEventListener('change',fotoOT);
 $('mb_otcap').addEventListener('change',e=>{cerrarCam();fotoOT(e)});
@@ -1277,7 +1306,9 @@ $('otcap').addEventListener('click',async()=>{
   c.getContext('2d').drawImage(v,x,y,w,h,0,0,c.width,c.height);
   cerrarCam();
   const bm=await createImageBitmap(c);c.width=c.height=0;
-  procesarOT(bm,[[1,3000,0],[1,3000,-2],[1,3000,2],[1,3000,-5],[1,3000,5]]);
+  // lo capturado ya es solo la tabla: se lee casi a su tamaño (ampliarlo mucho empeora la lectura), en una columna
+  const k=Math.min(3000,Math.max(1000,bm.width)),k2=Math.min(3000,Math.round(k*1.3));
+  procesarOT(bm,[[1,k,0,'4'],[1,k,1,'4'],[1,k,-1,'4'],[1,k2,0,'4'],[1,k,0],[1,k,-1],[1,k,-2,'4'],[1,k,2,'4'],[1,k2,0],[1,k,-5,'4'],[1,k,5,'4']]);
 });
 // cambio de modo
 function setMode(m){

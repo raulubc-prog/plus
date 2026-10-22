@@ -4,6 +4,9 @@ Web: https://raulubc-prog.github.io/plus/ · Enlace modo manual: https://raulubc
 
 Historial de GitHub reiniciado el 19/10/2026 (v2.3.19) por privacidad; las versiones anteriores solo quedan descritas aquí.
 
+## 22/10/2026
+- **v2.3.29** — Lectura de la Orden de Trabajo más fiable, sobre todo con la cámara dentro de la web: lee la tabla capturada casi a su tamaño y como una sola columna de texto, prueba varios tamaños y ángulos, y se queda con la lectura que cuadra (la Localización lleva la calle y acaba en la Localidad) o con la que se repite. Ya no confunde la fila de fechas con la obra ni toma la fila de «Cliente» como localidad.
+
 ## 21/10/2026
 - **v2.3.28** — Foto a la Orden de Trabajo con la cámara: "Hacer foto a la Orden de Trabajo" abre la cámara dentro de la web con un recuadro para encajar la tabla de arriba y "Capturar" (se lee solo lo de dentro del recuadro). Si el navegador no deja usar la cámara en la web, abre la cámara del móvil; "Elegir foto" sigue para fotos ya hechas. La imagen de la cámara no sale del móvil.
 - **v2.3.27** — "Obra con foto de la Orden de Trabajo" (modo "Apuntar a mano"): haces una foto a la Orden de Trabajo de la carpeta de montaje y la web rellena la obra con lo que pone en "Localización" (y la dirección para la ruta). La foto se lee en el propio móvil con Tesseract.js (Apache-2.0, servido desde el repo, sin internet); la foto y el resto del texto no se guardan ni se envían. Tú revisas, pones los km y la añades. Aviso de privacidad ampliado. Ejemplos con A Coruña → Santiago (antes Zaragoza → Huesca). (La v2.3.26, con carga de obras desde carpetas, no se publicó.)
