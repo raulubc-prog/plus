@@ -130,6 +130,7 @@ h2{font-family:var(--display);font-weight:700;font-size:22px;margin:0}
 .xhead span{color:var(--muted);font-size:14px}
 .xacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;padding:10px 16px}
 .xacts .btn{padding:14px 12px;font-size:16px}
+.xpart{display:block;padding:10px 16px 0;font-weight:600}.xpart select{display:block;width:100%;margin-top:6px;font-size:16px;padding:10px}
 #xport .status{padding:0 16px;min-height:1.2em}
 .xprev{padding:6px 16px 16px}
 .xprev summary{font-family:var(--body);font-size:14px;color:var(--muted)}
@@ -149,6 +150,8 @@ h2{font-family:var(--display);font-weight:700;font-size:22px;margin:0}
 .used{font-family:var(--display);font-size:20px;font-weight:600}
 .src{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
 .diff{color:var(--bad);font-weight:700}
+.cline.gps{color:var(--muted);font-size:13px}
+.pick{margin-top:8px;font-size:13px;font-weight:600;color:var(--bad)}.pick .acts{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}.pick .small{font-weight:400;color:var(--muted)}
 #obras tr.flag td{background:var(--bad-soft)}
 #obras tr.flag td:first-child{box-shadow:inset 4px 0 0 var(--bad)}
 .chip.bad{background:var(--bad);color:#fff}
@@ -241,7 +244,8 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   #daystable td.empty{grid-column:1/-1}
   #daystable input[type=checkbox]{width:22px;height:22px}
 }
-#obras th:nth-child(2),#obras td:nth-child(2),#obras th:nth-child(3),#obras th:nth-child(4),#obras th:nth-child(6),#obras td:nth-child(3),#obras td:nth-child(4),#obras td:nth-child(6){display:none}
+/* v2.3.30: se ven Obra, Km GPS, Km según Maps, Km elegido (referencia) y coordenadas */
+#obras th:nth-child(2),#obras td:nth-child(2),#obras th:nth-child(4),#obras td:nth-child(4),#obras th:nth-child(7),#obras td:nth-child(7){display:none}
 #obras table{min-width:0}
 #obras input.km::placeholder{color:var(--fg);opacity:1}
 /* v2.2.6: tabla de Obras (modo GPS) apilada en el móvil, sin scroll lateral */
@@ -251,18 +255,19 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   #obras table,#obras tbody{display:block}
   #obras tr{display:grid;grid-template-columns:minmax(0,1fr);gap:8px 10px;padding:12px;border-bottom:1px solid var(--line)}
   #obras td{border:0;padding:0;text-align:left;min-width:0}
-  #obras td:nth-child(7),#obras td.empty{grid-column:1/-1}
-  #obras td:nth-child(n+2):nth-child(-n+6)::before{display:block;font-size:11px;color:var(--muted);font-weight:600}
+  #obras td:nth-child(8),#obras td.empty{grid-column:1/-1}
+  #obras td:nth-child(n+2):nth-child(-n+7)::before{display:block;font-size:11px;color:var(--muted);font-weight:600}
   #obras td:nth-child(2)::before{content:"Visitas"}
-  #obras td:nth-child(3)::before{content:"Km GPS"}
+  #obras td:nth-child(3)::before{content:"Km GPS (mediana)"}
   #obras td:nth-child(4)::before{content:"Km carretera"}
-  #obras td:nth-child(5){display:grid;grid-template-columns:minmax(0,1fr) 7em;align-items:center;gap:2px 10px}#obras td:nth-child(5)::before{content:"Km casa → obra";font-size:14px;color:var(--fg)}#obras td:nth-child(5) .small{grid-column:1;grid-row:2;margin:0}#obras td:nth-child(5) input{grid-column:2;grid-row:1/3}
-  #obras td:nth-child(6)::before{content:"Km usados"}
+  #obras td:nth-child(5)::before{content:"Km según Maps"}
+  #obras td:nth-child(6){display:grid;grid-template-columns:minmax(0,1fr) 7em;align-items:center;gap:2px 10px}#obras td:nth-child(6)::before{content:"Km de referencia (casa → obra)";font-size:14px;color:var(--fg)}#obras td:nth-child(6) .small{grid-column:1;grid-row:2;margin:0}#obras td:nth-child(6) input{grid-column:2;grid-row:1/3}
+  #obras td:nth-child(7)::before{content:"Km de referencia"}
   #obras input.nm{min-width:0;width:100%;box-sizing:border-box}
   #obras input.km{width:100%;box-sizing:border-box}
-  #obras td:nth-child(7){display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px}
-  #obras td:nth-child(7) .acts{display:flex;flex-direction:column;gap:6px}
-  #obras td:nth-child(7) .acts .btn{text-align:center}
+  #obras td:nth-child(8){display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px}
+  #obras td:nth-child(8) .acts{display:flex;flex-direction:column;gap:6px}
+  #obras td:nth-child(8) .acts .btn{text-align:center}
   #obras .obhead .acts{display:flex;flex-wrap:wrap}
   #obras .small{overflow-wrap:anywhere}
 }
@@ -274,7 +279,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.29 · 22/10/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.30 · 22/10/2026</span></p>
     </div>
   </header>
 
@@ -303,7 +308,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <div class="acts"><button class="btn primary" id="mn_add" type="button" style="min-height:40px">Añadir obra</button></div>
     </div>
     <p class="status" id="mn_msg" role="status" style="color:var(--warn);font-weight:600"></p>
-    <p class="hint">Km = de tu casa a la obra, solo ida, por la ruta más corta sin peaje de Google Maps. El botón "Ruta" te la abre. Cada trayecto (ida o vuelta) de más de 50 km cobra los km que pasan de 50.</p>
+    <p class="hint">Km = de tu casa a la obra, solo ida, por la ruta más rápida según Google Maps (con peajes si es la más rápida). El botón "Ruta" te la abre. Cada trayecto (ida o vuelta) de más de 50 km cobra los km que pasan de 50.</p>
   </details>
 
   <div class="mnav" data-only="man">
@@ -379,12 +384,9 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <label data-only="gps">Horario desde<input type="time" id="c_ini"></label>
       <label data-only="gps">Horario hasta<input type="time" id="c_fin"></label>
       <label data-only="gps">Casa (lat, lng)<input type="text" id="c_casa" placeholder="se detecta sola"></label>
-      <label data-only="gps">Km para el plus
-        <select id="c_kmsrc"><option value="obra">Km fijos de la obra (tabla de obras)</option><option value="gps">Km del GPS de cada trayecto</option></select>
-      </label>
     </div>
     <p class="hint" id="eqhint"></p>
-    <p class="hint" data-only="gps">Reglas: lunes a viernes; una parada de hasta la parada máxima no corta el trayecto; una más larga es una obra. Si un sitio de la tabla de obras no es obra (dejar a un compañero, gasolinera, compra), ponle un nombre que empiece por "paso" (ej. "paso: compañero Tudela"): ahí la parada solo corta el trayecto si pasa de la parada máxima en sitio de paso. Cuenta cada trayecto de más del umbral. Con "km fijos de la obra", los trayectos casa ↔ obra usan los km de la tabla de obras (manual, si no carretera, si no mediana del GPS); el resto usa el GPS.</p>
+    <p class="hint" data-only="gps">Reglas: lunes a viernes; una parada de hasta la parada máxima no corta el trayecto; una más larga es una obra. Si un sitio de la tabla de obras no es obra (dejar a un compañero, gasolinera, compra), ponle un nombre que empiece por "paso" (ej. "paso: compañero Tudela"): ahí la parada solo corta el trayecto si pasa de la parada máxima en sitio de paso. Cuenta cada trayecto de más del umbral. Los trayectos casa ↔ obra usan siempre el km de referencia de la obra (tabla de obras), el mismo todos los días; el GPS de cada día solo se enseña como nota. Los trayectos que no son casa ↔ obra (de obra a obra, o sin obra) usan el GPS de ese trayecto.</p>
   </details>
 
   <div class="bar" style="align-items:flex-end" data-only="gps">
@@ -410,6 +412,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <div class="xhead"><b id="x_title">Exportar</b><span id="x_sub"></span></div>
       <button class="btn" id="x_close" type="button" aria-label="Cerrar">✕</button>
     </div>
+    <label class="xpart">Qué exportar<select id="x_part"><option value="">Todo lo de la pantalla</option></select></label>
     <div class="xacts">
       <button class="btn primary" id="x_open" type="button">Abrir PDF</button>
       <button class="btn" id="x_pdf" type="button">Guardar PDF</button>
@@ -463,7 +466,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
     <summary id="obsum">Obras</summary>
     <div class="obhead" style="margin-top:10px">
       <div>
-        <p>Sitios donde has estado más de la parada máxima en día laborable. Se ven las del mes o las fechas elegidas arriba. Ponles nombre (por ejemplo "Almacén"). Km de casa a la obra: mediana del GPS, por carretera (OSRM) y corrección manual si alguno no cuadra.</p>
+        <p>Sitios donde has estado más de la parada máxima en día laborable. Se ven las del mes o las fechas elegidas arriba. Ponles nombre (por ejemplo "Almacén"). Km de casa a la obra: los de la ruta más rápida según Google Maps; mientras no los pongas, se propone la mediana del GPS.</p>
       </div>
       <div class="acts">
         <button class="btn" id="obexp">Guardar obras en archivo</button>
@@ -476,11 +479,11 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
     <p class="status" id="osrmmsg"></p>
     <div class="tablebox" style="margin-top:10px">
       <table>
-        <thead><tr><th>Obra</th><th class="num">Visitas</th><th class="num">Km GPS</th><th class="num">Km carretera</th><th class="num">Km</th><th class="num">Km usados</th><th>Coordenadas</th></tr></thead>
+        <thead><tr><th>Obra</th><th class="num">Visitas</th><th class="num">Km GPS</th><th class="num">Km carretera</th><th class="num">Km según Maps</th><th class="num">Km elegido</th><th class="num">Km de referencia</th><th>Coordenadas</th></tr></thead>
         <tbody id="obrows"></tbody>
       </table>
     </div>
-    <p class="hint">"Km GPS" es la mediana de los trayectos casa ↔ obra (ida y vuelta), así los desvíos sueltos no cuentan. "Km carretera" lo calcula OSRM (mapa libre, sin Google) para la ruta más corta en coche; para eso se envían a OSRM solo las coordenadas de casa y de la obra. Si el GPS o tu km manual se separan más de un 10 % de la carretera, la fila sale en rojo con "revisar": compruébala en Maps con el botón de copiar y escribe el bueno en "Km manual". Km carretera: ruta de OSRM con datos © colaboradores de OpenStreetMap (ODbL).</p>
+    <p class="hint">Cada obra tiene UN km de referencia por trayecto, y con él se calculan todos sus días (el GPS de cada día solo sale como nota): los km de la ruta más rápida según Google Maps (con peajes si es la más rápida). "Comprobar en Google Maps" abre esa ruta de casa a la obra (sale de esta web solo si lo pulsas): apunta sus km en "Km según Maps". Mientras no los pongas, se propone "Km GPS", la mediana de los trayectos casa ↔ obra si hay 3 días o más, así los desvíos sueltos no cuentan. "Km carretera" lo calcula OSRM (mapa libre, sin Google) si lo pides; para eso se envían a OSRM solo las coordenadas de casa y de la obra. Si la referencia se separa más de un 10 % de otra fuente, la fila sale en rojo con "revisar" y te deja elegir cuál usar; o escribe el tuyo en "Km elegido". Km carretera: ruta de OSRM con datos © colaboradores de OpenStreetMap (ODbL).</p>
   </details>
   <details class="panel" id="reset">
     <summary>Borrar datos</summary>
@@ -494,7 +497,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.29 · 22/10/2026</span></p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.30 · 22/10/2026</span></p>
   <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
@@ -612,7 +615,16 @@ function mergedDays(H,useDesde){
 function findSaved(p){let b=null,bd=0.2;for(const s of saved){const k=dist(s.p,p);if(k<bd){bd=k;b=s}}return b}
 function savedFor(o,create){let s=findSaved(o.p);if(!s&&create){s={p:o.p.map(x=>+x.toFixed(6)),name:'',man:null,osrm:null};saved.push(s)}return s}
 function persistSaved(){if(!isExample)store.set('pd_obras',saved)}
-function obraKm(o){const s=o.sv;if(s&&isFinite(s.man)&&s.man>0)return{km:s.man,src:'manual'};if(s&&isFinite(s.osrm)&&s.osrm>0)return{km:s.osrm,src:'carretera'};if(o.med)return{km:o.med,src:'GPS'};return null}
+// v2.3.30: UN km de referencia por obra para todos sus días (nunca el GPS del día). Orden: el que elige el usuario;
+// si no, km según Google Maps (ruta más rápida); si no, la mediana del GPS casa ↔ obra con 3 días o más (propuesta);
+// si no, carretera (OSRM); si no, la mediana con pocos días.
+const r1=x=>Math.round(x*10)/10;
+function obraKm(o){const s=o.sv||{};const ok=v=>isFinite(v)&&v>0;
+  if(ok(s.man))return{km:r1(s.man),src:'elegido'};
+  if(ok(s.maps))return{km:r1(s.maps),src:'Maps'};
+  if(o.med&&o.tdays&&o.tdays.size>=3)return{km:r1(o.med),src:'mediana GPS'};
+  if(ok(s.osrm))return{km:r1(s.osrm),src:'carretera'};
+  if(o.med)return{km:r1(o.med),src:'mediana GPS (pocos días)'};return null}
 function buildObras(H){
   const cl=[];
   for(const v of visits){
@@ -634,7 +646,7 @@ function buildObras(H){
   return cl;
 }
 function obraOf(p){let c=null,bd=MATCH_R;for(const o of obras){const k=dist(o.p,p);if(k<bd){bd=k;c=o}}return c}
-function obraName(o,H){return (o.sv&&o.sv.name)||('Obra a '+Math.round(dist(H,o.p))+' km')}
+function obraName(o,H){if(o.sv&&o.sv.name)return o.sv.name;const k=obraKm(o);return k?'Obra a '+n1(k.km)+' km':'Obra a '+Math.round(dist(H,o.p))+' km en línea recta'} // v2.3.30: el nombre lleva los mismos km con los que se calcula
 
 function compute(){
   const H=parseCasa(cfg.casa)||home;if(!drives||!H){obras=[];return []}
@@ -646,12 +658,13 @@ function compute(){
       const hs=dist(H,m.s)<CASA_R,he=dist(H,m.e)<CASA_R;
       const os=hs?null:obraOf(m.s),oe=he?null:obraOf(m.e);
       let km=m.km,fixed=null;
-      if(cfg.kmsrc==='obra'&&hs!==he){const o=hs?oe:os;const k=o&&obraKm(o);if(k){km=k.km;fixed=k.src}}
-      if(km<=cfg.umbral)continue;
-      const min=(new Date(m.end)-new Date(m.start))/60000,extra=km-cfg.umbral;
-      const imp=impOf(extra,km,min,hs!==he?(hs?oe:os):null);
-      const lab=(p,o,h)=>h?'Casa':o?obraName(o,H):'Obra a '+Math.round(dist(H,p))+' km';
-      trips.push({ini:m.start.slice(11,16),fin:m.end.slice(11,16),km,gps:m.km,fixed,min,extra,imp,stops:m.stops,de:lab(m.s,os,hs),a:lab(m.e,oe,he)});
+      if(hs!==he){const o=hs?oe:os;const k=o&&obraKm(o);if(k){km=k.km;fixed=k.src}} // v2.3.30: siempre el km de referencia (kmsrc ya no se usa)
+      if(km<=cfg.umbral&&!fixed)continue; // v2.3.30: con km de referencia sale igual, a 0 € (lo que se ve = lo que se calcula)
+      const min=(new Date(m.end)-new Date(m.start))/60000,extra=Math.max(0,km-cfg.umbral);
+      const imp=extra>0?impOf(extra,km,min,hs!==he?(hs?oe:os):null):0;
+      const lab=(p,o,h)=>h?'Casa':o?obraName(o,H):'Sitio a '+Math.round(dist(H,p))+' km en línea recta';
+      const desv=!!fixed&&Math.abs(m.km-km)/km>0.25; // v2.3.30: el GPS del día se aleja >25 % de la referencia: posible desvío (solo aviso)
+      trips.push({ini:m.start.slice(11,16),fin:m.end.slice(11,16),km,gps:m.km,fixed,desv,min,extra,imp,stops:m.stops,de:lab(m.s,os,hs),a:lab(m.e,oe,he)});
     }
     if(trips.length)days.push({day,trips,extra:trips.reduce((s,t)=>s+t.extra,0),imp:trips.reduce((s,t)=>s+t.imp,0),largo:trips.some(t=>t.gps>150),mano:manual.some(x=>x.day===day)});
   }
@@ -661,9 +674,9 @@ function compute(){
     {const g=days.find(d=>d.day===x.day);if(g){if(g.trips.some(t=>t.de!=='Casa'||t.a!=='Casa'))continue;days.splice(days.indexOf(g),1)}}
     let km=x.km,nm=x.name||'Obra',xo=null;
     if(x.p){const o=obraOf(x.p);if(o){xo=o;const k=obraKm(o);if(k)km=k.km;nm=obraName(o,H)}}
-    if(!(km>cfg.umbral))continue;
-    const extra=km-cfg.umbral,min=km/cfg.vel*60;
-    const t=(de,a)=>({ini:'—',fin:'—',km,gps:km,fixed:'a mano',min,extra,imp:impOf(extra,km,min,xo),stops:0,de,a,mano:true});
+    if(!(km>0))continue;
+    const extra=Math.max(0,km-cfg.umbral),min=km/cfg.vel*60;
+    const t=(de,a)=>({ini:'—',fin:'—',km,gps:km,fixed:'a mano',min,extra,imp:extra>0?impOf(extra,km,min,xo):0,stops:0,de,a,mano:true});
     const trips=x.modo==='i'?[t('Casa',nm)]:x.modo==='v'?[t(nm,'Casa')]:[t('Casa',nm),t(nm,'Casa')];
     days.push({day:x.day,trips,extra:trips.reduce((s,t)=>s+t.extra,0),imp:trips.reduce((s,t)=>s+t.imp,0),largo:false,mano:true});
   }
@@ -697,16 +710,24 @@ function renderObras(){
     const dM=[...o.days].filter(inR).length;
     const lastM=[...o.days,...o.tdays].filter(inR).sort().pop();
     const big=(a,b)=>a&&b&&Math.abs(a-b)/b>0.10;
-    const offG=big(o.med,s.osrm),offM=big(s.man,s.osrm),off=offG||offM;
+    // v2.3.30: aviso de discrepancia (el de siempre, en rojo). Sin km elegido: la referencia se separa >10 % de otra fuente
+    // (GPS, Maps o carretera) → "¿Por qué difiere? Elige cuál usar". Con km elegido: solo si no se parece a ninguna (errata).
+    const hasM=isFinite(s.man)&&s.man>0;
+    const cand=[['GPS',o.med?r1(o.med):null],['Maps',s.maps>0?r1(s.maps):null],['carretera',s.osrm>0?r1(s.osrm):null]].filter(c=>c[1]);
+    const off=hasM?cand.length>0&&cand.every(c=>big(s.man,c[1])):!!used&&cand.some(c=>big(c[1],used.km));
+    const offG=off&&!!o.med&&(hasM?big(s.man,r1(o.med)):big(r1(o.med),used.km)||cand.some(c=>c[0]!=='GPS'&&big(r1(o.med),c[1])));
     const ll6=o.p[0].toFixed(6)+', '+o.p[1].toFixed(6);
-    return `<tr class="${off?'flag':''}"><td><input class="nm" data-i="${i}" data-f="name" value="${escH(s.name||'')}" placeholder="Obra a ${Math.round(dist(H,o.p))} km (recta)" aria-label="Nombre de la obra"><div class="small">${all?'última: '+o.last.split('-').reverse().join('/'):'última: '+(lastM||'').split('-').reverse().join('/')} · <b>${all?o.n:dM} ${(all?o.n:dM)===1?'visita':'visitas'}</b>${all?'':(o.n!==dM?' ('+o.n+' en total)':'')}${off?' <span class="chip bad">revisar</span>':''}</div></td>
+    const dir=H?`https://www.google.com/maps/dir/?api=1&origin=${H[0].toFixed(6)},${H[1].toFixed(6)}&destination=${o.p[0].toFixed(6)},${o.p[1].toFixed(6)}&travelmode=driving`:'';
+    const pick=off?`<div class="pick">${hasM?`Tu km elegido (${n1(s.man)}) no se parece a ${cand.length>1?'ninguno de estos':'este'}: revísalo o elige uno.`:'¿Por qué difiere? Puede ser un desvío, otra ruta o un punto mal puesto. Elige cuál usar:'}<div class="acts">${cand.map(c=>`<button class="btn sm" type="button" data-pick="${i}" data-v="${c[1]}">${c[0]} ${n1(c[1])}</button>`).join('')}</div><div class="small">o escribe el tuyo en "Km elegido". Siempre se puede cambiar.</div></div>`:'';
+    return `<tr class="${off?'flag':''}"><td><input class="nm" data-i="${i}" data-f="name" value="${escH(s.name||'')}" placeholder="${escH(obraName(o,H))}" aria-label="Nombre de la obra"><div class="small">${all?'última: '+o.last.split('-').reverse().join('/'):'última: '+(lastM||'').split('-').reverse().join('/')} · <b>${all?o.n:dM} ${(all?o.n:dM)===1?'visita':'visitas'}</b>${all?'':(o.n!==dM?' ('+o.n+' en total)':'')}${off?' <span class="chip bad">revisar</span>':''}${s.rev&&!(s.maps>0)?' <span class="chip warn">revisar km</span>':''}</div>${s.rev&&!(s.maps>0)?'<div class="small w">Viene de una copia con la regla anterior: confirma los km con «Comprobar en Google Maps» y apúntalos en «Km según Maps». No se han cambiado.</div>':''}${pick}</td>
       <td class="num">${all?o.n:dM}<div class="small">${(all?o.n:dM)===1?'día':'días'}${all?'':(view==='mes'?' este mes':' en el periodo')}${all?'':'<br>'+o.n+' en total'}</div></td>
-      <td class="num ${offG?'diff':''}">${o.med?n1(o.med):'—'}<div class="small">${o.km.length} trayectos</div></td>
-      <td class="num ${off?'diff':''}">${s.osrm?n1(s.osrm)+(s.vr>0?`<div class="small">${Math.round(s.osrm/s.vr*60)} min · ${Math.round(s.vr)} km/h</div>`:''):`<button class="btn sm" data-osrm="${i}">Calcular</button>`}</td>
-      <td class="num ${off?'diff':''}"><input class="km" type="number" min="0" step="0.1" inputmode="decimal" data-i="${i}" data-f="man" value="${isFinite(s.man)&&s.man>0?s.man:''}" placeholder="${used?n1(used.km):'km'}" aria-label="Km de casa a la obra"><div class="small">${isFinite(s.man)&&s.man>0?'a mano':used?(used.src==='GPS'?'del GPS':'por carretera'):'escribe los km'}${off?' · revisar':''}</div></td>
+      <td class="num ${offG?'diff':''}">${o.med?n1(r1(o.med)):'—'}<div class="small">mediana · ${o.tdays.size} ${o.tdays.size===1?'día':'días'}</div></td>
+      <td class="num">${s.osrm?n1(s.osrm)+(s.vr>0?`<div class="small">${Math.round(s.osrm/s.vr*60)} min · ${Math.round(s.vr)} km/h</div>`:''):`<button class="btn sm" data-osrm="${i}">Calcular</button>`}</td>
+      <td class="num"><input class="km" type="number" min="0" step="0.1" inputmode="decimal" data-i="${i}" data-f="maps" value="${s.maps>0?s.maps:''}" placeholder="km" aria-label="Km según Google Maps">${dir?`<div class="acts"><a class="btn sm" href="${dir}" target="_blank" rel="noopener">Comprobar en Google Maps</a></div>`:''}</td>
+      <td class="num ${off?'diff':''}"><input class="km" type="number" min="0" step="0.1" inputmode="decimal" data-i="${i}" data-f="man" value="${hasM?s.man:''}" placeholder="${used?n1(used.km):'km'}" aria-label="Km elegido de casa a la obra"><div class="small">${hasM?'elegido':used?'propuesta: '+used.src:'escribe los km'}${off?' · revisar':''}</div></td>
       <td class="num">${used?`<span class="used">${n1(used.km)}</span><span class="src">${used.src}</span>`:'—'}</td>
       <td><div class="small">${ll6}</div><div class="acts"><button class="btn sm" data-copy="${i}">Copiar</button><a class="btn sm" href="https://www.google.com/maps/search/?api=1&query=${o.p[0].toFixed(6)},${o.p[1].toFixed(6)}" target="_blank" rel="noopener">Ver punto</a></div></td></tr>`;
-  }).join(''):`<tr><td colspan="7" class="empty">${drives?(all?'No hay obras con los ajustes actuales.':'No hay obras en este mes.'):'Carga tu archivo para ver tus obras.'}</td></tr>`;
+  }).join(''):`<tr><td colspan="8" class="empty">${drives?(all?'No hay obras con los ajustes actuales.':'No hay obras en este mes.'):'Carga tu archivo para ver tus obras.'}</td></tr>`;
 }
 
 // distancia por carretera con OSRM (servidor público de prueba, sin clave)
@@ -744,9 +765,9 @@ function render(){
   const RG=getRange();
   current=days.filter(d=>RG.inR(d.day));
   const on=current.filter(d=>!excl[d.day]);
-  const tot=on.reduce((s,d)=>s+d.imp,0),km=on.reduce((s,d)=>s+d.extra,0),tr=on.reduce((s,d)=>s+d.trips.length,0);
+  const tot=on.reduce((s,d)=>s+d.imp,0),km=on.reduce((s,d)=>s+d.extra,0),tr=on.reduce((s,d)=>s+d.trips.filter(t=>t.imp>0).length,0),nd=on.filter(d=>d.imp>0).length;
   $('dsum').innerHTML=`Días con plus <small>· ${RG.view==='mes'&&RG.m?MES[+RG.m.slice(5,7)-1]+' '+RG.m.slice(0,4):RG.all?'todo lo cargado':'entre fechas'}</small>`;
-  $('kpis').innerHTML=`<div class="kpi main"><span>${RG.view==='mes'?'Importe del mes':RG.all?'Importe de todo lo cargado':'Importe entre fechas'}</span><b>${eur(tot)}</b></div><div class="kpi"><span>Días</span><b>${on.length}</b></div><div class="kpi"><span>Trayectos</span><b>${tr}</b></div><div class="kpi"><span>Km de más</span><b>${Math.round(km)}</b></div>`;
+  $('kpis').innerHTML=`<div class="kpi main"><span>${RG.view==='mes'?'Importe del mes':RG.all?'Importe de todo lo cargado':'Importe entre fechas'}${cfg.desde?'':' (orientativo)'}</span><b>${eur(tot)}</b></div><div class="kpi"><span>Días con plus</span><b>${nd}</b></div><div class="kpi"><span>Trayectos</span><b>${tr}</b></div><div class="kpi"><span>Km de más</span><b>${Math.round(km)}</b></div>`;
   $('rows').innerHTML=current.length?current.map(d=>{
     const dt=new Date(d.day+'T12:00:00');
     const trips=d.trips.map(t=>`<div class="trip"><span class="time">${t.ini} → ${t.fin}</span><span>${n1(t.km)} km${t.mano?'':' · '+Math.round(t.min)+' min'}</span><span class="place">${escH(t.de)} → ${escH(t.a)}</span>${t.fixed?`<span class="chip" title="GPS de este trayecto: ${n1(t.gps)} km">km obra · ${t.fixed}</span>`:''}${t.stops?`<span class="chip">${t.stops} parada${t.stops>1?'s':''}</span>`:''}</div>`).join('');
@@ -756,11 +777,11 @@ function render(){
   $('gdays').innerHTML=current.length?current.slice().reverse().map(d=>{
     const dt=new Date(d.day+'T12:00:00'),open=gOpen===d.day,off=!!excl[d.day];
     const ob=[...new Set(d.trips.flatMap(t=>[t.de,t.a]).filter(x=>x&&x!=='Casa'))];
-    const warn='';
+    const warn=d.trips.some(t=>t.desv)?' <small class="w">· posible desvío</small>':'';
     const row=`<div class="drow" data-gtog="${d.day}" role="button" tabindex="0" aria-expanded="${open}"><span class="dd"><b>${DOW[dt.getDay()]} ${dt.getDate()}</b>${RG.view==='mes'?'':`<small>${MES[dt.getMonth()].slice(0,3)} ${dt.getFullYear()}</small>`}</span><span class="dm">${ob.length?escH(ob.join(' + ')):'<span class="w">Sin obra</span>'}${warn}</span><span class="de">${d.largo&&!off?'<small class="w" title="viaje largo: revisar">⚠ </small>':''}${off?'<small>no cuenta</small>':eur(d.imp)}</span></div>`;
     let body='';
     if(open){
-      const trips=d.trips.map(t=>`<div class="gtrip"><div><b>${t.ini} → ${t.fin}</b> · ${escH(t.de)} → ${escH(t.a)}</div><div class="cline">${n1(t.km)} km${t.mano?'':' · '+Math.round(t.min)+' min'}${t.fixed?' · km obra '+t.fixed:''}${t.stops?` · ${t.stops} parada${t.stops>1?'s':''}`:''}</div></div>`).join('');
+      const trips=d.trips.map(t=>`<div class="gtrip"><div><b>${t.ini} → ${t.fin}</b> · ${escH(t.de)} → ${escH(t.a)}</div><div class="cline">${n1(t.km)} km${t.fixed&&!t.mano?' (referencia de la obra)':''} · ${eur(t.imp)}${t.stops?` · ${t.stops} parada${t.stops>1?'s':''}`:''}</div>${t.fixed&&!t.mano?`<div class="cline gps">GPS hoy: ${n1(t.gps)} km · ${Math.round(t.min)} min${t.desv?' · <span class="w">posible desvío (se aleja más de un 25 %)</span>':''}</div>`:''}</div>`).join('');
       // v2.3.6: "Ver punto" de cada obra del día; si no hay obra, la parada más lejana de casa
       const H3=parseCasa(cfg.casa)||home;const mp=p=>`https://www.google.com/maps/search/?api=1&query=${p[0].toFixed(6)},${p[1].toFixed(6)}`;
       let pts=ob.map(nm=>{const o=obras.find(o=>obraName(o,H3)===nm);return o?`<a class="btn sm" href="${mp(o.p)}" target="_blank" rel="noopener">Ver punto: ${escH(nm)}</a>`:''}).join('');
@@ -771,7 +792,7 @@ function render(){
     return `<article class="card${open?' open':''}${off?' gex':''}">${row}${body}</article>`;
   }).join(''):`<div class="panel empty">${drives?'No hay trayectos de más del umbral en este periodo con los ajustes actuales.':'Carga tu archivo de Cronología para empezar.'}</div>`;
   const all=days.filter(d=>!excl[d.day]).reduce((s,d)=>s+d.imp,0);
-  $('foot').textContent=days.length?`Total de todo el periodo cargado${cfg.desde?' desde '+cfg.desde.split('-').reverse().join('/'):''}: ${eur(all)} en ${days.filter(d=>!excl[d.day]).length} días. Desmarca "Incluir" en los días que no fueron de trabajo: no suman y no salen en la tabla para Excel ni en el PDF.`:'';
+  $('foot').textContent=days.length?`${cfg.desde?'':'Orientativo: sin acuerdo firmado no se cobra. '}Total de todo el periodo cargado${cfg.desde?' desde '+cfg.desde.split('-').reverse().join('/'):''}: ${eur(all)} en ${days.filter(d=>!excl[d.day]&&d.imp>0).length} días con plus. Desmarca "Incluir" en los días que no fueron de trabajo: no suman y no salen en la tabla para Excel ni en el PDF.`:'';
   $('banner').hidden=!isExample;
   if(!isExample&&drives&&(parseCasa(cfg.casa)||home)&&$('status').textContent.startsWith('No he podido detectar'))$('status').textContent='';
   renderObras();renderManual();renderQuick();
@@ -807,7 +828,7 @@ $('obrows').addEventListener('change',e=>{
   const i=e.target.dataset.i,f=e.target.dataset.f;if(i===undefined||!f)return;
   const o=obras[+i];if(!o)return;const s=savedFor(o,true);o.sv=s;
   if(f==='name')s.name=e.target.value.trim();
-  else{const v=parseFloat(String(e.target.value).replace(',','.'));s.man=isFinite(v)&&v>0?v:null}
+  else{const v=parseFloat(String(e.target.value).replace(',','.'));s[f==='maps'?'maps':'man']=isFinite(v)&&v>0?v:null}
   persistSaved();renderSoon();
 });
 let rsT=null;
@@ -819,9 +840,10 @@ $('obrows').addEventListener('click',e=>{
     const fb=()=>{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(_){}ta.remove();done()};
     try{navigator.clipboard.writeText(t).then(done,fb)}catch(_){fb()}}
   if(b.dataset.osrm!==undefined){b.disabled=true;doOsrm([obras[+b.dataset.osrm]])}
+  if(b.dataset.pick!==undefined){const o=obras[+b.dataset.pick];const v=parseFloat(b.dataset.v);if(o&&v>0){const s=savedFor(o,true);o.sv=s;s.man=v;persistSaved();render()}}
 });
 $('obexp').addEventListener('click',()=>{
-  const data={tipo:'plus-desplazamiento-obras',version:1,fecha:new Date().toLocaleDateString('sv-SE'),casa:parseCasa(cfg.casa)||(isExample?null:home),obras:(isExample?store.get('pd_obras',[]):saved).filter(s=>s&&(s.name||s.man||s.osrm)),dias:isExample?store.get('pd_manual',[]):manual,excl:isExample?store.get('pd_excl',{}):excl,ajustes:(({umbral,eur,ekm,vel,modo,desde,parada,parada2,ini,fin,casa,kmsrc})=>({umbral,eur,ekm,vel,modo,desde,parada,parada2,ini,fin,casa,kmsrc}))(cfg)};
+  const data={tipo:'plus-desplazamiento-obras',version:1,fecha:new Date().toLocaleDateString('sv-SE'),casa:parseCasa(cfg.casa)||(isExample?null:home),obras:(isExample?store.get('pd_obras',[]):saved).filter(s=>s&&(s.name||s.man||s.maps||s.osrm)),dias:isExample?store.get('pd_manual',[]):manual,excl:isExample?store.get('pd_excl',{}):excl,ajustes:(({umbral,eur,ekm,vel,modo,desde,parada,parada2,ini,fin,casa,kmsrc})=>({umbral,eur,ekm,vel,modo,desde,parada,parada2,ini,fin,casa,kmsrc}))(cfg)};
   const txt=JSON.stringify(data,null,1),fn=`obras_${data.fecha}.json`;
   const okMsg=()=>{$('osrmmsg').textContent=`Guardadas ${data.obras.length} obras en ${fn}. Guárdalo en la carpeta datos del proyecto.`};
   const plain=()=>{const blob=new Blob([txt],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);okMsg()};
@@ -834,10 +856,10 @@ $('obimpf').addEventListener('change',e=>{
   rd.onload=()=>{try{const j=JSON.parse(rd.result);if(!j||typeof j!=='object'||j.tipo!=='plus-desplazamiento-obras'||!Array.isArray(j.obras))throw 0;
     {const base=isExample?store.get('pd_manual',[]):manual;if(Array.isArray(j.dias))for(const x of j.dias){if(!x||typeof x!=='object'||!isDay(x.day)||base.some(y=>y.day===x.day))continue;const km=kmOk(x.km);const p=isCoord(x.p)?x.p:null;if(!p&&!km)continue;base.push({day:x.day,p,name:txt(x.name,120).trim(),km,modo:okModo(x.modo)})}store.set('pd_manual',base);if(!isExample)manual=base}
     if(j.excl&&typeof j.excl==='object'&&!Array.isArray(j.excl)){const base=isExample?store.get('pd_excl',{}):excl;for(const k in j.excl)if(isDay(k))base[k]=1;store.set('pd_excl',base);if(!isExample)excl=base}
-    const ch=applyAj(j.ajustes,['umbral','eur','ekm','vel','modo','desde','parada','parada2','ini','fin','kmsrc'].concat(cfg.casa?[]:['casa']));
+    const ch=applyAj(j.ajustes,['umbral','eur','ekm','vel','modo','desde','parada','parada2','ini','fin'].concat(cfg.casa?[]:['casa']));
     if(!cfg.casa&&isCoord(j.casa)){cfg.casa=j.casa[0]+', '+j.casa[1];store.set('pd_cfg',cfg);$('c_casa').value=cfg.casa}
     if(isExample)saved=store.get('pd_obras',[]).concat(saved.filter(x=>x.name==='Obra de ejemplo (Santiago)'));
-    let n=0;for(const o of j.obras){if(!o||typeof o!=='object'||!isCoord(o.p))continue;const name=txt(o.name,120),man=kmOk(o.man),osrm=kmOk(o.osrm),vr=vrOk(o.vr);const s=findSaved(o.p);if(s){s.name=name||s.name;s.man=man??s.man;s.osrm=osrm??s.osrm;if(vr)s.vr=vr}else{const x={p:o.p,name,man,osrm};if(vr)x.vr=vr;saved.push(x)}n++}
+    let n=0;for(const o of j.obras){if(!o||typeof o!=='object'||!isCoord(o.p))continue;const name=txt(o.name,120),man=kmOk(o.man),maps=kmOk(o.maps),osrm=kmOk(o.osrm),vr=vrOk(o.vr);const rev=!maps;const s=findSaved(o.p);if(s){s.name=name||s.name;s.man=man??s.man;s.maps=maps??s.maps;s.osrm=osrm??s.osrm;if(vr)s.vr=vr;if(rev&&!(s.maps>0))s.rev=1}else{const x={p:o.p,name,man,maps,osrm};if(rev)x.rev=1;if(vr)x.vr=vr;saved.push(x)}n++}
     if(isExample){store.set('pd_obras',saved.filter(x=>x.name!=='Obra de ejemplo (Santiago)'));const t=store.get('pd_obras',[]).length;saved=[{p:[42.88,-8.54],name:'Obra de ejemplo (Santiago)',man:null,osrm:null}];$('osrmmsg').innerHTML=`<b>✓ Cargadas ${n} obras de ${escH(f.name)}</b> (${t} guardadas en el móvil). Se verán en la lista cuando cargues tu Cronología: las obras salen de los sitios donde paraste.${escH(ajMsg(ch))}`}
     else{persistSaved();$('osrmmsg').innerHTML=`<b>✓ Cargadas ${n} obras de ${escH(f.name)}.</b>${escH(ajMsg(ch))}`}render()}
     catch(_){let t='';try{t=JSON.parse(rd.result).tipo}catch(__){}
@@ -871,7 +893,7 @@ function renderQuick(){
 }
 
 // ajustes
-const F={desde:'c_desde',umbral:'c_umbral',eur:'c_eur',vel:'c_vel',modo:'c_modo',ekm:'c_ekm',parada:'c_parada',parada2:'c_parada2',ini:'c_ini',fin:'c_fin',casa:'c_casa',kmsrc:'c_kmsrc'};
+const F={desde:'c_desde',umbral:'c_umbral',eur:'c_eur',vel:'c_vel',modo:'c_modo',ekm:'c_ekm',parada:'c_parada',parada2:'c_parada2',ini:'c_ini',fin:'c_fin',casa:'c_casa'};
 for(const k in F){const el=$(F[k]);el.value=cfg[k];el.addEventListener('change',()=>{let v=el.value;if(['umbral','eur','vel','parada','parada2'].includes(k)){v=parseFloat(String(v).replace(',','.'));if(!isFinite(v)||v<0||(k==='vel'&&!(v>0)))v=DEF[k];el.value=v}if(['ini','fin'].includes(k)&&!/^\d\d:\d\d$/.test(v)){v=DEF[k];el.value=v}if(k==='ekm'){v=parseFloat(String(v).replace(',','.'));if(!(v>0))v='';el.value=v}cfg[k]=v;store.set('pd_cfg',cfg);render();
   // v2.3.22: al elegir "Por duración de la ruta", se pide a OSRM la duración de las obras que no la tienen (solo entonces)
   if(k==='modo'&&v==='osrm'&&drives){const list=obras.filter(o=>!vrOf(o));if(list.length)doOsrm(list)}})}
@@ -901,30 +923,40 @@ drop.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f){const rd=
 // copiar
 // ---------- exportar ----------
 const XE=()=>MODE==='man'?{}:excl;
-const XH=['Fecha','Desde','Hasta','Km','Origen km','Km GPS','Km de más','Importe (€)']; // sin horas por privacidad
-function xRows(){const R=[];for(const d of current)if(!XE()[d.day])for(const t of d.trips)R.push([d.day.split('-').reverse().join('/'),t.de,t.a,n1(t.km),t.fixed||'GPS',n1(t.gps),n1(t.extra),t.imp.toFixed(2).replace('.',',')]);return R}
-function xName(){const RG=getRange();const b=RG.view==='mes'?RG.m:RG.all?'todo':RG.a.replace(/^0000.*/,'inicio')+'_a_'+RG.b.replace(/^9999.*/,'fin');return 'plus_desplazamiento_'+b+'.csv'}
+// v2.3.30: exportar todo, una semana (lun–dom) o un día de lo que se ve
+const monOf=k=>{const d=new Date(k+'T12:00:00');d.setDate(d.getDate()-(d.getDay()+6)%7);return isoD(d)};
+const XD=()=>{const v=$('x_part').value;if(!v)return current;const k=v.slice(2);return current.filter(d=>v[0]==='w'?monOf(d.day)===k:d.day===k)};
+function fillPart(){const sel=$('x_part'),old=sel.value,fd=k=>k.split('-').reverse().join('/'),sh=k=>fd(k).slice(0,5);
+  const on=current.filter(d=>!XE()[d.day]).map(d=>d.day).sort();const W=[...new Set(on.map(monOf))];
+  const sun=k=>{const d=new Date(k+'T12:00:00');d.setDate(d.getDate()+6);return isoD(d)};
+  sel.innerHTML='<option value="">Todo lo de la pantalla</option>'+(W.length?'<optgroup label="Una semana">'+W.map(w=>`<option value="w:${w}">Semana del ${sh(w)} al ${sh(sun(w))}</option>`).join('')+'</optgroup><optgroup label="Un día">'+on.map(k=>`<option value="d:${k}">${DOW[new Date(k+'T12:00:00').getDay()]} ${fd(k)}</option>`).join('')+'</optgroup>':'');
+  sel.value=[...sel.options].some(o=>o.value===old)?old:''}
+const XH=['Fecha','Desde','Hasta','Km','Origen km','Km de más','Importe (€)']; // sin horas por privacidad; v2.3.30: sin el GPS del día
+function xRows(){const R=[];for(const d of XD())if(!XE()[d.day])for(const t of d.trips)R.push([d.day.split('-').reverse().join('/'),t.de,t.a,n1(t.km),t.fixed||'GPS del trayecto',n1(t.extra),t.imp.toFixed(2).replace('.',',')]);return R}
+function xName(){const RG=getRange(),v=$('x_part').value;const b=v?(v[0]==='w'?'semana_'+v.slice(2):v.slice(2)):RG.view==='mes'?RG.m:RG.all?'todo':RG.a.replace(/^0000.*/,'inicio')+'_a_'+RG.b.replace(/^9999.*/,'fin');return 'plus_desplazamiento_'+b+'.csv'}
 function xCsv(){const q=v=>{v=String(v);return /[;"\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
-  const on=current.filter(d=>!XE()[d.day]);const tot=on.reduce((s,d)=>s+d.imp,0);
-  const L=[XH,...xRows(),[],['Total','','','','','','',tot.toFixed(2).replace('.',',')]];
+  const on=XD().filter(d=>!XE()[d.day]);const tot=on.reduce((s,d)=>s+d.imp,0);
+  const L=[XH,...xRows(),[],['Total','','','','','',tot.toFixed(2).replace('.',',')]];
   return '\ufeff'+L.map(r=>r.map(q).join(';')).join('\r\n')}
 function renderX(){
   if(!$('xport').open)return;
-  const R=xRows();const RG=getRange();
-  const on=current.filter(d=>!XE()[d.day]);const tot=on.reduce((s,d)=>s+d.imp,0);
+  const R=xRows();const RG=getRange(),xv=$('x_part').value;
+  const on=XD().filter(d=>!XE()[d.day]);const tot=on.reduce((s,d)=>s+d.imp,0);
   const fdx=k=>k.split('-').reverse().join('/');
   const per=RG.view==='mes'?(RG.m?MES[+RG.m.slice(5)-1]+' '+RG.m.slice(0,4):'sin días con plus'):RG.all?'todo lo cargado':RG.a.startsWith('0000')?'hasta el '+fdx(RG.b):RG.b.startsWith('9999')?'desde el '+fdx(RG.a):RG.a===RG.b?'el '+fdx(RG.a):'del '+fdx(RG.a)+' al '+fdx(RG.b);
-  const nx=current.filter(d=>XE()[d.day]).length;
-  $('x_sub').textContent=`${per} · ${R.length} trayectos · total ${eur(tot)}`+(nx?` · ${nx} día${nx>1?'s':''} quitado${nx>1?'s':''}`:'');
+  const per2=!xv?per:xv[0]==='d'?'el '+fdx(xv.slice(2)):$('x_part').selectedOptions[0].textContent.replace('Semana','semana');
+  const nx=XD().filter(d=>XE()[d.day]).length;
+  $('x_sub').textContent=`${per2} · ${R.length} trayecto${R.length===1?'':'s'} · total ${eur(tot)}`+(nx?` · ${nx} día${nx>1?'s':''} quitado${nx>1?'s':''}`:'');
   const esc=v=>String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;');
-  $('x_table').innerHTML='<thead><tr>'+XH.map(h=>`<th>${h}</th>`).join('')+'</tr></thead><tbody>'+(R.length?R.map(r=>'<tr>'+r.map((v,i)=>`<td class="${[3,5,6,7].includes(i)?'num':''}">${esc(v)}</td>`).join('')+'</tr>').join(''):'<tr><td colspan="8" class="empty">No hay trayectos en este periodo.</td></tr>')+'</tbody>'+`<tfoot><tr><td colspan="7">Total</td><td class="num">${tot.toFixed(2).replace('.',',')}</td></tr></tfoot>`;
-  const kmx=current.filter(d=>!XE()[d.day]).reduce((s,d)=>s+d.extra,0);
+  $('x_table').innerHTML='<thead><tr>'+XH.map(h=>`<th>${h}</th>`).join('')+'</tr></thead><tbody>'+(R.length?R.map(r=>'<tr>'+r.map((v,i)=>`<td class="${[3,5,6].includes(i)?'num':''}">${esc(v)}</td>`).join('')+'</tr>').join(''):'<tr><td colspan="7" class="empty">No hay trayectos en este periodo.</td></tr>')+'</tbody>'+`<tfoot><tr><td colspan="6">Total</td><td class="num">${tot.toFixed(2).replace('.',',')}</td></tr></tfoot>`;
+  const kmx=XD().filter(d=>!XE()[d.day]).reduce((s,d)=>s+d.extra,0);
   $('x_s1').textContent=$('x_sub').textContent;
   $('x_s2').textContent=`Días: ${on.length} · Km de más: ${Math.round(kmx)} · Importe: ${tot.toFixed(2).replace('.',',')} €`;
-  $('x_s3').textContent=`Cálculo: más de ${cfg.umbral} km por trayecto; ${calcTxt()}. Km de obra: ruta más corta sin peaje (manual) o GPS. Generado el ${new Date().toLocaleDateString('es-ES')}. Sin acuerdo firmado no hay devengo: los importes son orientativos.`;
+  $('x_s3').textContent=`Cálculo: más de ${cfg.umbral} km por trayecto; ${calcTxt()}. Km de obra: ruta más rápida según Google Maps (o la mediana del GPS como propuesta). Generado el ${new Date().toLocaleDateString('es-ES')}. Sin acuerdo firmado no hay devengo: los importes son orientativos.`;
 }
 $('m_export').addEventListener('click',()=>$('copy').click());
-$('copy').addEventListener('click',()=>{const x=$('xport');$('x_msg').textContent='';try{x.showModal()}catch(_){x.setAttribute('open','')}renderX()});
+$('copy').addEventListener('click',()=>{const x=$('xport');$('x_msg').textContent='';try{x.showModal()}catch(_){x.setAttribute('open','')}fillPart();renderX()});
+$('x_part').addEventListener('change',()=>{$('x_msg').textContent='';renderX()});
 $('x_close').addEventListener('click',()=>{try{$('xport').close()}catch(_){$('xport').removeAttribute('open')}});
 $('x_open').addEventListener('click',async()=>{
   const w=window.open('','_blank');$('x_msg').textContent='Creando PDF…';
@@ -951,14 +983,14 @@ function loadScript(u){return new Promise((ok,ko)=>{const s=document.createEleme
 async function xPdf(){
   if(!window.jspdf){await loadScript('lib/jspdf.umd.min.js');await loadScript('lib/jspdf.plugin.autotable.min.js')}
   const {jsPDF}=window.jspdf;const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-  const on=current.filter(d=>!XE()[d.day]);const tot=on.reduce((s,d)=>s+d.imp,0),km=on.reduce((s,d)=>s+d.extra,0);
+  const on=XD().filter(d=>!XE()[d.day]);const tot=on.reduce((s,d)=>s+d.imp,0),km=on.reduce((s,d)=>s+d.extra,0);
   doc.setFontSize(16);doc.text('Plus de desplazamiento',14,15);
   doc.setFontSize(10);doc.text($('x_sub').textContent,14,22);
   doc.text(`Días: ${on.length} · Km de más: ${Math.round(km)} · Importe: ${tot.toFixed(2).replace('.',',')} €`,14,28);
-  doc.setFontSize(8);doc.setTextColor(100);doc.text(doc.splitTextToSize(`Cálculo: más de ${cfg.umbral} km por trayecto; ${calcTxt()}. Km de obra: ruta más corta sin peaje (manual) o GPS. Generado el ${new Date().toLocaleDateString('es-ES')}.`,268),14,33);
+  doc.setFontSize(8);doc.setTextColor(100);doc.text(doc.splitTextToSize(`Cálculo: más de ${cfg.umbral} km por trayecto; ${calcTxt()}. Km de obra: ruta más rápida según Google Maps (o la mediana del GPS como propuesta). Generado el ${new Date().toLocaleDateString('es-ES')}.`,268),14,33);
   doc.setTextColor(163,93,0);doc.text('Prototipo. Sin acuerdo firmado no hay devengo: los importes son orientativos. No sustituyen al cálculo oficial de la empresa.',14,41);doc.setTextColor(0);
-  doc.autoTable({startY:45,head:[XH],body:xRows(),styles:{fontSize:8,cellPadding:1.5},headStyles:{fillColor:[11,78,162]},columnStyles:{3:{halign:'right'},5:{halign:'right'},6:{halign:'right'},7:{halign:'right'}},
-    foot:[['Total','','','','','','',tot.toFixed(2).replace('.',',')]],footStyles:{fillColor:[227,236,248],textColor:20,fontStyle:'bold'}});
+  doc.autoTable({startY:45,head:[XH],body:xRows(),styles:{fontSize:8,cellPadding:1.5},headStyles:{fillColor:[11,78,162]},columnStyles:{3:{halign:'right'},5:{halign:'right'},6:{halign:'right'}},
+    foot:[['Total','','','','','',tot.toFixed(2).replace('.',',')]],footStyles:{fillColor:[227,236,248],textColor:20,fontStyle:'bold'}});
   return doc.output('blob');
 }
 $('x_pdf').addEventListener('click',async()=>{
@@ -1008,8 +1040,7 @@ function manTrips(day,mk){
   if(!mk||!mk.o)return [];
   const o=obById(mk.o);if(!o||!(o.km>0))return [];
   if(cfg.desde&&day<cfg.desde)return [];
-  if(!(o.km>cfg.umbral))return [];
-  const km=o.km,extra=km-cfg.umbral,min=km/cfg.vel*60,imp=EKM()?extra*EKM():extra*cfg.eur/cfg.vel;
+  const km=o.km,extra=Math.max(0,km-cfg.umbral),min=km/cfg.vel*60,imp=EKM()?extra*EKM():extra*cfg.eur/cfg.vel;
   const t=(de,a)=>({ini:'—',fin:'—',km,gps:km,fixed:'a mano',min,extra,imp,stops:0,de,a,mano:true});
   const m=mk.m||'iv';
   return m==='i'?[t('Casa',o.name)]:m==='v'?[t(o.name,'Casa')]:[t('Casa',o.name),t(o.name,'Casa')];
@@ -1025,7 +1056,7 @@ function renderMset(){
   $('msum').textContent=act.length?`Tus obras (${act.length})`:'Tus obras: empieza aquí';
   if(!act.length)$('mset').open=true;
   $('mc_dir').value=cfg.casaDir||'';
-  $('moblist').innerHTML=act.map(o=>obEdit!==o.id?`<div class="obrow" data-id="${escH(o.id)}"><b>${escH(o.name)}</b><span class="k">${o.km>0?n1(o.km)+' km':'<span class="chip warn">sin km</span>'}</span><a class="btn sm" href="${escH(mapsUrl(o))}" target="_blank" rel="noopener">Ruta</a><button class="btn sm" type="button" data-oedit="${o.id}">Editar</button></div>`:`<div class="obitem" data-id="${escH(o.id)}">
+  $('moblist').innerHTML=act.map(o=>obEdit!==o.id?`<div class="obrow" data-id="${escH(o.id)}"><b>${escH(o.name)}</b><span class="k">${o.km>0?n1(o.km)+' km':'<span class="chip warn">sin km</span>'}${o.km>0&&o.kmok===false?' <span class="chip warn">revisar km</span> <button class="btn sm" type="button" data-kmok="'+o.id+'">Confirmar</button>':''}</span><a class="btn sm" href="${escH(mapsUrl(o))}" target="_blank" rel="noopener">Ruta</a><button class="btn sm" type="button" data-oedit="${o.id}">Editar</button></div>`:`<div class="obitem" data-id="${escH(o.id)}">
     <label>Obra<input type="text" data-f="name" value="${escH(o.name)}"></label>
     <label class="wide">Dirección<input type="text" data-f="dir" value="${escH(o.dir)}" placeholder="opcional"></label>
     <label>Km<input type="number" data-f="km" min="0" step="0.1" inputmode="decimal" value="${o.km>0?o.km:''}"></label>
@@ -1035,7 +1066,7 @@ function renderMset(){
 $('mc_dir').addEventListener('change',e=>{cfg.casaDir=e.target.value.trim();store.set('pd_cfg',cfg);renderMset()});
 $('moblist').addEventListener('change',e=>{
   const it=e.target.closest('.obitem'),f=e.target.dataset.f;if(!it||!f)return;const o=obById(it.dataset.id);if(!o)return;
-  if(f==='km'){const v=parseFloat(String(e.target.value).replace(',','.'));o.km=isFinite(v)&&v>0?v:null}
+  if(f==='km'){const v=parseFloat(String(e.target.value).replace(',','.'));o.km=isFinite(v)&&v>0?v:null;o.kmok=true}
   else o[f]=e.target.value.trim();
   if(f==='name'&&!o.name)o.name='Obra';
   saveMan();renderMan();if(obEdit!==o.id)renderMset();
@@ -1043,6 +1074,7 @@ $('moblist').addEventListener('change',e=>{
 let obEdit=null;
 $('moblist').addEventListener('click',e=>{
   if(e.target.dataset&&e.target.dataset.oedit!==undefined){obEdit=e.target.dataset.oedit||null;renderMset();return}
+  if(e.target.dataset&&e.target.dataset.kmok){const o=obById(e.target.dataset.kmok);if(o){o.kmok=true;saveMan();renderMset()}return} // v2.3.30: km confirmados con Maps
   const id=e.target.dataset&&e.target.dataset.del;if(!id)return;obEdit=null;const o=obById(id);if(!o)return;
   const used=Object.values(marks).some(m=>m.o===id);
   if(used)o.arch=true;else mob=mob.filter(x=>x.id!==id);
@@ -1054,7 +1086,7 @@ $('mn_add').addEventListener('click',()=>{
   if(!name){$('mn_msg').textContent='Ponle un nombre a la obra.';return}
   if(!(km>0)){$('mn_msg').textContent='Escribe los km de tu casa a la obra (solo ida). Si no los sabes, añade la dirección y usa "Ruta" después.';}
   if(mob.some(o=>!o.arch&&o.name.toLowerCase()===name.toLowerCase())){$('mn_msg').textContent='Ya tienes una obra con ese nombre.';return}
-  mob.push({id:newId(),name,dir,km:km>0?km:null});saveMan();
+  mob.push({id:newId(),name,dir,km:km>0?km:null,kmok:km>0});saveMan();
   $('mn_name').value='';$('mn_dir').value='';$('mn_km').value='';
   if(km>0)$('mn_msg').textContent=`Añadida "${name}".`;
   renderMset();renderMan();
@@ -1081,7 +1113,7 @@ function renderMan(){
     const dlab=`<span class="dd"><b>${DOW[d.wd]} ${dt.getDate()}</b>${d.day===TODAY?'<small>hoy</small>':''}</span>`;
     let mid='',end='';
     if(mk&&mk.off){mid='<span class="dm off">Libre</span>'}
-    else if(o){const mm=mk.m||'iv';mid=`<span class="dm">${escH(o.name)}${mm==='i'?' <small>· ida</small>':mm==='v'?' <small>· vuelta</small>':''}${o.km>0?'':' <small class="w">· sin km</small>'}</span>`;end=`<span class="de">${trips.length?eur(imp):'0 €'}</span>`}
+    else if(o){const mm=mk.m||'iv';mid=`<span class="dm">${escH(o.name)}${mm==='i'?' <small>· ida</small>':mm==='v'?' <small>· vuelta</small>':''}${o.km>0?'':' <small class="w">· sin km</small>'}</span>`;end=`<span class="de">${trips.length?eur(imp):eur(0)}</span>`}
     else if(mk&&mk.o){mid='<span class="dm w">obra quitada</span>'}
     else{mid=`<span class="dm ${d.we?'':'w'}">${d.we?'—':'Sin marcar'}</span>`;
       if(pvo)end=`<button class="qrep" type="button" data-same="${d.day}" aria-label="Repetir ${escH(pvo.name)}">↻ ${escH(pvo.name)}</button>`}
@@ -1094,7 +1126,7 @@ function renderMan(){
       const pills=top.map(x=>`<button class="pill" type="button" data-set="${d.day}" data-o="${escH(x.id)}" aria-pressed="${mk&&mk.o===x.id}">${escH(x.name)}</button>`).join('');
       const sel=act.length>top.length?`<select class="pill" data-pick="${d.day}" aria-label="Otra obra"><option value="">Otra obra…</option>${act.map(x=>`<option value="${escH(x.id)}">${escH(x.name)}${x.km>0?' · '+n1(x.km)+' km':''}</option>`).join('')}</select>`:'';
       let info='';
-      if(o){info=`${o.km>0?n1(o.km)+' km de casa':'<b>sin km</b>'}`+(trips.length?` · ${Math.round(extra)} km de más`:(o.km>0&&o.km<=cfg.umbral?' · no pasa de '+cfg.umbral+' km':''))+(cfg.desde&&d.day<cfg.desde?' · antes del inicio del plus':'')}
+      if(o){info=`${o.km>0?n1(o.km)+' km de casa':'<b>sin km</b>'}`+(extra>0?` · ${Math.round(extra)} km de más`:(o.km>0&&o.km<=cfg.umbral?' · no pasa de '+cfg.umbral+' km: 0 €':''))+(cfg.desde&&d.day<cfg.desde?' · antes del inicio del plus':'')}
       body=`<div class="dbody">${info?`<div class="cline">${info}</div>`:''}${sameB}<div class="pills">${pills}${sel}<button class="pill libre" type="button" data-off="${d.day}" aria-pressed="${!!(mk&&mk.off)}">Libre / no fui</button></div>`
         +(act.length?'':'<p class="hint">Primero añade tus obras arriba, en "Tus obras".</p>');
       if(o)body+=`<div class="pills">${[['iv','Ida y vuelta'],['i','Solo ida'],['v','Solo vuelta']].map(([k,t])=>`<button class="pill sm" type="button" data-mode="${d.day}" data-m="${k}" aria-pressed="${(mk.m||'iv')===k}">${t}</button>`).join('')}</div>`;
@@ -1105,8 +1137,8 @@ function renderMan(){
   $('mdays').innerHTML=cards.join('')||`<div class="panel empty">No hay días en este mes todavía.</div>`;
   days.sort((a,b)=>a.day<b.day?-1:1);
   current=days;
-  const tot=days.reduce((s,d)=>s+d.imp,0),km=days.reduce((s,d)=>s+d.extra,0),tr=days.reduce((s,d)=>s+d.trips.length,0);
-  $('mkpis').innerHTML=`<div class="kpi main"><span>Importe del mes</span><b>${eur(tot)}</b></div><div class="kpi"><span>Días con plus</span><b>${days.length}</b></div><div class="kpi"><span>Trayectos</span><b>${tr}</b></div><div class="kpi"><span>Km de más</span><b>${Math.round(km)}</b></div>`;
+  const tot=days.reduce((s,d)=>s+d.imp,0),km=days.reduce((s,d)=>s+d.extra,0),tr=days.reduce((s,d)=>s+d.trips.filter(t=>t.imp>0).length,0),nd=days.filter(d=>d.imp>0).length;
+  $('mkpis').innerHTML=`<div class="kpi main"><span>Importe del mes${cfg.desde?'':' (orientativo)'}</span><b>${eur(tot)}</b></div><div class="kpi"><span>Días con plus</span><b>${nd}</b></div><div class="kpi"><span>Trayectos</span><b>${tr}</b></div><div class="kpi"><span>Km de más</span><b>${Math.round(km)}</b></div>`;
   const pb=$('mpend');
   if(pend.length){pb.hidden=false;pb.innerHTML=`Te ${pend.length===1?'falta 1 día':'faltan '+pend.length+' días'} por marcar este mes (lunes a viernes). <button class="btn sm" type="button" id="m_gopend">Ir al primero</button>`;pb.dataset.first=pend[pend.length-1]}
   else pb.hidden=true;
@@ -1152,9 +1184,9 @@ $('mb_load').addEventListener('change',e=>{
     if(j.tipo==='plus-desplazamiento-manual'){
       // solo entran los campos que la app conoce, con su tipo; nada de copiar objetos enteros del archivo
       const okId=v=>typeof v==='string'&&/^[a-z0-9]{4,24}$/i.test(v);const map=new Map();
-      const pick=o=>({name:txt(o.name,120).trim(),dir:txt(o.dir,200).trim(),km:kmOk(o.km),arch:!!o.arch});
+      const pick=o=>({name:txt(o.name,120).trim(),dir:txt(o.dir,200).trim(),km:kmOk(o.km),arch:!!o.arch,kmok:o.kmok===true});
       let n=0;for(const o of Array.isArray(j.obras)?j.obras:[]){if(!o||typeof o!=='object')continue;const c=pick(o);if(!c.name)continue;const ex=(okId(o.id)&&mob.find(x=>x.id===o.id))||mob.find(x=>!x.arch&&x.name.toLowerCase()===c.name.toLowerCase());
-        if(ex){if(okId(o.id))map.set(o.id,ex.id);ex.name=c.name;ex.arch=c.arch;if(c.km!==null)ex.km=c.km;if(c.dir)ex.dir=c.dir}else{const id=okId(o.id)&&!mob.some(x=>x.id===o.id)?o.id:newId();if(okId(o.id))map.set(o.id,id);mob.push(Object.assign({id},c));n++}}
+        if(ex){if(okId(o.id))map.set(o.id,ex.id);ex.name=c.name;ex.arch=c.arch;if(c.km!==null){ex.km=c.km;ex.kmok=c.kmok}if(c.dir)ex.dir=c.dir}else{const id=okId(o.id)&&!mob.some(x=>x.id===o.id)?o.id:newId();if(okId(o.id))map.set(o.id,id);mob.push(Object.assign({id},c));n++}}
       let d=0;const mk=j.marcas&&typeof j.marcas==='object'&&!Array.isArray(j.marcas)?j.marcas:{};
       for(const k of Object.keys(mk)){const m=mk[k];if(marks[k]||!isDay(k)||!m||typeof m!=='object')continue;
         if(m.off){marks[k]={off:1};d++}else if(okId(m.o)){const o=map.get(m.o)||m.o;if(!mob.some(x=>x.id===o))continue;marks[k]={o,m:okModo(m.m)};d++}}
@@ -1162,7 +1194,7 @@ $('mb_load').addEventListener('change',e=>{
       const ch=applyAj(j.ajustes,['umbral','eur','ekm','vel','desde']);
       $('mb_msg').textContent=`Copia cargada: ${n} obras nuevas y ${d} días que no tenías. Los días que ya tenías marcados no se tocan.`+ajMsg(ch);
     }else if(j.tipo==='plus-desplazamiento-obras'&&Array.isArray(j.obras)){
-      let n=0;for(const o of j.obras){if(!o||typeof o!=='object')continue;const name=txt(o.name,120).trim();const km=kmOk(o.man)||kmOk(o.osrm);if(!name||/^\s*paso\b/i.test(name)||!km)continue;if(mob.some(x=>!x.arch&&x.name.toLowerCase()===name.toLowerCase()))continue;mob.push({id:newId(),name,dir:'',km});n++}
+      let n=0;for(const o of j.obras){if(!o||typeof o!=='object')continue;const name=txt(o.name,120).trim();const km=kmOk(o.man)||kmOk(o.maps)||kmOk(o.osrm);if(!name||/^\s*paso\b/i.test(name)||!km)continue;if(mob.some(x=>!x.arch&&x.name.toLowerCase()===name.toLowerCase()))continue;mob.push({id:newId(),name,dir:'',km,kmok:!!kmOk(o.maps)&&km===kmOk(o.maps)});n++}
       $('mb_msg').textContent=`Cargadas ${n} obras de la tabla del modo GPS (sin los sitios "paso").`;
     }else throw 0;
     saveMan();renderMset();renderMan();$('mn_msg').textContent=$('mb_msg').textContent;$('mset').open=true;
