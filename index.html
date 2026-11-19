@@ -279,7 +279,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.31 · 23/10/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.32 · 19/11/2026</span></p>
     </div>
   </header>
 
@@ -498,7 +498,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.31 · 23/10/2026</span></p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.32 · 19/11/2026</span></p>
   <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
@@ -557,7 +557,7 @@ const OBRA_R=0.4, CASA_R=3, MATCH_R=0.6;
 const DOW=['dom','lun','mar','mié','jue','vie','sáb'];
 const MES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
-function ll(s){if(!s)return null;const p=String(s).replace(/°/g,'').split(',');return [parseFloat(p[0]),parseFloat(p[1])]}
+function ll(s){if(!s)return null;const p=String(s).replace(/°/g,'').split(',');const q=[parseFloat(p[0]),parseFloat(p[1])];return q.every(isFinite)&&Math.abs(q[0])<=90&&Math.abs(q[1])<=180?q:null} // v2.3.32: coordenadas rotas → null (antes [NaN,NaN])
 function dist(a,b){const R=6371,r=Math.PI/180;const dl=(b[0]-a[0])*r,dg=(b[1]-a[1])*r;const h=Math.sin(dl/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dg/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
 const eur=n=>n.toLocaleString('es-ES',{style:'currency',currency:'EUR'});
 const n1=n=>n.toLocaleString('es-ES',{maximumFractionDigits:1,minimumFractionDigits:1});
@@ -569,20 +569,25 @@ const VEH=new Set(['IN_PASSENGER_VEHICLE','IN_VEHICLE','IN_BUS','IN_TAXI','MOTOR
 function parseTimeline(j){
   const segs=j&&j.semanticSegments;
   if(!Array.isArray(segs))throw new Error('formato');
-  const out=[];const night={};const vis=[];
+  const out=[];const night={};const vis=[];let malos=0;
+  // v2.3.32: un tramo incompleto (sin hora válida o con coordenadas rotas) se salta y se cuenta; ya no tumba el archivo entero
+  const okT=t=>typeof t==='string'&&/^\d{4}-\d\d-\d\dT\d\d:\d\d/.test(t)&&!isNaN(Date.parse(t));
   for(const s of segs){
+    if(!s||typeof s!=='object')continue;
     if(s.activity&&s.activity.topCandidate&&VEH.has(s.activity.topCandidate.type)){
       const a=s.activity;const st=ll(a.start&&a.start.latLng),en=ll(a.end&&a.end.latLng);
-      if(st&&en)out.push({start:s.startTime,end:s.endTime,s:st,e:en,km:(a.distanceMeters||0)/1000});
+      if(st&&en&&okT(s.startTime)&&okT(s.endTime))out.push({start:s.startTime,end:s.endTime,s:st,e:en,km:(a.distanceMeters||0)/1000});else malos++;
     }else if(s.visit&&s.visit.topCandidate&&s.visit.topCandidate.placeLocation){
-      const t0=new Date(s.startTime),t1=new Date(s.endTime);const p=ll(s.visit.topCandidate.placeLocation.latLng);
-      if(p&&(t1-t0)>4*3600e3){const k=p[0].toFixed(3)+','+p[1].toFixed(3);night[k]=(night[k]||0)+(t1-t0)}
-      if(p&&s.startTime&&s.endTime)vis.push({start:s.startTime,end:s.endTime,p});
+      const p=ll(s.visit.topCandidate.placeLocation.latLng);
+      if(!p||!okT(s.startTime)||!okT(s.endTime)){malos++;continue}
+      const t0=new Date(s.startTime),t1=new Date(s.endTime);
+      if((t1-t0)>4*3600e3){const k=p[0].toFixed(3)+','+p[1].toFixed(3);night[k]=(night[k]||0)+(t1-t0)}
+      vis.push({start:s.startTime,end:s.endTime,p});
     }
   }
   out.sort((a,b)=>a.start<b.start?-1:1);
   const best=Object.entries(night).sort((a,b)=>b[1]-a[1])[0];
-  return {drives:out,visits:vis,home:best?best[0].split(',').map(Number):null};
+  return {drives:out,visits:vis,home:best?best[0].split(',').map(Number):null,malos};
 }
 
 // ---------- cálculo ----------
@@ -910,6 +915,7 @@ function loadText(txt,name){
     $('loadedshort').textContent=`${r.drives.length} trayectos · del ${r.drives[0].start.slice(0,10).split('-').reverse().join('/')} al ${r.drives[r.drives.length-1].start.slice(0,10).split('-').reverse().join('/')}`;
     $('loadedtxt').textContent=`Archivo: ${name}.`+(H?` Casa: ${H[0].toFixed(4)}, ${H[1].toFixed(4)}${cfg.casa?' (fijada a mano)':' (detectada)'}.`:'');
     if(!H)$('status').textContent='No he podido detectar tu casa en este archivo (no hay ninguna estancia larga). Escribe sus coordenadas en Ajustes del cálculo → Casa (lat, lng) y se calculará todo.';
+    if(r.malos)$('status').textContent=($('status').textContent+' Ojo: '+(r.malos===1?'1 tramo del archivo estaba incompleto':r.malos+' tramos del archivo estaban incompletos')+' (sin hora o sin coordenadas válidas) y no se ha usado. Revisa esos días en Google Maps.').trim(); // v2.3.32
     $('month').value='';render();
   }catch(e){const keep=drives&&!isExample;$('loaded').hidden=!keep;$('drop').hidden=keep;
     $('status').textContent=e.message==='formato'?'Este archivo no tiene el formato de la Cronología de Android (falta "semanticSegments"). Si viene de un iPhone, todavía no se puede leer.':'No he podido leer el archivo. Comprueba que es el .json exportado de la Cronología.';

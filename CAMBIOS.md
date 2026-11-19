@@ -4,6 +4,9 @@ Web: https://raulubc-prog.github.io/plus/ · Enlace modo manual: https://raulubc
 
 Historial de GitHub reiniciado el 19/10/2026 (v2.3.19) por privacidad; las versiones anteriores solo quedan descritas aquí.
 
+## 19/11/2026
+- **v2.3.32** — Cronología con tramos incompletos (sin hora o con coordenadas rotas): se saltan esos tramos, se calcula el resto y se avisa de cuántos. Antes un tramo sin hora impedía cargar todo el archivo y uno con coordenadas rotas entraba como trayecto.
+
 ## 23/10/2026
 - **v2.3.31** — Exportar: casilla «Incluir trayectos a 0 €», desmarcada por defecto. Sin marcarla, la hoja, el PDF y el Excel solo llevan los trayectos con importe, y sus días y trayectos cuadran con el resumen.
 
