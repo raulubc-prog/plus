@@ -286,7 +286,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.40 · 20/11/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.41 · 21/11/2026</span></p>
     </div>
   </header>
 
@@ -431,6 +431,11 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
     </details>
   </dialog>
 
+  <div class="panel" id="gobox" data-only="gps" hidden>
+    <label style="font-size:15px;color:var(--fg);font-weight:600">¿Dónde estuve el día…?<input type="date" id="goday" style="font-size:16px;padding:10px"></label>
+    <p class="status" id="gomsg" role="status" style="margin:6px 0 0"></p>
+  </div>
+
   <h2 class="sect" id="dsum" data-only="gps">Días con plus</h2>
   <section class="kpis" id="kpis" data-only="gps"></section>
   <p class="nodev" data-only="gps">Sin acuerdo firmado no hay devengo: los importes son orientativos.</p>
@@ -514,7 +519,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.40 · 20/11/2026</span></p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.41 · 21/11/2026</span></p>
   <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
@@ -574,7 +579,7 @@ let visits=[];        // [{start,end,p:[lat,lng]}] estancias fuera de casa
 let tpath={};         // v2.3.33: {día:[[lat,lng,hora]...]} puntos del recorrido (solo en memoria)
 let dirs=isObj(store.get('pd_dirs',{}))?store.get('pd_dirs',{}):{}; // v2.3.34: {"lat,lng":"Calle, Localidad"} direcciones ya pedidas
 let autoDir=!!store.get('pd_autodir',false);let geoBusy=false,geoMsg={};
-let showAll=!!store.get('pd_alld',false); // v2.3.33: ver también los días sin plus
+let showAll=!!store.get('pd_alld',true); // v2.3.41: por defecto se ven también los días sin plus // v2.3.33: ver también los días sin plus
 let home=null; let isExample=true;
 const casaH=()=>isExample?home:(parseCasa(cfg.casa)||home); // v2.3.35: en el ejemplo manda la casa del ejemplo, no la tuya (antes salía «Sitio a N km» en vez de «Casa»)
 let saved=Array.isArray(store.get('pd_obras',[]))?store.get('pd_obras',[]):[]; // [{p:[lat,lng],name,man,osrm}] datos de obra guardados por el usuario
@@ -874,6 +879,7 @@ function render(){
   // v2.3.33: con la casilla, también los días con coche en el archivo que no llegan al plus (solo para consultar; no entran en importes ni en exportar)
   let lista=current;
   if(showAll&&drives){const have=new Set(current.map(d=>d.day));const ex=[...new Set(drives.map(d=>d.start.slice(0,10)))].filter(k=>RG.inR(k)&&!have.has(k)).map(k=>({day:k,sinPlus:true}));lista=current.concat(ex).sort((a,b)=>a.day<b.day?-1:1)}
+  $('gobox').hidden=!drives;if(drives&&drives.length){$('goday').min=drives[0].start.slice(0,10);$('goday').max=drives[drives.length-1].start.slice(0,10)}
   $('allbox').hidden=!drives;$('alld').checked=showAll;$('autobox').hidden=!drives;$('autodir').checked=autoDir;
   $('gdays').innerHTML=lista.length?lista.slice().reverse().map(d=>{
     if(d.sinPlus){const dt=new Date(d.day+'T12:00:00'),open=gOpen===d.day;let nm='',body='';
@@ -965,6 +971,13 @@ $('osrmall').addEventListener('click',()=>{const list=obras.filter(o=>!(o.sv&&o.
 $('gdays').addEventListener('click',e=>{if(e.target.closest('input,label'))return;const g=e.target.closest('[data-geo]');if(g){geoDay(g.dataset.geo);return}const r=e.target.closest('[data-gtog]');if(!r)return;gOpen=gOpen===r.dataset.gtog?null:r.dataset.gtog;render();if(gOpen&&autoDir&&!isExample)geoDay(gOpen)});
 $('autodir').addEventListener('change',e=>{autoDir=e.target.checked;store.set('pd_autodir',autoDir);if(autoDir&&gOpen&&!isExample)geoDay(gOpen)});
 $('gdays').addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('button,select,input,a'))return;const r=e.target.closest&&e.target.closest('[data-gtog]');if(r&&(e.key==='Enter'||e.key===' ')){e.preventDefault();r.click()}});
+// v2.3.41: ir a un día concreto (con plus o sin él): abre su mes, despliega el día y baja hasta él
+$('goday').addEventListener('change',e=>{const k=e.target.value;if(!isDay(k)||!drives)return;const fd=k.split('-').reverse().join('/');
+  if(!drives.some(d=>d.start.slice(0,10)===k)){$('gomsg').textContent=`El archivo no tiene ningún trayecto en coche el ${fd}. Si ese día fuiste andando, en transporte o no saliste, no aparece.`;return}
+  const L=new Date(+k.slice(0,4),+k.slice(5,7),0).getDate(),a=k.slice(0,8)+'01',b=k.slice(0,8)+pad(L);
+  $('gomsg').textContent=`Abajo tienes el ${fd}, dentro de su mes.`;showAll=true;store.set('pd_alld',true);
+  $('obview').value='rango';$('ob_from').value=a;$('ob_to').value=b;store.set('pd_obview',{view:'rango',from:a,to:b});
+  gOpen=k;render();const c=document.querySelector('#gdays .card.open');if(c)c.scrollIntoView({block:'start',behavior:'smooth'});if(autoDir&&!isExample)geoDay(k)});
 $('alld').addEventListener('change',e=>{showAll=e.target.checked;store.set('pd_alld',showAll);render()});
 $('gdays').addEventListener('change',e=>{const d=e.target.dataset.day;if(!d)return;if(e.target.checked)delete excl[d];else excl[d]=1;if(!isExample)store.set('pd_excl',excl);render()});
 $('rows').addEventListener('change',e=>{const d=e.target.dataset.day;if(!d)return;if(e.target.checked)delete excl[d];else excl[d]=1;if(!isExample)store.set('pd_excl',excl);render()});

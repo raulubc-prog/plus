@@ -4,6 +4,9 @@ Web: https://raulubc-prog.github.io/plus/ · Enlace modo manual: https://raulubc
 
 Historial de GitHub reiniciado el 19/10/2026 (v2.3.19) por privacidad; las versiones anteriores solo quedan descritas aquí.
 
+## 21/11/2026
+- **v2.3.41** — «¿Dónde estuve el día…?» (modo GPS): eliges una fecha y la app abre ese día, con plus o sin él, con sus paradas, horas y recorrido. Si ese día no hay coche en el archivo, lo dice. Los días sin plus se ven ya por defecto.
+
 ## 20/11/2026
 - **v2.3.40** — «Exportar copia» arreglado: el móvil no deja enviar archivos .json desde una web, así que la copia se exporta como .txt (mismo contenido; «Cargar copia» la lee igual). Si aun así el móvil no deja enviarla, se guarda en Descargas y el mensaje dice por qué.
 - **v2.3.39** — Copia más simple: arriba del todo hay siempre los mismos dos botones, «Hacer copia» (la guarda en Descargas) y «Exportar copia» (abre el menú del móvil para mandártela por WhatsApp, correo o Drive), dentro de un recuadro que dice cuántos días llevas sin hacer copia. Se resalta como aviso si no hay copia, si has cambiado obras, km, días o ajustes desde la última («Tienes cambios sin copiar») o si tiene más de 30 días. Cargar la Cronología no cuenta como cambio. Se quita «Ahora no».
