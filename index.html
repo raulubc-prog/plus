@@ -286,7 +286,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.39 · 20/11/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.40 · 20/11/2026</span></p>
     </div>
   </header>
 
@@ -514,7 +514,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.39 · 20/11/2026</span></p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.40 · 20/11/2026</span></p>
   <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
@@ -1278,11 +1278,12 @@ let cwNote='',cwShared=false;
 const copySig=()=>{const g=gpsData(),m=manData();delete g.fecha;delete m.fecha;g.casa=cfg.casa||'';const t=JSON.stringify([g,m]);let h=5381;for(let i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))|0;return t.length+':'+h};
 const copyDone=(t,shared)=>{store.set('pd_lastcopy',TODAY);store.set('pd_copysig',copySig());cwNote=t;cwShared=!!shared;renderCopyWarn()};
 function saveCopy(msgEl){const fn=`plus_copia_${TODAY}.json`,t=`Copia hecha: ${fn} (en Descargas). Lleva obras, km, días y ajustes de los dos modos.`;saveFile(fn,copyTxt(),'application/json',msgEl,t);copyDone('✓ '+t)}
-// Android solo deja compartir ciertos tipos de archivo desde una web: se prueba .json y, si no, .txt (mismo contenido; se carga igual)
-let shareType=null;try{if(navigator.share&&navigator.canShare)for(const c of [['application/json','json'],['text/plain','txt']]){if(navigator.canShare({files:[new File(['{}'],'c.'+c[1],{type:c[0]})]})){shareType=c;break}}}catch(_){}
+// v2.3.40: Android solo deja enviar desde una web ciertos tipos de archivo (texto, imagen, PDF…) y el .json no está entre ellos,
+// aunque canShare diga que sí. La copia se exporta siempre como .txt (mismo contenido; «Cargar copia» la lee igual).
+let shareType=null;try{if(navigator.share&&navigator.canShare)for(const c of [['text/plain','txt']]){if(navigator.canShare({files:[new File(['{}'],'c.'+c[1],{type:c[0]})]})){shareType=c;break}}}catch(_){}
 async function shareCopy(msgEl){if(!shareType){saveCopy(msgEl);const t='Este navegador no deja enviar archivos: la copia se ha guardado en Descargas.';msgEl.textContent=t;cwNote='✓ '+t;renderCopyWarn();return}const fn=`plus_copia_${TODAY}.${shareType[1]}`;const file=new File([copyTxt()],fn,{type:shareType[0]});
   try{await navigator.share({files:[file],title:'Copia de Plus Desplazamiento'});const t='Copia exportada. Para recuperarla: descarga ese archivo en el móvil y usa "Cargar copia".';msgEl.textContent=t;copyDone('✓ '+t,true)}
-  catch(e){if(e&&e.name!=='AbortError')msgEl.textContent='No se pudo exportar desde aquí. Usa "Hacer copia".'}}
+  catch(e){if(e&&e.name==='AbortError')return;saveCopy(msgEl);const t='El móvil no ha dejado enviar el archivo ('+String(e&&e.name||'error').slice(0,40)+'). La copia se ha guardado en Descargas: mándala desde ahí.';msgEl.textContent=t;cwNote='⚠ '+t;renderCopyWarn()}}
 // v2.3.39: arriba, siempre los mismos dos botones («Hacer copia» y «Exportar copia») y una línea que dice cómo está la copia.
 // Se resalta como aviso si hay datos sin copia, cambios desde la última copia o han pasado más de 30 días.
 function renderCopyWarn(){
