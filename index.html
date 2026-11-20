@@ -49,7 +49,8 @@ h2.sect small{font-family:var(--body);font-size:15px;font-weight:500;color:var(-
 /* v2.3.4: bloques en desplegables */
 .privacy>summary{font-family:var(--body);font-size:14px;font-weight:400}
 .privacy>p{margin:6px 0 0}
-#obsum small,#manosum small{font-family:var(--body);font-size:14px;font-weight:600;color:var(--muted)}
+#desclist .w{color:var(--warn);font-weight:600}
+#obsum small,#manosum small,#descsum small{font-family:var(--body);font-size:14px;font-weight:600;color:var(--muted)}
 /* v2.3.2: precio hora y precio km en la misma línea */
 .pair{display:flex;gap:10px}.pair label{flex:1 1 0;min-width:0}
 /* v2.3.2: Cronología cargada, bien visible */
@@ -285,7 +286,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.35 · 20/11/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.36 · 20/11/2026</span></p>
     </div>
   </header>
 
@@ -447,6 +448,11 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <label class="chk" id="allbox" data-only="gps" style="margin:0 0 10px" hidden><input type="checkbox" id="alld"> Ver también los días sin plus (para consultar dónde fuiste)</label>
   <label class="chk" id="autobox" data-only="gps" style="margin:0 0 10px" hidden><input type="checkbox" id="autodir"> Buscar la dirección de las paradas al abrir un día (consulta OpenStreetMap)</label>
   <div class="cards" id="gdays" data-only="gps"></div>
+  <details class="panel" id="descbox" data-only="gps" hidden>
+    <summary id="descsum"></summary>
+    <p class="hint" style="margin-top:2px">Trayectos de más del umbral que hay en el archivo y no suman, con el motivo. Si alguno fue de trabajo: cambia el horario en "Ajustes del cálculo", o añade ese día en "Días añadidos a mano" (entonces cuenta el día entero).</p>
+    <ul class="rstops" id="desclist"></ul>
+  </details>
   <section class="tablebox" data-only="gps" hidden>
     <table id="daystable">
       <thead><tr><th>Día</th><th>Trayectos de más del umbral</th><th class="num">Km de más</th><th class="num">Importe</th><th>Incluir</th></tr></thead>
@@ -506,14 +512,14 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.35 · 20/11/2026</span></p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.36 · 20/11/2026</span></p>
   <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
 <script>
 (function(){
 const $=id=>document.getElementById(id);
-const DEF={desde:'',umbral:50,eur:22,ekm:'',vel:90,modo:'km',parada:30,parada2:60,ini:'06:30',fin:'21:00',casa:'',kmsrc:'obra'};
+const DEF={desde:'',umbral:50,eur:22,ekm:'',vel:90,modo:'km',parada:30,parada2:60,ini:'06:00',fin:'21:00',casa:'',kmsrc:'obra'};
 // v2.3.21: lo que llega de un archivo (copia propia o de un compañero) se comprueba antes de guardarlo.
 // Un valor raro se ignora; los ajustes que cambian se dicen en el mensaje, nunca en silencio.
 const MAXCOPIA=5*1024*1024;
@@ -548,12 +554,17 @@ const calcTxt=()=>EKM()?EKM().toLocaleString('es-ES',{maximumFractionDigits:3})+
 // v2.3.22: modo OSRM. Velocidad media de la ruta casa → obra (km ÷ duración de OSRM); si falta, km ÷ velocidad fija.
 let osrmFb=0;
 const vrOf=o=>{const s=o&&o.sv;return s&&s.vr>0?s.vr:null};
-const impOf=(extra,km,min,o)=>{if(EKM())return extra*EKM();if(cfg.modo==='tiempo')return min*extra/km/60*cfg.eur;if(cfg.modo==='osrm'){const v=vrOf(o);if(v)return extra/v*cfg.eur;osrmFb++}return extra*cfg.eur/cfg.vel};
+// v2.3.36: cada trayecto se redondea al céntimo y los totales suman lo redondeado (las filas de la hoja cuadran con el total)
+const c2=x=>Math.round(x*100)/100;
+const impOf=(extra,km,min,o)=>c2(impRaw(extra,km,min,o));
+const impRaw=(extra,km,min,o)=>{if(EKM())return extra*EKM();if(cfg.modo==='tiempo')return min*extra/km/60*cfg.eur;if(cfg.modo==='osrm'){const v=vrOf(o);if(v)return extra/v*cfg.eur;osrmFb++}return extra*cfg.eur/cfg.vel};
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const isObj=v=>v&&typeof v==='object'&&!Array.isArray(v);
 let cfg=Object.assign({},DEF,isObj(store.get('pd_cfg',{}))?store.get('pd_cfg',{}):{});
 // v2.3.21: si en el móvil quedó guardado un ajuste con tipo raro (p. ej. de una copia antigua), se repara al arrancar
 {let fix=false;for(const k in DEF){if(k in AJ_LBL&&okAj(k,cfg[k])===null&&String(cfg[k]??'')!==String(DEF[k])){cfg[k]=DEF[k];fix=true}}if(typeof cfg.casaDir!=='string'){cfg.casaDir='';fix=true}if(fix)store.set('pd_cfg',cfg)}
+// v2.3.36: el horario por defecto empieza a las 06:00 (antes 06:30); quien tenía guardado el valor antiguo pasa al nuevo una sola vez
+if(!store.get('pd_ini6',0)){if(cfg.ini==='06:30'){cfg.ini='06:00';store.set('pd_cfg',cfg)}store.set('pd_ini6',1)}
 let excl=isObj(store.get('pd_excl',{}))?store.get('pd_excl',{}):{};
 let manual=Array.isArray(store.get('pd_manual',[]))?store.get('pd_manual',[]):[];let wantMonth=null; // días añadidos a mano: [{day,p,name,km,modo:'iv'|'i'|'v'}]
 let drives=null;      // [{start,end,s:[lat,lng],e:[lat,lng],km}]
@@ -615,9 +626,9 @@ const median=a=>{if(!a.length)return null;const s=[...a].sort((x,y)=>x-y),m=s.le
 const isPaso=n=>/^\s*paso\b/i.test(String(n||''));
 function pasoAt(pt){if(!pt)return false;return saved.some(s=>isPaso(s.name)&&dist(s.p,pt)<MATCH_R)}
 // Une los tramos en coche de cada día en trayectos (una parada corta no corta el trayecto)
-function mergedDays(H,useDesde){
+function mergedDays(H,useDesde,all){ // v2.3.36: all = también los tramos fuera de horario o en fin de semana (para enseñar lo que no cuenta)
   const byDay={};
-  for(const d of drives){if(!isWork(d.start,useDesde))continue;const day=d.start.slice(0,10);(byDay[day]=byDay[day]||[]).push(d)}
+  for(const d of drives){const day=d.start.slice(0,10);if(all){if(useDesde&&cfg.desde&&day<cfg.desde)continue}else if(!isWork(d.start,useDesde))continue;(byDay[day]=byDay[day]||[]).push(d)}
   const res={};
   for(const day of Object.keys(byDay).sort()){
     const M=[];
@@ -625,8 +636,9 @@ function mergedDays(H,useDesde){
       const p=M[M.length-1];
       const gap=p?(new Date(d.start)-new Date(p.end))/60000:Infinity;
       const lim=(p&&pasoAt(p.e))?Math.max(cfg.parada,cfg.parada2):cfg.parada;
-      if(p&&gap<lim&&dist(H,p.e)>=1.5){if(gap>1)p.stops++;p.end=d.end;p.e=d.e;p.km+=d.km}
-      else M.push({start:d.start,end:d.end,s:d.s,e:d.e,km:d.km,stops:0});
+      const out=all&&!isWork(d.start,useDesde)?d.start:null;
+      if(p&&gap<lim&&dist(H,p.e)>=1.5){if(gap>1)p.stops++;p.end=d.end;p.e=d.e;p.km+=d.km;if(!p.out&&out)p.out=out}
+      else M.push({start:d.start,end:d.end,s:d.s,e:d.e,km:d.km,stops:0,out});
     }
     res[day]=M;
   }
@@ -688,7 +700,7 @@ function compute(){
       const desv=!!fixed&&Math.abs(m.km-km)/km>0.25; // v2.3.30: el GPS del día se aleja >25 % de la referencia: posible desvío (solo aviso)
       trips.push({ini:m.start.slice(11,16),fin:m.end.slice(11,16),km,gps:m.km,fixed,desv,min,extra,imp,stops:m.stops,de:lab(m.s,os,hs),a:lab(m.e,oe,he),pt:he?(hs?null:m.s):m.e});
     }
-    if(trips.length)days.push({day,trips,extra:trips.reduce((s,t)=>s+t.extra,0),imp:trips.reduce((s,t)=>s+t.imp,0),largo:trips.some(t=>t.gps>150),mano:manual.some(x=>x.day===day)});
+    if(trips.length)days.push({day,trips,extra:trips.reduce((s,t)=>s+t.extra,0),imp:c2(trips.reduce((s,t)=>s+t.imp,0)),largo:trips.some(t=>t.gps>150),mano:manual.some(x=>x.day===day)});
   }
   // días a mano sin trayectos del GPS: se crean con los km de la obra
   for(const x of manual){
@@ -700,7 +712,7 @@ function compute(){
     const extra=Math.max(0,km-cfg.umbral),min=km/cfg.vel*60;
     const t=(de,a)=>({ini:'—',fin:'—',km,gps:km,fixed:'a mano',min,extra,imp:extra>0?impOf(extra,km,min,xo):0,stops:0,de,a,mano:true});
     const trips=x.modo==='i'?[t('Casa',nm)]:x.modo==='v'?[t(nm,'Casa')]:[t('Casa',nm),t(nm,'Casa')];
-    days.push({day:x.day,trips,extra:trips.reduce((s,t)=>s+t.extra,0),imp:trips.reduce((s,t)=>s+t.imp,0),largo:false,mano:true});
+    days.push({day:x.day,trips,extra:trips.reduce((s,t)=>s+t.extra,0),imp:c2(trips.reduce((s,t)=>s+t.imp,0)),largo:false,mano:true});
   }
   days.sort((a,b)=>a.day<b.day?-1:1);
   return days;
@@ -882,6 +894,17 @@ function render(){
     }
     return `<article class="card${open?' open':''}${off?' gex':''}">${row}${body}</article>`;
   }).join(''):`<div class="panel empty">${drives?'No hay trayectos de más del umbral en este periodo con los ajustes actuales.':'Carga tu archivo de Cronología para empezar.'}</div>`;
+  // v2.3.36: trayectos de más del umbral que no cuentan (fuera de horario o en sábado/domingo), con su motivo
+  {const L=[];const H=casaH();
+    if(drives&&H){const md=mergedDays(H,true,true);for(const day of Object.keys(md)){if(!RG.inR(day))continue;for(const m of md[day]){if(!m.out||!(m.km>cfg.umbral))continue;
+      const wd=new Date(day+'T12:00:00').getDay(),h=m.out.slice(11,16);
+      const why=wd===6?'sábado':wd===0?'domingo':h<cfg.ini?`tramo a las ${h}, antes del horario (${cfg.ini})`:`tramo a las ${h}, después del horario (${cfg.fin})`;
+      const lb=p=>dist(H,p)<CASA_R?'Casa':(o=>o?obraName(o,H):'Sitio a '+Math.round(dist(H,p))+' km')(obraOf(p));
+      L.push({day,wd,txt:`${m.start.slice(11,16)} → ${m.end.slice(11,16)} · ${lb(m.s)} → ${lb(m.e)} · ${n1(m.km)} km (GPS)`,why})}}}
+    L.sort((a,b)=>a.day<b.day?1:-1);
+    $('descbox').hidden=!L.length;
+    $('descsum').innerHTML=`Trayectos largos que no cuentan <small>(${L.length})</small>`;
+    $('desclist').innerHTML=L.map(x=>`<li><span><b>${DOW[x.wd]} ${x.day.split('-').reverse().join('/')}</b> · ${escH(x.txt)}<br><span class="w">No cuenta: ${escH(x.why)}</span></span></li>`).join('')}
   const all=days.filter(d=>!excl[d.day]).reduce((s,d)=>s+d.imp,0);
   $('foot').textContent=days.length?`${cfg.desde?'':'Orientativo: sin acuerdo firmado no se cobra. '}Total de todo el periodo cargado${cfg.desde?' desde '+cfg.desde.split('-').reverse().join('/'):''}: ${eur(all)} en ${days.filter(d=>!excl[d.day]&&d.imp>0).length} días con plus. Desmarca "Incluir" en los días que no fueron de trabajo: no suman y no salen en la tabla para Excel ni en el PDF.`:'';
   $('banner').hidden=!isExample;
@@ -1137,7 +1160,7 @@ function manTrips(day,mk){
   if(!mk||!mk.o)return [];
   const o=obById(mk.o);if(!o||!(o.km>0))return [];
   if(cfg.desde&&day<cfg.desde)return [];
-  const km=o.km,extra=Math.max(0,km-cfg.umbral),min=km/cfg.vel*60,imp=EKM()?extra*EKM():extra*cfg.eur/cfg.vel;
+  const km=o.km,extra=Math.max(0,km-cfg.umbral),min=km/cfg.vel*60,imp=c2(EKM()?extra*EKM():extra*cfg.eur/cfg.vel);
   const t=(de,a)=>({ini:'—',fin:'—',km,gps:km,fixed:'a mano',min,extra,imp,stops:0,de,a,mano:true});
   const m=mk.m||'iv';
   return m==='i'?[t('Casa',o.name)]:m==='v'?[t(o.name,'Casa')]:[t('Casa',o.name),t(o.name,'Casa')];
