@@ -286,7 +286,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.38 · 20/11/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.39 · 20/11/2026</span></p>
     </div>
   </header>
 
@@ -493,7 +493,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   </details>
   <details class="panel" id="copybox">
     <summary>Copia de seguridad</summary>
-    <p class="hint" style="margin-top:2px">Todo vive en este navegador. La copia lleva tus obras, km, días y ajustes de los dos modos en un solo archivo. «Hacer copia» la guarda en Descargas. Cuando ya tienes una, aparece «Compartir copia» para mandártela (WhatsApp, correo, Drive). Si se pierde o cambias de móvil, cárgala con «Cargar copia».</p>
+    <p class="hint" style="margin-top:2px">Todo vive en este navegador. La copia lleva tus obras, km, días y ajustes de los dos modos en un solo archivo (la Cronología no: ese archivo ya lo tienes tú). Puedes hacer una cuando quieras; si cambias algo después, arriba sale el aviso «Tienes cambios sin copiar». «Hacer copia» la guarda en Descargas. Cuando ya tienes una, aparece «Compartir copia» para mandártela (WhatsApp, correo, Drive). Si se pierde o cambias de móvil, cárgala con «Cargar copia».</p>
     <div class="acts" style="margin-top:10px">
       <button class="btn primary" id="mb_save" type="button">Hacer copia</button>
       <button class="btn shcopy" id="mb_share" type="button" hidden>Compartir copia</button>
@@ -514,7 +514,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.38 · 20/11/2026</span></p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.39 · 20/11/2026</span></p>
   <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
@@ -1274,7 +1274,9 @@ const gpsData=()=>({tipo:'plus-desplazamiento-obras',version:1,fecha:TODAY,casa:
 const manData=()=>({tipo:'plus-desplazamiento-manual',version:1,fecha:TODAY,casaDir:cfg.casaDir||'',obras:mob,marcas:marks,ajustes:{umbral:cfg.umbral,eur:cfg.eur,ekm:cfg.ekm,vel:cfg.vel,desde:cfg.desde}});
 const copyTxt=()=>JSON.stringify({tipo:'plus-desplazamiento-copia',version:2,fecha:TODAY,gps:gpsData(),manual:manData()},null,1);
 let cwNote='',cwShared=false;
-const copyDone=(t,shared)=>{store.set('pd_lastcopy',TODAY);cwNote=t;cwShared=!!shared;renderCopyWarn()};
+// v2.3.39: huella de lo que entra en la copia (sin fechas ni la casa detectada), para saber si hay cambios sin copiar
+const copySig=()=>{const g=gpsData(),m=manData();delete g.fecha;delete m.fecha;g.casa=cfg.casa||'';const t=JSON.stringify([g,m]);let h=5381;for(let i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))|0;return t.length+':'+h};
+const copyDone=(t,shared)=>{store.set('pd_lastcopy',TODAY);store.set('pd_copysig',copySig());cwNote=t;cwShared=!!shared;renderCopyWarn()};
 function saveCopy(msgEl){const fn=`plus_copia_${TODAY}.json`,t=`Copia hecha: ${fn} (en Descargas). Lleva obras, km, días y ajustes de los dos modos.`;saveFile(fn,copyTxt(),'application/json',msgEl,t);copyDone('✓ '+t)}
 // Android solo deja compartir ciertos tipos de archivo desde una web: se prueba .json y, si no, .txt (mismo contenido; se carga igual)
 let shareType=null;try{if(navigator.share&&navigator.canShare)for(const c of [['application/json','json'],['text/plain','txt']]){if(navigator.canShare({files:[new File(['{}'],'c.'+c[1],{type:c[0]})]})){shareType=c;break}}}catch(_){}
@@ -1285,12 +1287,16 @@ async function shareCopy(msgEl){if(!shareType)return;const fn=`plus_copia_${TODA
 function renderCopyWarn(){
   const has=store.get('pd_obras',[]).length||mob.length||Object.keys(marks).length||store.get('pd_manual',[]).length;
   const last=store.get('pd_lastcopy',''),sn=store.get('pd_copysnooze','');const dd=k=>Math.round((new Date(TODAY+'T12:00:00')-new Date(k+'T12:00:00'))/864e5);
-  const show=!!has&&(!isDay(last)||dd(last)>30)&&!(isDay(sn)&&dd(sn)<7);
+  const changed=isDay(last)&&store.get('pd_copysig','')!==copySig(); // con copia hecha: avisa en cuanto cambian obras, km, días o ajustes
+  if(changed&&cwNote){cwNote='';cwShared=false}
+  const show=!!has&&(!isDay(last)||changed||dd(last)>30)&&!(isDay(sn)&&dd(sn)<7);
   // v2.3.38: «Compartir copia» solo aparece cuando ya hay una copia hecha
   const canSh=!!shareType&&isDay(last);$('mb_share').hidden=!canSh;
   $('copywarn').hidden=!(show||cwNote);$('cw_tit').hidden=$('cw_save').hidden=$('cw_later').hidden=!!cwNote;
   $('cw_share').hidden=!(canSh&&cwNote&&!cwShared);$('cw_acts').hidden=!!cwNote&&$('cw_share').hidden;
-  $('cw_txt').textContent=cwNote||(isDay(last)?`Tu última copia es de hace ${dd(last)} días. `:'Todavía no has hecho ninguna copia. ')+'Tus obras, km y días solo están guardados en este móvil: si se borran o cambias de móvil, se pierden. Pulsa «Hacer copia» y se guarda un archivo en Descargas.';
+  $('cw_tit').textContent=changed?'⚠ Tienes cambios sin copiar':'⚠ Copia de seguridad pendiente';
+  const fd=k=>k.split('-').reverse().join('/');
+  $('cw_txt').textContent=cwNote||(changed?`Has cambiado obras, km, días o ajustes desde tu última copia (${dd(last)===0?'hoy':fd(last)}). Pulsa «Hacer copia» para guardar una nueva en Descargas.`:(isDay(last)?`Tu última copia es de hace ${dd(last)} días. `:'Todavía no has hecho ninguna copia. ')+'Tus obras, km y días solo están guardados en este móvil: si se borran o cambias de móvil, se pierden. Pulsa «Hacer copia» y se guarda un archivo en Descargas.');
 }
 $('mb_save').addEventListener('click',()=>saveCopy($('mb_msg')));
 $('mb_share').addEventListener('click',()=>shareCopy($('mb_msg')));
