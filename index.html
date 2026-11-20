@@ -286,13 +286,15 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.36 · 20/11/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.37 · 20/11/2026</span></p>
     </div>
   </header>
 
   <p class="banner proto" id="proto" role="note">Prototipo. Los importes son orientativos y no sustituyen al cálculo oficial de la empresa.</p>
 
-  <details class="privacy"><summary><b>Tus datos no salen de este móvil</b></summary><p>No hay servidor ni cuentas: lo que apuntas y los archivos que cargas se quedan solo en este navegador (almacenamiento local; sin cookies ni rastreo). Solo sale algo fuera si tú lo pides: la ruta que abres en Google Maps y, en el modo GPS, las coordenadas de casa y de la obra que se mandan a OSRM (servidor público de FOSSGIS, en la UE) para calcular km por carretera; y, si pides la dirección de las paradas de un día, las coordenadas de esas paradas (redondeadas a unos 10 m), que se mandan a Nominatim, el buscador de direcciones de OpenStreetMap (OpenStreetMap Foundation), que como cualquier web ve tu IP. La dirección que devuelve se guarda en este navegador para no volver a pedirla. La página la aloja GitHub Pages, que registra la dirección IP de cada visita por seguridad (<a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">su política de privacidad</a>). Si añades una obra con la foto de la Orden de Trabajo (con la cámara o una foto que elijas), la imagen se lee en este móvil, sin enviarla a ningún sitio, solo para sacar la localización de la obra: la foto y el resto del texto (nombres, cliente, números de orden…) no se guardan. Revisa lo que se rellena antes de añadirla. Si borras los datos del navegador se pierde todo, así que guarda una copia de vez en cuando. No escribas nombres de otras personas: para una parada basta "paso: compañero".</p><p>Dudas o fallos: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a>. No mandes tus datos (obras, direcciones) si no hace falta: con contar el problema basta.</p></details>
+  <div class="banner" id="copywarn" role="status" hidden><span id="cw_txt"></span><div class="acts" id="cw_acts" style="margin-top:8px"><button class="btn primary shcopy" id="cw_share" type="button" hidden>Compartir copia</button><button class="btn" id="cw_save" type="button">Guardar copia</button><button class="btn" id="cw_later" type="button">Ahora no</button></div></div>
+
+  <details class="privacy"><summary><b>Tus datos no salen de este móvil</b></summary><p>No hay servidor ni cuentas: lo que apuntas y los archivos que cargas se quedan solo en este navegador (almacenamiento local; sin cookies ni rastreo). Solo sale algo fuera si tú lo pides: la ruta que abres en Google Maps y, en el modo GPS, las coordenadas de casa y de la obra que se mandan a OSRM (servidor público de FOSSGIS, en la UE) para calcular km por carretera; y, si pides la dirección de las paradas de un día, las coordenadas de esas paradas (redondeadas a unos 10 m), que se mandan a Nominatim, el buscador de direcciones de OpenStreetMap (OpenStreetMap Foundation), que como cualquier web ve tu IP. La dirección que devuelve se guarda en este navegador para no volver a pedirla. La página la aloja GitHub Pages, que registra la dirección IP de cada visita por seguridad (<a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">su política de privacidad</a>). Si añades una obra con la foto de la Orden de Trabajo (con la cámara o una foto que elijas), la imagen se lee en este móvil, sin enviarla a ningún sitio, solo para sacar la localización de la obra: la foto y el resto del texto (nombres, cliente, números de orden…) no se guardan. Revisa lo que se rellena antes de añadirla. Si borras los datos del navegador se pierde todo, así que guarda una copia de vez en cuando. Si la compartes (WhatsApp, correo, Drive…), el archivo sale del móvil por la app que tú elijas: lleva tus obras con sus km y coordenadas, las de tu casa, tus días y tus ajustes. Mándatela solo a ti. No escribas nombres de otras personas: para una parada basta "paso: compañero".</p><p>Dudas o fallos: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a>. No mandes tus datos (obras, direcciones) si no hace falta: con contar el problema basta.</p></details>
 
   <nav class="modes" role="tablist" aria-label="Forma de apuntar">
     <button class="mode" role="tab" data-mode="man" type="button">Apuntar a mano</button>
@@ -329,17 +331,6 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <div class="banner" id="mpend" data-only="man" hidden></div>
   <label class="chk" data-only="man"><input type="checkbox" id="m_we"> Ver sábados y domingos</label>
   <div class="cards" id="mdays" data-only="man"></div>
-  <details class="panel" data-only="man">
-    <summary>Copia de seguridad</summary>
-    <p class="hint" style="margin-top:2px">Todo vive en este navegador. Guarda una copia de vez en cuando (o antes de cambiar de móvil) y cárgala si se pierde.</p>
-    <div class="acts" style="margin-top:10px">
-      <button class="btn" id="mb_save" type="button">Guardar copia</button>
-      <label class="btn" for="mb_load" style="display:inline-block">Cargar copia</label>
-      <input type="file" id="mb_load">
-    </div>
-    <p class="status" id="mb_msg" role="status" style="color:var(--warn);font-weight:600"></p>
-  </details>
-
   <!-- ===== MODO GPS ===== -->
   <details class="panel" data-only="gps">
     <summary>Cómo sacar la Cronología del móvil</summary>
@@ -484,8 +475,8 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
         <p>Sitios donde has estado más de la parada máxima en día laborable. Se ven las del mes o las fechas elegidas arriba. Ponles nombre (por ejemplo "Almacén"). Km de casa a la obra: los de la ruta más rápida según Google Maps; mientras no los pongas, se propone la mediana del GPS.</p>
       </div>
       <div class="acts">
-        <button class="btn" id="obexp">Guardar obras en archivo</button>
-        <label class="btn primary" for="obimpf" style="display:inline-block">Cargar obras de archivo</label>
+        <button class="btn" id="obexp">Guardar copia</button>
+        <label class="btn primary" for="obimpf" style="display:inline-block">Cargar copia</label>
         <input type="file" id="obimpf">
         <button class="btn" id="osrmall">Calcular km por carretera</button>
       </div>
@@ -500,11 +491,22 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
     </div>
     <p class="hint">Cada obra tiene UN km de referencia por trayecto, y con él se calculan todos sus días (el GPS de cada día solo sale como nota): los km de la ruta más rápida según Google Maps (con peajes si es la más rápida). "Comprobar en Google Maps" abre esa ruta de casa a la obra (sale de esta web solo si lo pulsas): apunta sus km en "Km según Maps". Mientras no los pongas, se propone "Km GPS", la mediana de los trayectos casa ↔ obra si hay 3 días o más, así los desvíos sueltos no cuentan. "Km carretera" lo calcula OSRM (mapa libre, sin Google) si lo pides; para eso se envían a OSRM solo las coordenadas de casa y de la obra. Si la referencia se separa más de un 10 % de otra fuente, la fila sale en rojo con "revisar" y te deja elegir cuál usar; o escribe el tuyo en "Km elegido". Km carretera: ruta de OSRM con datos © colaboradores de OpenStreetMap (ODbL).</p>
   </details>
+  <details class="panel" id="copybox">
+    <summary>Copia de seguridad</summary>
+    <p class="hint" style="margin-top:2px">Todo vive en este navegador. La copia lleva tus obras, km, días y ajustes de los dos modos en un solo archivo. Compártela contigo mismo (WhatsApp, correo, Drive) o guárdala en el móvil, y cárgala si se pierde o cambias de móvil.</p>
+    <div class="acts" style="margin-top:10px">
+      <button class="btn primary shcopy" id="mb_share" type="button" hidden>Compartir copia</button>
+      <button class="btn" id="mb_save" type="button">Guardar copia</button>
+      <label class="btn" for="mb_load" style="display:inline-block">Cargar copia</label>
+      <input type="file" id="mb_load">
+    </div>
+    <p class="status" id="mb_msg" role="status" style="color:var(--warn);font-weight:600"></p>
+  </details>
   <details class="panel" id="reset">
     <summary>Borrar datos</summary>
     <p class="hint" style="margin-top:2px">Para empezar de cero o quitar pruebas. Se borra solo de este móvil.</p>
     <div class="banner" style="margin-top:10px"><b>⚠ Antes de borrar, guarda una copia.</b> Lo borrado no se puede recuperar si no tienes copia.
-      <div style="margin-top:8px"><button class="btn" type="button" data-only="gps" data-savecopy="obexp">Guardar copia ahora</button><button class="btn" type="button" data-only="man" data-savecopy="mb_save">Guardar copia ahora</button></div>
+      <div style="margin-top:8px"><button class="btn" type="button" data-savecopy="mb_save">Guardar copia ahora</button></div>
     </div>
     <div class="acts" style="margin-top:10px;display:flex;flex-direction:column;gap:8px;align-items:flex-start">
       <button class="btn danger" type="button" data-reset="dias">Borrar días (marcados, añadidos a mano y desmarcados)</button>
@@ -512,7 +514,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.36 · 20/11/2026</span></p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.37 · 20/11/2026</span></p>
   <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
@@ -909,7 +911,7 @@ function render(){
   $('foot').textContent=days.length?`${cfg.desde?'':'Orientativo: sin acuerdo firmado no se cobra. '}Total de todo el periodo cargado${cfg.desde?' desde '+cfg.desde.split('-').reverse().join('/'):''}: ${eur(all)} en ${days.filter(d=>!excl[d.day]&&d.imp>0).length} días con plus. Desmarca "Incluir" en los días que no fueron de trabajo: no suman y no salen en la tabla para Excel ni en el PDF.`:'';
   $('banner').hidden=!isExample;
   if(!isExample&&drives&&(casaH())&&$('status').textContent.startsWith('No he podido detectar'))$('status').textContent='';
-  renderObras();renderManual();renderQuick();
+  renderObras();renderManual();renderQuick();renderCopyWarn();
   if(MODE==='man')renderMan();else renderX();
 }
 function renderManual(){
@@ -956,31 +958,7 @@ $('obrows').addEventListener('click',e=>{
   if(b.dataset.osrm!==undefined){b.disabled=true;doOsrm([obras[+b.dataset.osrm]])}
   if(b.dataset.pick!==undefined){const o=obras[+b.dataset.pick];const v=parseFloat(b.dataset.v);if(o&&v>0){const s=savedFor(o,true);o.sv=s;s.man=v;persistSaved();render()}}
 });
-$('obexp').addEventListener('click',()=>{
-  const data={tipo:'plus-desplazamiento-obras',version:1,fecha:new Date().toLocaleDateString('sv-SE'),casa:parseCasa(cfg.casa)||(isExample?null:home),obras:(isExample?store.get('pd_obras',[]):saved).filter(s=>s&&(s.name||s.man||s.maps||s.osrm)),dias:isExample?store.get('pd_manual',[]):manual,excl:isExample?store.get('pd_excl',{}):excl,ajustes:(({umbral,eur,ekm,vel,modo,desde,parada,parada2,ini,fin,casa,kmsrc})=>({umbral,eur,ekm,vel,modo,desde,parada,parada2,ini,fin,casa,kmsrc}))(cfg)};
-  const txt=JSON.stringify(data,null,1),fn=`obras_${data.fecha}.json`;
-  const okMsg=()=>{$('osrmmsg').textContent=`Guardadas ${data.obras.length} obras en ${fn}. Guárdalo en la carpeta datos del proyecto.`};
-  const plain=()=>{const blob=new Blob([txt],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);okMsg()};
-  if(dl){dl.save({filename:fn,data:txt}).then(okMsg,err=>{$('osrmmsg').textContent=err&&err.code==='declined'?'Guardado cancelado.':'No se pudo guardar aquí. Usa la copia de la app que tienes en el PC.'})}else plain();
-});
 let dl=null;try{if(window.claude&&window.claude.use)window.claude.use('downloads').then(x=>{dl=x},()=>{})}catch(_){}
-$('obimpf').addEventListener('change',e=>{
-  const f=e.target.files[0];if(!f)return;const rd=new FileReader();
-  if(tooBig(f)){$('osrmmsg').innerHTML='<b>Ese archivo es demasiado grande</b> para ser una copia de obras de esta app.';e.target.value='';return}
-  rd.onload=()=>{try{const j=JSON.parse(rd.result);if(!j||typeof j!=='object'||j.tipo!=='plus-desplazamiento-obras'||!Array.isArray(j.obras))throw 0;
-    {const base=isExample?store.get('pd_manual',[]):manual;if(Array.isArray(j.dias))for(const x of j.dias){if(!x||typeof x!=='object'||!isDay(x.day)||base.some(y=>y.day===x.day))continue;const km=kmOk(x.km);const p=isCoord(x.p)?x.p:null;if(!p&&!km)continue;base.push({day:x.day,p,name:txt(x.name,120).trim(),km,modo:okModo(x.modo)})}store.set('pd_manual',base);if(!isExample)manual=base}
-    if(j.excl&&typeof j.excl==='object'&&!Array.isArray(j.excl)){const base=isExample?store.get('pd_excl',{}):excl;for(const k in j.excl)if(isDay(k))base[k]=1;store.set('pd_excl',base);if(!isExample)excl=base}
-    const ch=applyAj(j.ajustes,['umbral','eur','ekm','vel','modo','desde','parada','parada2','ini','fin'].concat(cfg.casa?[]:['casa']));
-    if(!cfg.casa&&isCoord(j.casa)){cfg.casa=j.casa[0]+', '+j.casa[1];store.set('pd_cfg',cfg);$('c_casa').value=cfg.casa}
-    if(isExample)saved=store.get('pd_obras',[]).concat(saved.filter(x=>x.name==='Obra de ejemplo (Santiago)'));
-    let n=0;for(const o of j.obras){if(!o||typeof o!=='object'||!isCoord(o.p))continue;const name=txt(o.name,120),man=kmOk(o.man),maps=kmOk(o.maps),osrm=kmOk(o.osrm),vr=vrOk(o.vr);const rev=!maps;const s=findSaved(o.p);if(s){s.name=name||s.name;s.man=man??s.man;s.maps=maps??s.maps;s.osrm=osrm??s.osrm;if(vr)s.vr=vr;if(rev&&!(s.maps>0))s.rev=1}else{const x={p:o.p,name,man,maps,osrm};if(rev)x.rev=1;if(vr)x.vr=vr;saved.push(x)}n++}
-    if(isExample){store.set('pd_obras',saved.filter(x=>x.name!=='Obra de ejemplo (Santiago)'));const t=store.get('pd_obras',[]).length;saved=[{p:[42.88,-8.54],name:'Obra de ejemplo (Santiago)',man:null,osrm:null}];$('osrmmsg').innerHTML=`<b>✓ Cargadas ${n} obras de ${escH(f.name)}</b> (${t} guardadas en el móvil). Se verán en la lista cuando cargues tu Cronología: las obras salen de los sitios donde paraste.${escH(ajMsg(ch))}`}
-    else{persistSaved();$('osrmmsg').innerHTML=`<b>✓ Cargadas ${n} obras de ${escH(f.name)}.</b>${escH(ajMsg(ch))}`}render()}
-    catch(_){let t='';try{t=JSON.parse(rd.result).tipo}catch(__){}
-      $('osrmmsg').innerHTML=t==='plus-desplazamiento-manual'?'<b>Esa es una copia del modo "Apuntar a mano".</b> Cárgala en esa pestaña, en "Copia de seguridad".':'<b>No he podido leer ese archivo.</b> Tiene que ser el que guarda esta app con "Guardar obras en archivo" (obras_fecha.json).'}
-    e.target.value=''};
-  rd.readAsText(f);
-});
 $('osrmall').addEventListener('click',()=>{const list=obras.filter(o=>!(o.sv&&o.sv.osrm)||(cfg.modo==='osrm'&&!vrOf(o)));if(!list.length){$('osrmmsg').textContent='Todas las obras ya tienen km por carretera.';return}doOsrm(list)});
 
 
@@ -1212,7 +1190,7 @@ $('mn_add').addEventListener('click',()=>{
   renderMset();renderMan();
 });
 
-function renderMan(){
+function renderMan(){renderCopyWarn();
   const y=+mMonth.slice(0,4),mo=+mMonth.slice(5,7);
   $('m_title').textContent=MES[mo-1]+' '+y;
   $('m_next').disabled=mMonth>=TODAY.slice(0,7);
@@ -1291,17 +1269,44 @@ function saveFile(fn,txt,type,msgEl,okTxt){
   if(dl){dl.save({filename:fn,data:txt}).then(ok,err=>{msgEl.textContent=err&&err.code==='declined'?'Guardado cancelado.':'No se pudo guardar.'});return}
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type}));a.download=fn;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);ok();
 }
-$('mb_save').addEventListener('click',()=>{
-  const data={tipo:'plus-desplazamiento-manual',version:1,fecha:TODAY,casaDir:cfg.casaDir||'',obras:mob,marcas:marks,ajustes:{umbral:cfg.umbral,eur:cfg.eur,ekm:cfg.ekm,vel:cfg.vel,desde:cfg.desde}};
-  const fn=`plus_copia_${TODAY}.json`;
-  saveFile(fn,JSON.stringify(data,null,1),'application/json',$('mb_msg'),`Copia guardada: ${fn} (en Descargas).`);
-});
-$('mb_load').addEventListener('change',e=>{
-  const f=e.target.files[0];if(!f)return;const rd=new FileReader();
-  if(tooBig(f)){$('mb_msg').textContent=$('mn_msg').textContent='Ese archivo es demasiado grande para ser una copia de esta app.';e.target.value='';return}
-  rd.onload=()=>{try{
-    const j=JSON.parse(rd.result);if(!j||typeof j!=='object')throw 0;
-    if(j.tipo==='plus-desplazamiento-manual'){
+// ---------- v2.3.37: UNA copia con todo (obras, km, días y ajustes de los dos modos), para guardar o compartir ----------
+const gpsData=()=>({tipo:'plus-desplazamiento-obras',version:1,fecha:TODAY,casa:parseCasa(cfg.casa)||(isExample?null:home),obras:(isExample?store.get('pd_obras',[]):saved).filter(s=>s&&(s.name||s.man||s.maps||s.osrm)),dias:isExample?store.get('pd_manual',[]):manual,excl:isExample?store.get('pd_excl',{}):excl,ajustes:(({umbral,eur,ekm,vel,modo,desde,parada,parada2,ini,fin,casa,kmsrc})=>({umbral,eur,ekm,vel,modo,desde,parada,parada2,ini,fin,casa,kmsrc}))(cfg)});
+const manData=()=>({tipo:'plus-desplazamiento-manual',version:1,fecha:TODAY,casaDir:cfg.casaDir||'',obras:mob,marcas:marks,ajustes:{umbral:cfg.umbral,eur:cfg.eur,ekm:cfg.ekm,vel:cfg.vel,desde:cfg.desde}});
+const copyTxt=()=>JSON.stringify({tipo:'plus-desplazamiento-copia',version:2,fecha:TODAY,gps:gpsData(),manual:manData()},null,1);
+let cwNote='';
+const copyDone=t=>{store.set('pd_lastcopy',TODAY);cwNote=t;renderCopyWarn()};
+function saveCopy(msgEl){const fn=`plus_copia_${TODAY}.json`,t=`Copia guardada: ${fn} (en Descargas). Lleva obras, km, días y ajustes de los dos modos.`;saveFile(fn,copyTxt(),'application/json',msgEl,t);copyDone('✓ '+t)}
+// Android solo deja compartir ciertos tipos de archivo desde una web: se prueba .json y, si no, .txt (mismo contenido; se carga igual)
+let shareType=null;try{if(navigator.share&&navigator.canShare)for(const c of [['application/json','json'],['text/plain','txt']]){if(navigator.canShare({files:[new File(['{}'],'c.'+c[1],{type:c[0]})]})){shareType=c;break}}}catch(_){}
+async function shareCopy(msgEl){if(!shareType)return;const fn=`plus_copia_${TODAY}.${shareType[1]}`;const file=new File([copyTxt()],fn,{type:shareType[0]});
+  try{await navigator.share({files:[file],title:'Copia de Plus Desplazamiento'});const t='Copia compartida. Para recuperarla: descarga ese archivo en el móvil y usa "Cargar copia".';msgEl.textContent=t;copyDone('✓ '+t)}
+  catch(e){if(e&&e.name!=='AbortError')msgEl.textContent='No se pudo compartir desde aquí. Usa "Guardar copia".'}}
+// aviso: hay datos y no hay copia, o la última tiene más de 30 días ("Ahora no" lo calla 7 días)
+function renderCopyWarn(){
+  const has=store.get('pd_obras',[]).length||mob.length||Object.keys(marks).length||store.get('pd_manual',[]).length;
+  const last=store.get('pd_lastcopy',''),sn=store.get('pd_copysnooze','');const dd=k=>Math.round((new Date(TODAY+'T12:00:00')-new Date(k+'T12:00:00'))/864e5);
+  const show=!!has&&(!isDay(last)||dd(last)>30)&&!(isDay(sn)&&dd(sn)<7);
+  $('copywarn').hidden=!(show||cwNote);$('cw_acts').hidden=!!cwNote;
+  $('cw_txt').textContent=cwNote||(isDay(last)?`Llevas ${dd(last)} días sin guardar copia. `:'Aún no has guardado ninguna copia. ')+'Tus obras, km y días solo están en este navegador: si se borran sus datos o cambias de móvil, se pierden.';
+}
+document.querySelectorAll('.shcopy').forEach(b=>b.hidden=!shareType);
+$('mb_save').addEventListener('click',()=>saveCopy($('mb_msg')));
+$('mb_share').addEventListener('click',()=>shareCopy($('mb_msg')));
+$('obexp').addEventListener('click',()=>saveCopy($('osrmmsg')));
+$('cw_save').addEventListener('click',()=>saveCopy($('cw_txt')));
+$('cw_share').addEventListener('click',()=>shareCopy($('cw_txt')));
+$('cw_later').addEventListener('click',()=>{store.set('pd_copysnooze',TODAY);renderCopyWarn()});
+// cargar: la copia nueva (todo) y las dos antiguas (obras del modo GPS, copia del modo manual)
+function impObras(j,fname){if(!isObj(j)||!Array.isArray(j.obras))throw 0;let MSG='';
+    {const base=isExample?store.get('pd_manual',[]):manual;if(Array.isArray(j.dias))for(const x of j.dias){if(!x||typeof x!=='object'||!isDay(x.day)||base.some(y=>y.day===x.day))continue;const km=kmOk(x.km);const p=isCoord(x.p)?x.p:null;if(!p&&!km)continue;base.push({day:x.day,p,name:txt(x.name,120).trim(),km,modo:okModo(x.modo)})}store.set('pd_manual',base);if(!isExample)manual=base}
+    if(j.excl&&typeof j.excl==='object'&&!Array.isArray(j.excl)){const base=isExample?store.get('pd_excl',{}):excl;for(const k in j.excl)if(isDay(k))base[k]=1;store.set('pd_excl',base);if(!isExample)excl=base}
+    const ch=applyAj(j.ajustes,['umbral','eur','ekm','vel','modo','desde','parada','parada2','ini','fin'].concat(cfg.casa?[]:['casa']));
+    if(!cfg.casa&&isCoord(j.casa)){cfg.casa=j.casa[0]+', '+j.casa[1];store.set('pd_cfg',cfg);$('c_casa').value=cfg.casa}
+    if(isExample)saved=store.get('pd_obras',[]).concat(saved.filter(x=>x.name==='Obra de ejemplo (Santiago)'));
+    let n=0;for(const o of j.obras){if(!o||typeof o!=='object'||!isCoord(o.p))continue;const name=txt(o.name,120),man=kmOk(o.man),maps=kmOk(o.maps),osrm=kmOk(o.osrm),vr=vrOk(o.vr);const rev=!maps;const s=findSaved(o.p);if(s){s.name=name||s.name;s.man=man??s.man;s.maps=maps??s.maps;s.osrm=osrm??s.osrm;if(vr)s.vr=vr;if(rev&&!(s.maps>0))s.rev=1}else{const x={p:o.p,name,man,maps,osrm};if(rev)x.rev=1;if(vr)x.vr=vr;saved.push(x)}n++}
+    if(isExample){store.set('pd_obras',saved.filter(x=>x.name!=='Obra de ejemplo (Santiago)'));const t=store.get('pd_obras',[]).length;saved=[{p:[42.88,-8.54],name:'Obra de ejemplo (Santiago)',man:null,osrm:null}];MSG=`<b>✓ Cargadas ${n} obras de ${escH(fname)}</b> (${t} guardadas en el móvil). Se verán en la lista cuando cargues tu Cronología: las obras salen de los sitios donde paraste.${escH(ajMsg(ch))}`}
+    else{persistSaved();MSG=`<b>✓ Cargadas ${n} obras de ${escH(fname)}.</b>${escH(ajMsg(ch))}`}return MSG}
+function impMan(j){
       // solo entran los campos que la app conoce, con su tipo; nada de copiar objetos enteros del archivo
       const okId=v=>typeof v==='string'&&/^[a-z0-9]{4,24}$/i.test(v);const map=new Map();
       const pick=o=>({name:txt(o.name,120).trim(),dir:txt(o.dir,200).trim(),km:kmOk(o.km),arch:!!o.arch,kmok:o.kmok===true});
@@ -1312,15 +1317,28 @@ $('mb_load').addEventListener('change',e=>{
         if(m.off){marks[k]={off:1};d++}else if(okId(m.o)){const o=map.get(m.o)||m.o;if(!mob.some(x=>x.id===o))continue;marks[k]={o,m:okModo(m.m)};d++}}
       if(!cfg.casaDir&&txt(j.casaDir,200).trim()){cfg.casaDir=txt(j.casaDir,200).trim();store.set('pd_cfg',cfg)}
       const ch=applyAj(j.ajustes,['umbral','eur','ekm','vel','desde']);
-      $('mb_msg').textContent=`Copia cargada: ${n} obras nuevas y ${d} días que no tenías. Los días que ya tenías marcados no se tocan.`+ajMsg(ch);
-    }else if(j.tipo==='plus-desplazamiento-obras'&&Array.isArray(j.obras)){
+      return `Copia cargada: ${n} obras nuevas y ${d} días que no tenías. Los días que ya tenías marcados no se tocan.`+ajMsg(ch);
+}
+function impObrasToMan(j){
       let n=0;for(const o of j.obras){if(!o||typeof o!=='object')continue;const name=txt(o.name,120).trim();const km=kmOk(o.man)||kmOk(o.maps)||kmOk(o.osrm);if(!name||/^\s*paso\b/i.test(name)||!km)continue;if(mob.some(x=>!x.arch&&x.name.toLowerCase()===name.toLowerCase()))continue;mob.push({id:newId(),name,dir:'',km,kmok:!!kmOk(o.maps)&&km===kmOk(o.maps)});n++}
-      $('mb_msg').textContent=`Cargadas ${n} obras de la tabla del modo GPS (sin los sitios "paso").`;
-    }else throw 0;
-    saveMan();renderMset();renderMan();$('mn_msg').textContent=$('mb_msg').textContent;$('mset').open=true;
-  }catch(_){$('mb_msg').textContent=$('mn_msg').textContent='Ese archivo no es una copia de esta app.'}e.target.value=''};
+      return `Cargadas ${n} obras de la tabla del modo GPS (sin los sitios "paso").`;
+}
+function loadCopy(f,ctx,input){
+  const out=h=>{$('mb_msg').innerHTML=h;$(ctx==='gps'?'osrmmsg':'mn_msg').innerHTML=h};
+  if(tooBig(f)){out('<b>Ese archivo es demasiado grande</b> para ser una copia de esta app.');input.value='';return}
+  const rd=new FileReader();
+  rd.onload=()=>{try{const j=JSON.parse(rd.result);if(!isObj(j))throw 0;let h='';
+      if(j.tipo==='plus-desplazamiento-copia'){const a=isObj(j.gps)&&Array.isArray(j.gps.obras)?impObras(j.gps,f.name):'';const b=isObj(j.manual)?escH(impMan(j.manual)):'';if(!a&&!b)throw 0;h=[a,b?'Modo "Apuntar a mano": '+b:''].filter(Boolean).join('<br>')}
+      else if(j.tipo==='plus-desplazamiento-manual')h=escH(impMan(j));
+      else if(j.tipo==='plus-desplazamiento-obras'&&Array.isArray(j.obras))h=ctx==='gps'?impObras(j,f.name):escH(impObrasToMan(j));
+      else throw 0;
+      saveMan();renderMset();render();out(h);if(ctx==='man')$('mset').open=true;
+    }catch(_){out('<b>Ese archivo no es una copia de esta app.</b> Tiene que ser el que sale de "Guardar copia" o "Compartir copia".')}
+    input.value=''};
   rd.readAsText(f);
-});
+}
+$('mb_load').addEventListener('change',e=>{const f=e.target.files[0];if(f)loadCopy(f,MODE==='gps'?'gps':'man',e.target)});
+$('obimpf').addEventListener('change',e=>{const f=e.target.files[0];if(f)loadCopy(f,'gps',e.target)});
 
 // ---------- v2.3.27: obra desde la foto de la Orden de Trabajo ----------
 // La foto se lee aquí con Tesseract (lib/ocr, sin internet). Solo se usa el campo "Localización" (y Dirección/Localidad
