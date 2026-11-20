@@ -212,6 +212,12 @@ select.pill{width:100%;min-width:0;text-overflow:ellipsis}
 .qrep{font:700 14px var(--body);border:0;border-radius:999px;background:var(--accent);color:var(--accent-fg);padding:8px 12px;min-height:38px;max-width:11em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
 @media (max-width:420px){.qrep{max-width:8em;padding:8px 10px}.drow .dm{min-width:5.5em}}
 .dbody{padding:0 12px 12px}
+.rbox{margin:12px 0 10px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.rtit{font-weight:600;font-size:14px;margin-bottom:6px}
+.rmap{display:block;width:100%;max-width:520px;height:auto;margin:0 auto 6px;color:var(--fg)}
+.rstops{list-style:none;margin:6px 0 0;padding:0;font-size:14px}.rstops li{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px solid var(--line)}
+.rn{flex:0 0 22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-fg);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center}
+.rnote{font-size:12px;margin-top:8px}#gdays .gex2 .drow .dm{color:var(--muted)}
 .dbody .cline{margin-top:0}
 .pill.libre[aria-pressed="true"]{background:var(--off);border-color:var(--off);color:#fff}
 select.pill{max-width:100%;appearance:auto}
@@ -279,7 +285,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.32 · 19/11/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.33 · 20/11/2026</span></p>
     </div>
   </header>
 
@@ -438,6 +444,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <p class="nodev" data-only="gps">Sin acuerdo firmado no hay devengo: los importes son orientativos.</p>
   <div class="banner" id="osrmwarn" data-only="gps" role="status" hidden></div>
 
+  <label class="chk" id="allbox" data-only="gps" style="margin:0 0 10px" hidden><input type="checkbox" id="alld"> Ver también los días sin plus (para consultar dónde fuiste)</label>
   <div class="cards" id="gdays" data-only="gps"></div>
   <section class="tablebox" data-only="gps" hidden>
     <table id="daystable">
@@ -498,7 +505,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.32 · 19/11/2026</span></p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.33 · 20/11/2026</span></p>
   <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
@@ -550,6 +557,8 @@ let excl=isObj(store.get('pd_excl',{}))?store.get('pd_excl',{}):{};
 let manual=Array.isArray(store.get('pd_manual',[]))?store.get('pd_manual',[]):[];let wantMonth=null; // días añadidos a mano: [{day,p,name,km,modo:'iv'|'i'|'v'}]
 let drives=null;      // [{start,end,s:[lat,lng],e:[lat,lng],km}]
 let visits=[];        // [{start,end,p:[lat,lng]}] estancias fuera de casa
+let tpath={};         // v2.3.33: {día:[[lat,lng,hora]...]} puntos del recorrido (solo en memoria)
+let showAll=!!store.get('pd_alld',false); // v2.3.33: ver también los días sin plus
 let home=null; let isExample=true;
 let saved=Array.isArray(store.get('pd_obras',[]))?store.get('pd_obras',[]):[]; // [{p:[lat,lng],name,man,osrm}] datos de obra guardados por el usuario
 let obras=[];         // calculadas: [{p,n,last,km:[],med,sv}]
@@ -569,7 +578,7 @@ const VEH=new Set(['IN_PASSENGER_VEHICLE','IN_VEHICLE','IN_BUS','IN_TAXI','MOTOR
 function parseTimeline(j){
   const segs=j&&j.semanticSegments;
   if(!Array.isArray(segs))throw new Error('formato');
-  const out=[];const night={};const vis=[];let malos=0;
+  const out=[];const night={};const vis=[];let malos=0;const tp={}; // v2.3.33: tp = puntos del recorrido por día
   // v2.3.32: un tramo incompleto (sin hora válida o con coordenadas rotas) se salta y se cuenta; ya no tumba el archivo entero
   const okT=t=>typeof t==='string'&&/^\d{4}-\d\d-\d\dT\d\d:\d\d/.test(t)&&!isNaN(Date.parse(t));
   for(const s of segs){
@@ -583,11 +592,14 @@ function parseTimeline(j){
       const t0=new Date(s.startTime),t1=new Date(s.endTime);
       if((t1-t0)>4*3600e3){const k=p[0].toFixed(3)+','+p[1].toFixed(3);night[k]=(night[k]||0)+(t1-t0)}
       vis.push({start:s.startTime,end:s.endTime,p});
+    }else if(Array.isArray(s.timelinePath)){ // v2.3.33: puntos intermedios del recorrido (para dibujarlo)
+      for(const q of s.timelinePath){const p=q&&ll(q.point);if(p&&okT(q.time))(tp[q.time.slice(0,10)]=tp[q.time.slice(0,10)]||[]).push([p[0],p[1],q.time])}
     }
   }
+  for(const k in tp)tp[k].sort((a,b)=>Date.parse(a[2])-Date.parse(b[2]));
   out.sort((a,b)=>a.start<b.start?-1:1);
   const best=Object.entries(night).sort((a,b)=>b[1]-a[1])[0];
-  return {drives:out,visits:vis,home:best?best[0].split(',').map(Number):null,malos};
+  return {drives:out,visits:vis,home:best?best[0].split(',').map(Number):null,malos,tpath:tp};
 }
 
 // ---------- cálculo ----------
@@ -759,6 +771,48 @@ async function doOsrm(list){
 // ---------- pintar ----------
 let current=[];
 let gOpen=null;
+// ---------- v2.3.33: recorrido del día (dónde fuiste y por dónde), también en días sin plus ----------
+const hm=iso=>iso.slice(11,16);
+const durTxt=m=>m>=60?Math.floor(m/60)+' h '+pad(Math.round(m%60))+' min':Math.round(m)+' min';
+function dayInfo(day){
+  const H=parseCasa(cfg.casa)||home;
+  const ds=(drives||[]).filter(d=>d.start.slice(0,10)===day);
+  const lugar=p=>{if(H&&dist(H,p)<CASA_R)return null;const o=obraOf(p);if(o)return obraName(o,H);const s=findSaved(p);if(s&&s.name)return s.name;return H?'Sitio a '+Math.round(dist(H,p))+' km de casa (línea recta)':'Sitio sin nombre'};
+  // paradas: estancias del día fuera de casa de 3 min o más
+  let stops=visits.filter(v=>(v.start.slice(0,10)===day||v.end.slice(0,10)===day)&&(!H||dist(H,v.p)>=CASA_R)&&(new Date(v.end)-new Date(v.start))>=180e3)
+    .sort((a,b)=>Date.parse(a.start)-Date.parse(b.start)).map(v=>({p:v.p,ini:v.start.slice(0,10)===day?hm(v.start):'00:00',fin:v.end.slice(0,10)===day?hm(v.end):'24:00',min:(new Date(v.end)-new Date(v.start))/60000,nm:lugar(v.p)}));
+  // si el archivo no trae estancias para ese día, se usan los finales de cada tramo en coche
+  if(!stops.length)stops=ds.filter(d=>!H||dist(H,d.e)>=CASA_R).map(d=>({p:d.e,ini:hm(d.end),fin:'',min:0,nm:lugar(d.e)}));
+  let pts=(tpath[day]||[]).map(q=>[q[0],q[1]]),aprox=false;
+  if(pts.length<2){aprox=true;pts=[];for(const d of ds){pts.push(d.s,d.e)}}
+  return {ds,stops,pts,aprox,H,km:ds.reduce((s,d)=>s+d.km,0)};
+}
+function routeSvg(I){
+  let P=I.pts;if(P.length<2)return '';
+  if(P.length>500){const k=Math.ceil(P.length/500);P=P.filter((_,i)=>i%k===0||i===P.length-1)}
+  const all=P.concat(I.stops.map(s=>s.p),I.H&&I.pts.some(p=>dist(I.H,p)<CASA_R)?[I.H]:[]);
+  const la=all.map(p=>p[0]),lo=all.map(p=>p[1]);const a0=Math.min(...la),a1=Math.max(...la),o0=Math.min(...lo),o1=Math.max(...lo);
+  const c=Math.cos((a0+a1)/2*Math.PI/180),W=320,Hh=190,m=22;
+  const w=Math.max((o1-o0)*c,1e-4),h=Math.max(a1-a0,1e-4),k=Math.min((W-2*m)/w,(Hh-2*m)/h);
+  const X=p=>(m+((W-2*m)-w*k)/2+(p[1]-o0)*c*k).toFixed(1),Y=p=>(m+((Hh-2*m)-h*k)/2+(a1-p[0])*k).toFixed(1);
+  let g=`<polyline points="${P.map(p=>X(p)+','+Y(p)).join(' ')}" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"${I.aprox?' stroke-dasharray="6 5"':''} opacity=".75"/>`;
+  if(I.H&&all.includes(I.H))g+=`<rect x="${X(I.H)-6}" y="${Y(I.H)-6}" width="12" height="12" rx="2" fill="var(--surface)" stroke="currentColor" stroke-width="2"/><text x="${+X(I.H)+10}" y="${+Y(I.H)+4}" font-size="11" fill="currentColor">Casa</text>`;
+  I.stops.forEach((s,i)=>{g+=`<circle cx="${X(s.p)}" cy="${Y(s.p)}" r="9" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/><text x="${X(s.p)}" y="${+Y(s.p)+4}" font-size="11" font-weight="700" text-anchor="middle" fill="var(--accent-fg)">${i+1}</text>`});
+  return `<svg class="rmap" viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Dibujo del recorrido del día">${g}</svg>`;
+}
+function routeBlock(day){
+  const I=dayInfo(day);if(!I.ds.length)return '';
+  const mp=p=>`https://www.google.com/maps/search/?api=1&query=${p[0].toFixed(6)},${p[1].toFixed(6)}`;
+  const c6=p=>p[0].toFixed(6)+','+p[1].toFixed(6);
+  const li=I.stops.map((s,i)=>`<li><span class="rn">${i+1}</span><span><b>${s.ini}${s.fin?' – '+s.fin:''}</b>${s.min?' · '+durTxt(s.min):''}<br>${escH(s.nm||'Sitio')} · <a href="${mp(s.p)}" target="_blank" rel="noopener">ver en Maps</a></span></li>`).join('');
+  // enlace a Google Maps con las paradas como puntos intermedios (máx. 8)
+  const o=I.ds[0].s,d=I.ds[I.ds.length-1].e;let wp=I.stops.map(s=>s.p);
+  if(wp.length&&dist(wp[wp.length-1],d)<0.3)wp=wp.slice(0,-1);
+  if(!wp.length&&dist(o,d)<CASA_R&&I.pts.length){wp=[I.pts.reduce((a,b)=>dist(o,b)>dist(o,a)?b:a)]}
+  if(wp.length>8){const k=wp.length/8;wp=Array.from({length:8},(_,i)=>wp[Math.floor(i*k)])}
+  const gm=`https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=${c6(o)}&destination=${c6(d)}${wp.length?'&waypoints='+wp.map(c6).join('%7C'):''}`;
+  return `<div class="rbox"><div class="rtit">Recorrido del día · ${hm(I.ds[0].start)} → ${hm(I.ds[I.ds.length-1].end)} · ${n1(I.km)} km en coche (GPS)</div>${routeSvg(I)}${li?`<ol class="rstops">${li}</ol>`:'<div class="cline">Sin paradas fuera de casa en el archivo para este día.</div>'}<div class="goob"><a class="btn sm" href="${gm}" target="_blank" rel="noopener">Abrir el recorrido en Google Maps</a></div><div class="cline rnote">${I.aprox?'El archivo no trae los puntos intermedios de este día: la línea solo une salida y llegada de cada tramo. ':'La línea une los puntos que guardó el móvil (uno cada pocos minutos): es orientativa, no sigue la carretera al metro. '}Google Maps calcula su propia ruta entre las paradas; puede no ser la que hiciste.</div></div>`;
+}
 function render(){
   const eqKm=cfg.eur/cfg.vel;
   $('eqhint').textContent=EKM()?`Se paga ${EKM().toLocaleString('es-ES',{maximumFractionDigits:3})} € por cada km de más (precio km puesto; el precio hora no se usa). Déjalo vacío para calcular por hora.`:(cfg.modo==='km'||MODE==='man')?`Equivale a ${eqKm.toLocaleString('es-ES',{maximumFractionDigits:3})} € por km de más (${cfg.eur} €/h a ${cfg.vel} km/h).`:cfg.modo==='osrm'?`Por duración de la ruta: km de más ÷ velocidad media de la ruta casa → obra según OSRM × precio hora. Si una obra no tiene duración de OSRM, se usa km ÷ ${cfg.vel} km/h. Para pedirla se mandan a OSRM las coordenadas de casa y de la obra.`:'Por tiempo real: minutos del trayecto × parte de km por encima del umbral × precio hora. Incluye las paradas cortas.';
@@ -780,7 +834,15 @@ function render(){
     return `<tr class="${excl[d.day]?'excluded':''}"><td><div class="day">${dt.getDate()} ${MES[dt.getMonth()].slice(0,3)}</div><div class="dow">${DOW[dt.getDay()]}${RG.view==='mes'?'':' · '+dt.getFullYear()}</div></td><td>${trips}${d.largo?'<span class="chip warn">viaje largo (&gt;150 km): revisar</span>':''}${d.mano?'<span class="chip warn">día añadido a mano</span>':''}</td><td class="num">${Math.round(d.extra)}</td><td class="num">${eur(d.imp)}</td><td><input type="checkbox" id="x_${d.day}" data-day="${d.day}" ${excl[d.day]?'':'checked'} aria-label="Contar ${d.day}"></td></tr>`;
   }).join(''):`<tr><td colspan="5" class="empty">${drives?'No hay trayectos de más del umbral en este periodo con los ajustes actuales.':'Carga tu archivo de Cronología para empezar.'}</td></tr>`;
   // v2.2.5: lista compacta (una fila por día; al tocar se despliega)
-  $('gdays').innerHTML=current.length?current.slice().reverse().map(d=>{
+  // v2.3.33: con la casilla, también los días con coche en el archivo que no llegan al plus (solo para consultar; no entran en importes ni en exportar)
+  let lista=current;
+  if(showAll&&drives){const have=new Set(current.map(d=>d.day));const ex=[...new Set(drives.map(d=>d.start.slice(0,10)))].filter(k=>RG.inR(k)&&!have.has(k)).map(k=>({day:k,sinPlus:true}));lista=current.concat(ex).sort((a,b)=>a.day<b.day?-1:1)}
+  $('allbox').hidden=!drives;$('alld').checked=showAll;
+  $('gdays').innerHTML=lista.length?lista.slice().reverse().map(d=>{
+    if(d.sinPlus){const dt=new Date(d.day+'T12:00:00'),open=gOpen===d.day;let nm='',body='';
+      {const I=dayInfo(d.day);const ns=[...new Set(I.stops.map(s=>s.nm).filter(Boolean))];nm=ns.length?escH(ns.slice(0,2).join(' + '))+(ns.length>2?' +'+(ns.length-2):''):n1(I.km)+' km en coche'}
+      if(open)body=`<div class="dbody">${routeBlock(d.day)}<div class="cline">Día sin plus: ningún trayecto pasa del umbral, o cae fuera del horario o de los días de trabajo de los ajustes. No suma ni se exporta.</div></div>`;
+      return `<article class="card${open?' open':''} gex2"><div class="drow" data-gtog="${d.day}" role="button" tabindex="0" aria-expanded="${open}"><span class="dd"><b>${DOW[dt.getDay()]} ${dt.getDate()}</b>${RG.view==='mes'?'':`<small>${MES[dt.getMonth()].slice(0,3)} ${dt.getFullYear()}</small>`}</span><span class="dm">${nm}</span><span class="de"><small>sin plus</small></span></div>${body}</article>`}
     const dt=new Date(d.day+'T12:00:00'),open=gOpen===d.day,off=!!excl[d.day];
     const ob=[...new Set(d.trips.flatMap(t=>[t.de,t.a]).filter(x=>x&&x!=='Casa'))];
     const warn=d.trips.some(t=>t.desv)?' <small class="w">· posible desvío</small>':'';
@@ -793,7 +855,7 @@ function render(){
       let pts=ob.map(nm=>{const o=obras.find(o=>obraName(o,H3)===nm);return o?`<a class="btn sm" href="${mp(o.p)}" target="_blank" rel="noopener">Ver punto: ${escH(nm)}</a>`:''}).join('');
       if(!ob.length&&H3){const vs=visits.filter(v=>v.start.slice(0,10)===d.day&&dist(H3,v.p)>=CASA_R).sort((a,b)=>dist(H3,b.p)-dist(H3,a.p));
         if(vs.length){const v=vs[0],mn=Math.round((new Date(v.end)-new Date(v.start))/60000);pts=`<a class="btn sm" href="${mp(v.p)}" target="_blank" rel="noopener">Ver dónde paraste (${mn} min, a ${Math.round(dist(H3,v.p))} km)</a>`}}
-      body=`<div class="dbody">${trips}${pts?`<div class="goob">${pts}</div>`:''}${ob.length?'':'<div class="cline w">Saliste de casa y volviste sin ninguna parada larga, así que no hay obra para este día y no sale en Obras. Si fue de trabajo, añádelo en "Días añadidos a mano" con su obra y se calculará con los km de esa obra; si no, desmárcalo.</div>'}<div class="cline">${Math.round(d.extra)} km de más${d.largo?' · <span class="w">viaje largo (&gt;150 km): revisar</span>':''}${d.mano?' · día añadido a mano':''}</div><label class="chk" style="margin-top:10px"><input type="checkbox" data-day="${d.day}" ${off?'':'checked'}> Contar este día</label></div>`;
+      body=`<div class="dbody">${trips}${pts?`<div class="goob">${pts}</div>`:''}${routeBlock(d.day)}${ob.length?'':'<div class="cline w">Saliste de casa y volviste sin ninguna parada larga, así que no hay obra para este día y no sale en Obras. Si fue de trabajo, añádelo en "Días añadidos a mano" con su obra y se calculará con los km de esa obra; si no, desmárcalo.</div>'}<div class="cline">${Math.round(d.extra)} km de más${d.largo?' · <span class="w">viaje largo (&gt;150 km): revisar</span>':''}${d.mano?' · día añadido a mano':''}</div><label class="chk" style="margin-top:10px"><input type="checkbox" data-day="${d.day}" ${off?'':'checked'}> Contar este día</label></div>`;
     }
     return `<article class="card${open?' open':''}${off?' gex':''}">${row}${body}</article>`;
   }).join(''):`<div class="panel empty">${drives?'No hay trayectos de más del umbral en este periodo con los ajustes actuales.':'Carga tu archivo de Cronología para empezar.'}</div>`;
@@ -878,6 +940,7 @@ $('osrmall').addEventListener('click',()=>{const list=obras.filter(o=>!(o.sv&&o.
 
 $('gdays').addEventListener('click',e=>{if(e.target.closest('input,label'))return;const r=e.target.closest('[data-gtog]');if(!r)return;gOpen=gOpen===r.dataset.gtog?null:r.dataset.gtog;render()});
 $('gdays').addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('button,select,input,a'))return;const r=e.target.closest&&e.target.closest('[data-gtog]');if(r&&(e.key==='Enter'||e.key===' ')){e.preventDefault();r.click()}});
+$('alld').addEventListener('change',e=>{showAll=e.target.checked;store.set('pd_alld',showAll);render()});
 $('gdays').addEventListener('change',e=>{const d=e.target.dataset.day;if(!d)return;if(e.target.checked)delete excl[d];else excl[d]=1;if(!isExample)store.set('pd_excl',excl);render()});
 $('rows').addEventListener('change',e=>{const d=e.target.dataset.day;if(!d)return;if(e.target.checked)delete excl[d];else excl[d]=1;if(!isExample)store.set('pd_excl',excl);render()});
 $('month').addEventListener('change',render);
@@ -909,7 +972,7 @@ function loadText(txt,name){
   try{
     const r=parseTimeline(JSON.parse(txt));
     if(!r.drives.length)throw new Error('vacío');
-    drives=r.drives;visits=r.visits;home=r.home;isExample=false;excl=store.get('pd_excl',{});saved=store.get('pd_obras',[]);manual=store.get('pd_manual',[]);
+    drives=r.drives;visits=r.visits;tpath=r.tpath||{};home=r.home;isExample=false;excl=store.get('pd_excl',{});saved=store.get('pd_obras',[]);manual=store.get('pd_manual',[]);
     const H=parseCasa(cfg.casa)||home;
     $('status').textContent='';$('drop').hidden=true;$('loaded').hidden=false;$('loaded').open=false;
     $('loadedshort').textContent=`${r.drives.length} trayectos · del ${r.drives[0].start.slice(0,10).split('-').reverse().join('/')} al ${r.drives[r.drives.length-1].start.slice(0,10).split('-').reverse().join('/')}`;
@@ -1385,7 +1448,7 @@ $('unload').addEventListener('click',()=>{
 function loadExample(){
   const H=[43.37,-8.40],O=[42.88,-8.54]; // A Coruña → Santiago, lugares y datos inventados
   const base=[['2026-10-01','07:30','08:30',72.0,'17:00','18:00',72.0],['2026-10-02','07:30','08:30',72.0,'17:00','18:00',72.0],['2026-10-05','07:30','08:30',72.0,'17:00','18:00',72.0],['2026-10-06','07:30','08:30',72.0,'17:00','18:00',72.0],['2026-10-07','07:30','08:30',72.0,'17:00','18:00',72.0]];
-  drives=[];visits=[];
+  drives=[];visits=[];tpath={};
   for(const b of base){drives.push({start:`${b[0]}T${b[1]}:00+02:00`,end:`${b[0]}T${b[2]}:00+02:00`,s:H,e:O,km:b[3]});drives.push({start:`${b[0]}T${b[4]}:00+02:00`,end:`${b[0]}T${b[5]}:00+02:00`,s:O,e:H,km:b[6]});visits.push({start:`${b[0]}T${b[2]}:00+02:00`,end:`${b[0]}T${b[4]}:00+02:00`,p:O})}
   home=H;manual=[];excl={};saved=[{p:O,name:'Obra de ejemplo (Santiago)',man:null,osrm:null}];
   isExample=true;$('status').textContent='';

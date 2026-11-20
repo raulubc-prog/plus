@@ -4,6 +4,9 @@ Web: https://raulubc-prog.github.io/plus/ · Enlace modo manual: https://raulubc
 
 Historial de GitHub reiniciado el 19/10/2026 (v2.3.19) por privacidad; las versiones anteriores solo quedan descritas aquí.
 
+## 20/11/2026
+- **v2.3.33** — Recorrido del día (modo GPS): al abrir un día sale un dibujo del recorrido con los puntos que guardó el móvil, la lista de paradas con sus horas (cada una con «ver en Maps») y un botón para abrir el recorrido en Google Maps. Nueva casilla «Ver también los días sin plus»: enseña los días con coche en el archivo que no llegan al umbral o caen fuera del horario, solo para consultar (no suman ni se exportan). El dibujo se hace en el propio móvil, sin mapas ni servidores externos; los puntos del recorrido no se guardan.
+
 ## 19/11/2026
 - **v2.3.32** — Cronología con tramos incompletos (sin hora o con coordenadas rotas): se saltan esos tramos, se calcula el resto y se avisa de cuántos. Antes un tramo sin hora impedía cargar todo el archivo y uno con coordenadas rotas entraba como trayecto.
 
