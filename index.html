@@ -1292,9 +1292,11 @@ function renderCopyWarn(){
   if(changed&&cwNote)cwNote='';
   const warn=!!has&&!cwNote&&(!isDay(last)||changed||dd(last)>30);
   const when=k=>dd(k)===0?'hoy':dd(k)===1?'ayer':'el '+k.split('-').reverse().join('/');
-  $('copywarn').className=warn?'banner':'';$('cw_tit').hidden=!warn;$('cw_txt').className=warn?'':'small';$('cw_save').classList.toggle('primary',warn);
-  $('cw_tit').textContent=changed?'⚠ Tienes cambios sin copiar':'⚠ Copia de seguridad pendiente';
-  $('cw_txt').textContent=cwNote||(!has?'':changed?`Has cambiado obras, km, días o ajustes desde tu última copia (${when(last)}).`:!isDay(last)?'Todavía no has hecho ninguna copia. Tus obras, km y días solo están guardados en este móvil: si se borran o cambias de móvil, se pierden.':dd(last)>30?`Tu última copia es de hace ${dd(last)} días.`:`Última copia: ${when(last)} · sin cambios desde entonces`);
+  // siempre con el mismo aspecto de aviso; el texto dice cuántos días llevas sin hacer copia
+  const dias=k=>dd(k)===0?'Última copia: hoy.':dd(k)===1?'Llevas 1 día sin hacer copia (última: ayer).':`Llevas ${dd(k)} días sin hacer copia (última: ${k.split('-').reverse().join('/')}).`;
+  $('copywarn').className='banner';$('cw_tit').hidden=false;$('cw_save').classList.toggle('primary',warn);
+  $('cw_tit').textContent=!warn?'Copia de seguridad':changed?'⚠ Tienes cambios sin copiar':'⚠ Copia de seguridad pendiente';
+  $('cw_txt').textContent=cwNote||(!has?'Aún no hay nada que copiar: cuando apuntes obras o días, haz una copia.':!isDay(last)?'Todavía no has hecho ninguna copia. Tus obras, km y días solo están guardados en este móvil: si se borran o cambias de móvil, se pierden.':dias(last)+(changed?' Desde entonces has cambiado obras, km, días o ajustes.':' Sin cambios desde entonces.'));
 }
 $('mb_save').addEventListener('click',()=>saveCopy($('mb_msg')));
 $('mb_share').addEventListener('click',()=>shareCopy($('mb_msg')));
