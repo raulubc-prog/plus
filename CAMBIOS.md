@@ -5,6 +5,7 @@ Web: https://raulubc-prog.github.io/plus/ · Enlace modo manual: https://raulubc
 Historial de GitHub reiniciado el 19/10/2026 (v2.3.19) por privacidad; las versiones anteriores solo quedan descritas aquí.
 
 ## 20/11/2026
+- **v2.3.34** — Dónde estuviste: al abrir un día, la lista de paradas va lo primero y cada parada puede llevar su dirección aproximada (calle y localidad). Se pide con «Buscar la dirección de las paradas», o sola al abrir el día si marcas la casilla. Para eso se mandan las coordenadas de la parada, redondeadas a unos 10 m, a Nominatim (OpenStreetMap); la dirección se guarda en el móvil y no se vuelve a pedir. Aviso de privacidad y política de contenido actualizados.
 - **v2.3.33** — Recorrido del día (modo GPS): al abrir un día sale un dibujo del recorrido con los puntos que guardó el móvil, la lista de paradas con sus horas (cada una con «ver en Maps») y un botón para abrir el recorrido en Google Maps. Nueva casilla «Ver también los días sin plus»: enseña los días con coche en el archivo que no llegan al umbral o caen fuera del horario, solo para consultar (no suman ni se exportan). El dibujo se hace en el propio móvil, sin mapas ni servidores externos; los puntos del recorrido no se guardan.
 
 ## 19/11/2026

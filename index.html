@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex">
 <title>Plus Desplazamiento</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; worker-src 'self'; connect-src 'self' https://router.project-osrm.org; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; worker-src 'self'; connect-src 'self' https://router.project-osrm.org https://nominatim.openstreetmap.org; base-uri 'none'; form-action 'none'; object-src 'none'">
 <style>
 /* Fuentes Barlow (licencia OFL, ver fonts/LICENSE-Barlow.txt) servidas desde este mismo repo: ninguna visita pasa por Google. */
 @font-face{font-family:'Barlow';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/barlow-latin-400-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
@@ -217,7 +217,7 @@ select.pill{width:100%;min-width:0;text-overflow:ellipsis}
 .rmap{display:block;width:100%;max-width:520px;height:auto;margin:0 auto 6px;color:var(--fg)}
 .rstops{list-style:none;margin:6px 0 0;padding:0;font-size:14px}.rstops li{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px solid var(--line)}
 .rn{flex:0 0 22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-fg);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center}
-.rnote{font-size:12px;margin-top:8px}#gdays .gex2 .drow .dm{color:var(--muted)}
+.rnote{font-size:12px;margin-top:8px}.raddr{font-weight:600}.rstops li:first-child{border-top:0}.rmap{margin-top:8px}#gdays .gex2 .drow .dm{color:var(--muted)}
 .dbody .cline{margin-top:0}
 .pill.libre[aria-pressed="true"]{background:var(--off);border-color:var(--off);color:#fff}
 select.pill{max-width:100%;appearance:auto}
@@ -285,13 +285,13 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <header>
     <div>
       <div class="ttl"><h1>Plus Desplazamiento</h1><div class="sign">&gt; 50 km</div></div>
-      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.33 · 20/11/2026</span></p>
+      <p class="sub">Trayectos de trabajo de más de 50 km · <span title="Versión de la app">v2.3.34 · 20/11/2026</span></p>
     </div>
   </header>
 
   <p class="banner proto" id="proto" role="note">Prototipo. Los importes son orientativos y no sustituyen al cálculo oficial de la empresa.</p>
 
-  <details class="privacy"><summary><b>Tus datos no salen de este móvil</b></summary><p>No hay servidor ni cuentas: lo que apuntas y los archivos que cargas se quedan solo en este navegador (almacenamiento local; sin cookies ni rastreo). Solo sale algo fuera si tú lo pides: la ruta que abres en Google Maps y, en el modo GPS, las coordenadas de casa y de la obra que se mandan a OSRM (servidor público de FOSSGIS, en la UE) para calcular km por carretera. La página la aloja GitHub Pages, que registra la dirección IP de cada visita por seguridad (<a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">su política de privacidad</a>). Si añades una obra con la foto de la Orden de Trabajo (con la cámara o una foto que elijas), la imagen se lee en este móvil, sin enviarla a ningún sitio, solo para sacar la localización de la obra: la foto y el resto del texto (nombres, cliente, números de orden…) no se guardan. Revisa lo que se rellena antes de añadirla. Si borras los datos del navegador se pierde todo, así que guarda una copia de vez en cuando. No escribas nombres de otras personas: para una parada basta "paso: compañero".</p><p>Dudas o fallos: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a>. No mandes tus datos (obras, direcciones) si no hace falta: con contar el problema basta.</p></details>
+  <details class="privacy"><summary><b>Tus datos no salen de este móvil</b></summary><p>No hay servidor ni cuentas: lo que apuntas y los archivos que cargas se quedan solo en este navegador (almacenamiento local; sin cookies ni rastreo). Solo sale algo fuera si tú lo pides: la ruta que abres en Google Maps y, en el modo GPS, las coordenadas de casa y de la obra que se mandan a OSRM (servidor público de FOSSGIS, en la UE) para calcular km por carretera; y, si pides la dirección de las paradas de un día, las coordenadas de esas paradas (redondeadas a unos 10 m), que se mandan a Nominatim, el buscador de direcciones de OpenStreetMap (OpenStreetMap Foundation), que como cualquier web ve tu IP. La dirección que devuelve se guarda en este navegador para no volver a pedirla. La página la aloja GitHub Pages, que registra la dirección IP de cada visita por seguridad (<a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">su política de privacidad</a>). Si añades una obra con la foto de la Orden de Trabajo (con la cámara o una foto que elijas), la imagen se lee en este móvil, sin enviarla a ningún sitio, solo para sacar la localización de la obra: la foto y el resto del texto (nombres, cliente, números de orden…) no se guardan. Revisa lo que se rellena antes de añadirla. Si borras los datos del navegador se pierde todo, así que guarda una copia de vez en cuando. No escribas nombres de otras personas: para una parada basta "paso: compañero".</p><p>Dudas o fallos: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a>. No mandes tus datos (obras, direcciones) si no hace falta: con contar el problema basta.</p></details>
 
   <nav class="modes" role="tablist" aria-label="Forma de apuntar">
     <button class="mode" role="tab" data-mode="man" type="button">Apuntar a mano</button>
@@ -445,6 +445,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
   <div class="banner" id="osrmwarn" data-only="gps" role="status" hidden></div>
 
   <label class="chk" id="allbox" data-only="gps" style="margin:0 0 10px" hidden><input type="checkbox" id="alld"> Ver también los días sin plus (para consultar dónde fuiste)</label>
+  <label class="chk" id="autobox" data-only="gps" style="margin:0 0 10px" hidden><input type="checkbox" id="autodir"> Buscar la dirección de las paradas al abrir un día (consulta OpenStreetMap)</label>
   <div class="cards" id="gdays" data-only="gps"></div>
   <section class="tablebox" data-only="gps" hidden>
     <table id="daystable">
@@ -505,7 +506,7 @@ details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary
       <button class="btn danger" type="button" data-reset="todo">Borrar todo y empezar de cero</button>
     </div>
   </details>
-  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.33 · 20/11/2026</span></p>
+  <p class="contact">Contacto: <a href="mailto:plus.desplazamiento@gmail.com?subject=Plus%20Desplazamiento">plus.desplazamiento@gmail.com</a> · <span title="Versión de la app">v2.3.34 · 20/11/2026</span></p>
   <p class="contact">© 2026 Plus Desplazamiento · Uso gratuito, se ofrece tal cual, sin garantía, y puede retirarse sin previo aviso.</p>
 </div>
 
@@ -558,6 +559,8 @@ let manual=Array.isArray(store.get('pd_manual',[]))?store.get('pd_manual',[]):[]
 let drives=null;      // [{start,end,s:[lat,lng],e:[lat,lng],km}]
 let visits=[];        // [{start,end,p:[lat,lng]}] estancias fuera de casa
 let tpath={};         // v2.3.33: {día:[[lat,lng,hora]...]} puntos del recorrido (solo en memoria)
+let dirs=isObj(store.get('pd_dirs',{}))?store.get('pd_dirs',{}):{}; // v2.3.34: {"lat,lng":"Calle, Localidad"} direcciones ya pedidas
+let autoDir=!!store.get('pd_autodir',false);let geoBusy=false,geoMsg={};
 let showAll=!!store.get('pd_alld',false); // v2.3.33: ver también los días sin plus
 let home=null; let isExample=true;
 let saved=Array.isArray(store.get('pd_obras',[]))?store.get('pd_obras',[]):[]; // [{p:[lat,lng],name,man,osrm}] datos de obra guardados por el usuario
@@ -787,6 +790,25 @@ function dayInfo(day){
   if(pts.length<2){aprox=true;pts=[];for(const d of ds){pts.push(d.s,d.e)}}
   return {ds,stops,pts,aprox,H,km:ds.reduce((s,d)=>s+d.km,0)};
 }
+// v2.3.34: dirección aproximada de cada parada (Nominatim / OpenStreetMap), solo si se pide; se guarda para no repetir
+const k4=p=>p[0].toFixed(4)+','+p[1].toFixed(4);
+const dirOf=p=>{const v=dirs[k4(p)];return typeof v==='string'&&v?v:''};
+function dirTxt(j){const a=j&&j.address;if(!isObj(a))return '';const t=v=>typeof v==='string'?v.trim():'';
+  const calle=t(a.road)||t(a.pedestrian)||t(a.industrial)||t(a.commercial)||t(a.neighbourhood)||t(a.hamlet);
+  const loc=t(a.village)||t(a.town)||t(a.city)||t(a.municipality)||t(a.county);
+  const bar=t(a.suburb)||t(a.quarter)||'';
+  const out=[calle?(calle+(t(a.house_number)?' '+t(a.house_number):'')):'',bar&&bar!==loc&&bar!==calle?bar:'',loc].filter(Boolean).join(', ');
+  return (out||t(j.display_name).split(',').slice(0,3).join(',')).slice(0,140)}
+async function geoDay(day){
+  if(geoBusy)return;const I=dayInfo(day);const need=I.stops.filter(s=>!dirOf(s.p)).slice(0,12);if(!need.length)return;
+  geoBusy=true;geoMsg[day]='Buscando direcciones…';render();let ok=0,ko=0;
+  for(let i=0;i<need.length;i++){const p=need[i].p;if(dirOf(p)){ok++;continue}
+    if(i)await new Promise(r=>setTimeout(r,1100)); // una consulta por segundo como mucho (norma de uso de Nominatim)
+    try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${p[0].toFixed(4)}&lon=${p[1].toFixed(4)}&zoom=18&addressdetails=1&accept-language=es`);
+      if(!r.ok)throw 0;const d=dirTxt(await r.json());if(!d)throw 0;dirs[k4(p)]=d;ok++}catch(_){ko++}}
+  if(ok)store.set('pd_dirs',dirs);geoBusy=false;
+  geoMsg[day]=ko?(ok?'Alguna dirección no se ha podido buscar. ':'No se han podido buscar las direcciones (sin conexión o servicio ocupado). ')+'Prueba otra vez en un rato.':'';render();
+}
 function routeSvg(I){
   let P=I.pts;if(P.length<2)return '';
   if(P.length>500){const k=Math.ceil(P.length/500);P=P.filter((_,i)=>i%k===0||i===P.length-1)}
@@ -804,14 +826,14 @@ function routeBlock(day){
   const I=dayInfo(day);if(!I.ds.length)return '';
   const mp=p=>`https://www.google.com/maps/search/?api=1&query=${p[0].toFixed(6)},${p[1].toFixed(6)}`;
   const c6=p=>p[0].toFixed(6)+','+p[1].toFixed(6);
-  const li=I.stops.map((s,i)=>`<li><span class="rn">${i+1}</span><span><b>${s.ini}${s.fin?' – '+s.fin:''}</b>${s.min?' · '+durTxt(s.min):''}<br>${escH(s.nm||'Sitio')} · <a href="${mp(s.p)}" target="_blank" rel="noopener">ver en Maps</a></span></li>`).join('');
+  const li=I.stops.map((s,i)=>`<li><span class="rn">${i+1}</span><span><b>${s.ini}${s.fin?' – '+s.fin:''}</b>${s.min?' · '+durTxt(s.min):''}<br>${escH(s.nm||'Sitio')}${dirOf(s.p)?`<br><span class="raddr">${escH(dirOf(s.p))}</span>`:''}<br><a href="${mp(s.p)}" target="_blank" rel="noopener">ver el punto en Maps</a></span></li>`).join('');
   // enlace a Google Maps con las paradas como puntos intermedios (máx. 8)
   const o=I.ds[0].s,d=I.ds[I.ds.length-1].e;let wp=I.stops.map(s=>s.p);
   if(wp.length&&dist(wp[wp.length-1],d)<0.3)wp=wp.slice(0,-1);
   if(!wp.length&&dist(o,d)<CASA_R&&I.pts.length){wp=[I.pts.reduce((a,b)=>dist(o,b)>dist(o,a)?b:a)]}
   if(wp.length>8){const k=wp.length/8;wp=Array.from({length:8},(_,i)=>wp[Math.floor(i*k)])}
   const gm=`https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=${c6(o)}&destination=${c6(d)}${wp.length?'&waypoints='+wp.map(c6).join('%7C'):''}`;
-  return `<div class="rbox"><div class="rtit">Recorrido del día · ${hm(I.ds[0].start)} → ${hm(I.ds[I.ds.length-1].end)} · ${n1(I.km)} km en coche (GPS)</div>${routeSvg(I)}${li?`<ol class="rstops">${li}</ol>`:'<div class="cline">Sin paradas fuera de casa en el archivo para este día.</div>'}<div class="goob"><a class="btn sm" href="${gm}" target="_blank" rel="noopener">Abrir el recorrido en Google Maps</a></div><div class="cline rnote">${I.aprox?'El archivo no trae los puntos intermedios de este día: la línea solo une salida y llegada de cada tramo. ':'La línea une los puntos que guardó el móvil (uno cada pocos minutos): es orientativa, no sigue la carretera al metro. '}Google Maps calcula su propia ruta entre las paradas; puede no ser la que hiciste.</div></div>`;
+  return `<div class="rbox"><div class="rtit">Dónde estuviste · ${hm(I.ds[0].start)} → ${hm(I.ds[I.ds.length-1].end)} · ${n1(I.km)} km en coche (GPS)</div>${li?`<ol class="rstops">${li}</ol>`:'<div class="cline">Sin paradas fuera de casa en el archivo para este día.</div>'}${routeSvg(I)}<div class="goob">${!isExample&&I.stops.some(s=>!dirOf(s.p))?`<button class="btn sm" type="button" data-geo="${day}"${geoBusy?' disabled':''}>Buscar la dirección de las paradas</button>`:''}<a class="btn sm" href="${gm}" target="_blank" rel="noopener">Abrir el recorrido en Google Maps</a></div>${geoMsg[day]?`<div class="cline w" role="status">${escH(geoMsg[day])}</div>`:''}<div class="cline rnote">${I.aprox?'El archivo no trae los puntos intermedios de este día: la línea solo une salida y llegada de cada tramo. ':'La línea une los puntos que guardó el móvil (uno cada pocos minutos): es orientativa, no sigue la carretera al metro. '}Google Maps calcula su propia ruta entre las paradas; puede no ser la que hiciste. Las direcciones son aproximadas (la calle más cercana al punto del GPS) · © colaboradores de OpenStreetMap.</div></div>`;
 }
 function render(){
   const eqKm=cfg.eur/cfg.vel;
@@ -837,10 +859,10 @@ function render(){
   // v2.3.33: con la casilla, también los días con coche en el archivo que no llegan al plus (solo para consultar; no entran en importes ni en exportar)
   let lista=current;
   if(showAll&&drives){const have=new Set(current.map(d=>d.day));const ex=[...new Set(drives.map(d=>d.start.slice(0,10)))].filter(k=>RG.inR(k)&&!have.has(k)).map(k=>({day:k,sinPlus:true}));lista=current.concat(ex).sort((a,b)=>a.day<b.day?-1:1)}
-  $('allbox').hidden=!drives;$('alld').checked=showAll;
+  $('allbox').hidden=!drives;$('alld').checked=showAll;$('autobox').hidden=!drives;$('autodir').checked=autoDir;
   $('gdays').innerHTML=lista.length?lista.slice().reverse().map(d=>{
     if(d.sinPlus){const dt=new Date(d.day+'T12:00:00'),open=gOpen===d.day;let nm='',body='';
-      {const I=dayInfo(d.day);const ns=[...new Set(I.stops.map(s=>s.nm).filter(Boolean))];nm=ns.length?escH(ns.slice(0,2).join(' + '))+(ns.length>2?' +'+(ns.length-2):''):n1(I.km)+' km en coche'}
+      {const I=dayInfo(d.day);const ns=[...new Set(I.stops.map(s=>(/^Sitio /.test(s.nm||'')&&dirOf(s.p))?dirOf(s.p):s.nm).filter(Boolean))];nm=ns.length?escH(ns.slice(0,2).join(' + '))+(ns.length>2?' +'+(ns.length-2):''):n1(I.km)+' km en coche'}
       if(open)body=`<div class="dbody">${routeBlock(d.day)}<div class="cline">Día sin plus: ningún trayecto pasa del umbral, o cae fuera del horario o de los días de trabajo de los ajustes. No suma ni se exporta.</div></div>`;
       return `<article class="card${open?' open':''} gex2"><div class="drow" data-gtog="${d.day}" role="button" tabindex="0" aria-expanded="${open}"><span class="dd"><b>${DOW[dt.getDay()]} ${dt.getDate()}</b>${RG.view==='mes'?'':`<small>${MES[dt.getMonth()].slice(0,3)} ${dt.getFullYear()}</small>`}</span><span class="dm">${nm}</span><span class="de"><small>sin plus</small></span></div>${body}</article>`}
     const dt=new Date(d.day+'T12:00:00'),open=gOpen===d.day,off=!!excl[d.day];
@@ -938,7 +960,8 @@ $('obimpf').addEventListener('change',e=>{
 $('osrmall').addEventListener('click',()=>{const list=obras.filter(o=>!(o.sv&&o.sv.osrm)||(cfg.modo==='osrm'&&!vrOf(o)));if(!list.length){$('osrmmsg').textContent='Todas las obras ya tienen km por carretera.';return}doOsrm(list)});
 
 
-$('gdays').addEventListener('click',e=>{if(e.target.closest('input,label'))return;const r=e.target.closest('[data-gtog]');if(!r)return;gOpen=gOpen===r.dataset.gtog?null:r.dataset.gtog;render()});
+$('gdays').addEventListener('click',e=>{if(e.target.closest('input,label'))return;const g=e.target.closest('[data-geo]');if(g){geoDay(g.dataset.geo);return}const r=e.target.closest('[data-gtog]');if(!r)return;gOpen=gOpen===r.dataset.gtog?null:r.dataset.gtog;render();if(gOpen&&autoDir&&!isExample)geoDay(gOpen)});
+$('autodir').addEventListener('change',e=>{autoDir=e.target.checked;store.set('pd_autodir',autoDir);if(autoDir&&gOpen&&!isExample)geoDay(gOpen)});
 $('gdays').addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('button,select,input,a'))return;const r=e.target.closest&&e.target.closest('[data-gtog]');if(r&&(e.key==='Enter'||e.key===' ')){e.preventDefault();r.click()}});
 $('alld').addEventListener('change',e=>{showAll=e.target.checked;store.set('pd_alld',showAll);render()});
 $('gdays').addEventListener('change',e=>{const d=e.target.dataset.day;if(!d)return;if(e.target.checked)delete excl[d];else excl[d]=1;if(!isExample)store.set('pd_excl',excl);render()});
